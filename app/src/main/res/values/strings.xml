@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Final Project</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="don_t_have_account_sign_up">Don\'t have account? Sign Up</string>
+    <string name="what_s_your_name">What\'s your name?</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="next">Next</string>
+    <string name="create_password">Create Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="finish">Finish</string>
+    <string name="what_s_your_email">What\'s your email</string>
+    <string name="yourname_company_com">yourname@company.com</string>
 </resources>

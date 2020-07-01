@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.auth.PreAuthActivity"></activity>
+        <activity android:name=".ui.auth.PreAuthActivity"/>
         <activity android:name=".ui.auth.RegisterActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
         <activity android:name=".ui.MainActivity">
