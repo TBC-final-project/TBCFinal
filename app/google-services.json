@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "515173335181",
+    "firebase_url": "https://postit-tbc.firebaseio.com",
+    "project_id": "postit-tbc",
+    "storage_bucket": "postit-tbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515173335181:android:b0676c54fd3de4127522c4",
+        "android_client_info": {
+          "package_name": "com.c0d3in3.finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515173335181-kfriass3pebhhlfkjoji0l73t5jbj9so.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdcze2ZZIBHBBAIK0yTjlBsrw7PXESDLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515173335181-kfriass3pebhhlfkjoji0l73t5jbj9so.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
