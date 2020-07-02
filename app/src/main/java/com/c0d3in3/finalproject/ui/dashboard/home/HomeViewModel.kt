@@ -1,6 +1,7 @@
-package com.c0d3in3.finalproject.ui
+package com.c0d3in3.finalproject.ui.dashboard.home
 
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(private val repository: PostsRepository) : ViewModel() {
+class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
 
     val posts by lazy{
         MutableLiveData<ArrayList<PostModel>>().also {
@@ -39,7 +40,7 @@ class MainViewModel(private val repository: PostsRepository) : ViewModel() {
         }
     }
 
-    private suspend fun addPost(post:PostModel){
+    private suspend fun addPost(post: PostModel){
         repository.addPost(post).collect{state->
             when(state){
                 is State.Success ->{
