@@ -25,10 +25,10 @@
     <string name="title_activity_dashboard">Dashboard Activity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-
     <string name="title_notifications">Notifications</string>
     <string name="have_an_account_already_log_in">Have an account already? Log In</string>
     <string name="welcome_to_postit">Welcome to PostIt</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
+    <string name="password_tip">Your password must include at least one\nsymbol and be 8 or more characters long.</string>
 </resources>
