@@ -1,15 +1,11 @@
 package com.c0d3in3.finalproject.ui.dashboard.home
 
 import android.util.Log.d
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.c0d3in3.BaseFragment
+import com.c0d3in3.finalproject.BaseFragment
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : BaseFragment() {

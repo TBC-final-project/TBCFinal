@@ -3,10 +3,9 @@ package com.c0d3in3.finalproject.ui.dashboard.search
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.c0d3in3.BaseFragment
+import com.c0d3in3.finalproject.BaseFragment
 
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
 class SearchFragment : BaseFragment() {

@@ -1,4 +1,4 @@
-package com.c0d3in3.finalproject.ui.dashboard
+package com.c0d3in3.finalproject
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class DashboardPagerAdapter(fm: FragmentManager) :
+class BasePagerAdapter(fm: FragmentManager) :
     FragmentStatePagerAdapter(fm) {
 
     private val fragmentsList = arrayListOf<Fragment>()
