@@ -14,4 +14,17 @@
     <string name="finish">Finish</string>
     <string name="what_s_your_email">What\'s your email</string>
     <string name="yourname_company_com">yourname@company.com</string>
+    <string name="home_caps">HOME</string>
+    <string name="stories_caps">STORIES</string>
+    <string name="notifications_caps">NOTIFICATIONS</string>
+    <string name="search_caps">SEARCH</string>
+    <string name="news_feed">news feed</string>
+    <string name="stories">stories</string>
+    <string name="notifications">notifications</string>
+    <string name="search">search</string>
+    <string name="title_activity_dashboard">Dashboard Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+
+    <string name="title_notifications">Notifications</string>
 </resources>
