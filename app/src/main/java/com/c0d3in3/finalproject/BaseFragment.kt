@@ -1,4 +1,4 @@
-package com.c0d3in3
+package com.c0d3in3.finalproject
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -3,7 +3,7 @@ package com.c0d3in3.finalproject.ui.dashboard
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
+import com.c0d3in3.finalproject.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
@@ -14,13 +14,14 @@ import kotlinx.android.synthetic.main.app_bar_layout.view.*
 
 class DashboardActivity : AppCompatActivity() {
 
-    private lateinit var adapter: DashboardPagerAdapter
+    private lateinit var adapter: BasePagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        adapter = DashboardPagerAdapter(supportFragmentManager)
+        adapter =
+            BasePagerAdapter(supportFragmentManager)
 
         adapter.addFragment(HomeFragment())
         adapter.addFragment(StoriesFragment())

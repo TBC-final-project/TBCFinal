@@ -36,6 +36,7 @@
         android:textColor="#fff"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signInGoogleButton"
         android:layout_width="match_parent"
         android:background="@drawable/btn_google"
         android:layout_height="wrap_content"

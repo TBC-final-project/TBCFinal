@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fillViewport="true"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".ui.auth.RegisterActivity">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="24dp"
-            android:src="@mipmap/baseline_keyboard_arrow_left_black_24" />
+            android:src="@mipmap/ic_back_arrow" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,23 +32,25 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/firstNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@drawable/et_background"
             android:hint="@string/first_name"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:paddingVertical="20dp"
             android:paddingStart="15dp"
             android:paddingEnd="15dp" />
 
         <EditText
+            android:id="@+id/lastNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="21dp"
             android:background="@drawable/et_background"
             android:hint="@string/last_name"
-            android:inputType="textPassword"
+            android:inputType="text"
             android:paddingVertical="20dp"
             android:paddingStart="15dp"
             android:paddingEnd="15dp" />
@@ -58,11 +60,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="21dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/btn_solid_style"
             android:paddingVertical="20dp"
             android:text="@string/next"
-            android:textColor="#fff"
-            android:layout_marginBottom="50dp"/>
+            android:textColor="#fff" />
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>
