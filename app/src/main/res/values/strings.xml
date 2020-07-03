@@ -46,4 +46,8 @@
     <string name="fields_are_empty">Fields are empty</string>
     <string name="passwords_not_match">Passwords don\'t match</string>
     <string name="ok">OK</string>
+    <string name="add_comment">Add a comment…</string>
+    <string name="post">Post</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

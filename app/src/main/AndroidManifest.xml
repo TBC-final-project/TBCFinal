@@ -11,17 +11,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:windowSoftInputMode="stateHidden"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.profile.EditProfileActivity"></activity>
-        <activity android:name=".ui.profile.ProfileActivity" />
-        <activity android:name=".ui.dashboard.DashboardActivity" />
-        <activity android:name=".ui.auth.PreAuthActivity">
+        <activity android:name=".ui.post.comment.CommentsActivity" />
+        <activity android:name=".ui.post.post_detailed.ImagePostDetailedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.profile.EditProfileActivity" />
+        <activity android:name=".ui.profile.ProfileActivity" />
+        <activity android:name=".ui.dashboard.DashboardActivity" />
+        <activity android:name=".ui.auth.PreAuthActivity"></activity>
         <activity android:name=".ui.auth.RegisterActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
     </application>
