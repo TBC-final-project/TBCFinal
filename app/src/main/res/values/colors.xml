@@ -5,4 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="titleTextColor">#434b56</color>
     <color name="errorColor">#EA3030</color>
+    <color name="colorLightBlue">#9963A2F6</color>
+    <color name="colorBlue">#2676e1</color>
+    <color name="descriptionColor">#484d54</color>
 </resources>

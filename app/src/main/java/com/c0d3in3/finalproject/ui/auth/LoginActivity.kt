@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Log.d
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.extensions.isEmailValid
+import com.c0d3in3.finalproject.extensions.setColor
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.model.UserModel
@@ -30,8 +32,20 @@ class LoginActivity : AppCompatActivity() {
     private fun init(){
         emailET.isEmailValid()
 
+        signUpTV.setColor(" ${getString(R.string.sign_up)}", ContextCompat.getColor(this,R.color.colorBlue))
+
         loginButton.setOnClickListener {
             logIn()
+        }
+
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
+
+        signUpTV.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
     }
 

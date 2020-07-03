@@ -28,17 +28,42 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_margin="@dimen/dialog_items_margin"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
         android:background="@android:color/black"
         android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:id="@+id/dialogOkButton"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/ok"
-        android:background="@android:color/transparent"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/yesDialogButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/yes"
+            android:background="@android:color/transparent"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/noDialogButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no"
+            android:background="@android:color/transparent"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

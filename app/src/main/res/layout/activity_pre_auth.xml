@@ -9,6 +9,7 @@
     tools:context=".ui.auth.PreAuthActivity">
 
     <TextView
+        android:id="@+id/logInTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -16,7 +17,7 @@
         android:textSize="16sp"
         android:textColor="#fff"
         android:gravity="end"
-        android:text="@string/have_an_account_already_log_in"/>
+        android:text=""/>
 
     <ImageView
         android:layout_width="100dp"
@@ -27,12 +28,13 @@
         />
 
     <TextView
+        android:id="@+id/welcomeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:textSize="35sp"
+        android:textSize="25sp"
         android:layout_marginTop="30dp"
-        android:text="@string/welcome_to_postit"
+        android:text="@string/welcome_to"
         android:textColor="#fff"/>
 
     <androidx.appcompat.widget.AppCompatButton
