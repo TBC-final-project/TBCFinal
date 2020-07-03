@@ -37,18 +37,18 @@ class HomeFragment : BaseFragment() {
             homeViewModel.loadMorePosts(lastId)
         }
         rootView!!.addPost.setOnClickListener {
-            addPosts()
+            //addPosts()
         }
 
 
     }
 
-    private fun addPosts(){
-        val post = PostModel()
-        post.postId = "${(1..1000).random()}"
-        post.postAuthor = "tedo ${(1..100).random()}"
-        homeViewModel.addPosts(post)
-    }
+//    private fun addPosts(){
+//        val post = PostModel()
+//        post.postId = "${(1..1000).random()}"
+//        post.postAuthor = "tedo ${(1..100).random()}"
+//        homeViewModel.addPosts(post)
+//    }
 
     override fun getLayout() = R.layout.fragment_home
 }

@@ -1,6 +1,20 @@
 package com.c0d3in3.finalproject.network.model
 
-class UserModel {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class UserModel(
+    var userFollowers: ArrayList<UserModel>? = null,
+    var userFollowing : ArrayList<UserModel>?  = null,
+    var userFullName: String = "",
+    var userId : String = "",
+    var userProfileCover : String = "",
+    var userProfileImage : String = "",
+    var userRegisterDate : Long = 0,
+    var username : String = ""): Parcelable{}
+
+/*
     var userFollowers: ArrayList<UserModel> = arrayListOf()
     var userFollowing : ArrayList<UserModel> = arrayListOf()
     var userFullName = ""
@@ -9,4 +23,4 @@ class UserModel {
     var userProfileImage = ""
     var userRegisterDate : Long = 0
     var username = ""
-}
+ */
