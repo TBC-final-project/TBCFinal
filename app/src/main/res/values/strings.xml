@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">Final Project</string>
-    <string name="login">Login</string>
+    <string name="app_name">PostIt</string>
+    <string name="login">Log In</string>
     <string name="email">Email</string>
+    <string name="sign_up">Sign Up</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="don_t_have_account_sign_up">Don\'t have account? Sign Up</string>
+    <string name="don_t_have_account">Don\'t have account?</string>
     <string name="what_s_your_name">What\'s your name?</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -26,8 +27,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="have_an_account_already_log_in">Have an account already? Log In</string>
-    <string name="welcome_to_postit">Welcome to PostIt</string>
+    <string name="have_an_account_already">Have an account already?</string>
+    <string name="welcome_to">Welcome to</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
     <string name="password_tip">Your password must include at least one\nsymbol and be 8 or more characters long.</string>
@@ -40,4 +41,9 @@
     <string name="update">Update</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="posts">Posts</string>
+    <string name="email_is_empty">Email is empty</string>
+    <string name="email_is_not_valid">Email is not valid</string>
+    <string name="fields_are_empty">Fields are empty</string>
+    <string name="passwords_not_match">Passwords don\'t match</string>
+    <string name="ok">OK</string>
 </resources>
