@@ -31,4 +31,13 @@
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
     <string name="password_tip">Your password must include at least one\nsymbol and be 8 or more characters long.</string>
+    <string name="back_button">back button</string>
+    <string name="upload_new_image">Upload New Image</string>
+    <string name="delete_image">Delete image</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="edit_image">Edit Image</string>
+    <string name="upload_picture">Upload Picture</string>
+    <string name="update">Update</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="posts">Posts</string>
 </resources>
