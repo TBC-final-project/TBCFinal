@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log.d
 import com.c0d3in3.finalproject.Constants.RC_SIGN_IN
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.extensions.setBold
+import com.c0d3in3.finalproject.extensions.setUnderline
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.model.UserModel
 import com.c0d3in3.finalproject.tools.Utils
@@ -52,6 +54,16 @@ class PreAuthActivity : AppCompatActivity() {
 
     private fun init(){
         auth = Firebase.auth
+
+        welcomeTV.setBold(" ${getString(R.string.app_name)}")
+        logInTextView.text = getString(R.string.have_an_account_already)
+        logInTextView.setUnderline(" ${getString(R.string.login)}")
+
+        logInTextView.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
