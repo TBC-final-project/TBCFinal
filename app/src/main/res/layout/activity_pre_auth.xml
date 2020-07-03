@@ -17,7 +17,7 @@
         android:textSize="16sp"
         android:textColor="#fff"
         android:gravity="end"
-        android:text=""/>
+        android:text="@string/have_an_account_already"/>
 
     <ImageView
         android:layout_width="100dp"

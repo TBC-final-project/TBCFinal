@@ -27,8 +27,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="have_an_account_already">Have an account already?</string>
-    <string name="welcome_to">Welcome to</string>
+    <string name="have_an_account_already">Have an account already? Log In</string>
+    <string name="welcome_to">Welcome to PostIt</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
     <string name="password_tip">Your password must include at least one\nsymbol and be 8 or more characters long.</string>
@@ -50,4 +50,10 @@
     <string name="post">Post</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="follow">Follow</string>
+    <string name="obsessed_with_fahim_md_s_youtube_channel_love_to_go_shopping_on_weekends_and_loveee_food_foodielife">Obsessed with Fahim MD\'s YouTube channel, love to go shopping on weekends and loveee food #foodielife</string>
+    <string name="creative_designer_argoradius">Creative Designer @ArgoRadius</string>
+    <string name="follow">Follow</string>
+    <string name="followers">followers</string>
+    <string name="following">following</string>
 </resources>
