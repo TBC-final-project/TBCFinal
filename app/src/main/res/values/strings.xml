@@ -50,10 +50,10 @@
     <string name="post">Post</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="follow">Follow</string>
     <string name="obsessed_with_fahim_md_s_youtube_channel_love_to_go_shopping_on_weekends_and_loveee_food_foodielife">Obsessed with Fahim MD\'s YouTube channel, love to go shopping on weekends and loveee food #foodielife</string>
     <string name="creative_designer_argoradius">Creative Designer @ArgoRadius</string>
     <string name="follow">Follow</string>
     <string name="followers">followers</string>
     <string name="following">following</string>
+    <string name="upload_photo">Upload Photo</string>
 </resources>
