@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/profileImg" />
+        android:src="@mipmap/img_profile" />
 
     <LinearLayout
         android:background="@android:color/transparent"
