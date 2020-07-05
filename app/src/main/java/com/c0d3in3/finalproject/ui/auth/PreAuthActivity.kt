@@ -9,6 +9,7 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.extensions.setBold
 import com.c0d3in3.finalproject.extensions.setUnderline
 import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.model.UserModel
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
@@ -19,6 +20,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_pre_auth.*
 
@@ -71,7 +73,20 @@ class PreAuthActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    uploadUser(auth.currentUser!!.uid)
+                    FirebaseHandler.getDatabase().collection(USERS_REF).document(auth.uid!!).get().addOnSuccessListener {
+                        if(it.exists()){
+                            UserInfo.userInfo = it.toObject<UserModel>()!!
+                            val intent = Intent(this, DashboardActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                        else{
+                            val intent = Intent(this, RegisterActivity::class.java)
+                            intent.putExtra("googleAuth", true)
+                            startActivity(intent)
+                        }
+                    }
+                    //uploadUser(auth.currentUser!!.uid)
                 } else {
                     d("GoogleSignIn", "signInWithCredential:failure", task.exception)
                     Utils.createDialog(this, "Error", "Google sign in failed")
@@ -86,9 +101,7 @@ class PreAuthActivity : AppCompatActivity() {
         userModel.userFullName = auth.currentUser!!.displayName!!
         FirebaseHandler.getDatabase().collection("users").document(uid).set(userModel).addOnSuccessListener {
             UserInfo.userInfo = userModel
-            val intent = Intent(this, DashboardActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+
         }
     }
 

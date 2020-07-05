@@ -1,9 +1,12 @@
 package com.c0d3in3.finalproject.network
 
 import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
+import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.network.model.UserModel
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.tasks.await
 
 class PostsRepository {
     private val mPostsCollection = FirebaseHandler.getDatabase().collection(POSTS_REF)
+    private val mUsersCollection = FirebaseHandler.getDatabase().collection(USERS_REF)
 
     fun getAllPosts(limit:Long = 10, lastPostId: String? = null) = flow<State<ArrayList<PostModel>>> {
 
@@ -49,6 +53,19 @@ class PostsRepository {
         // If exception is thrown, emit failed state along with message.
         emit(State.failed(it.message.toString()))
     }.flowOn(Dispatchers.IO)
+
+    fun checkUser(username: String) = flow<State<UserModel?>>{
+        emit(State.loading())
+
+        var userModel : UserModel? = null
+        mUsersCollection.get().addOnSuccessListener {
+            for(doc in it){
+                if(doc.get("username") == username)  userModel = doc.toObject()
+            }
+        }.await()
+
+        emit(State.success(userModel))
+    }
 
 //    suspend fun getAllPosts() : ArrayList<PostModel>{
 //        val arrayList = arrayListOf<PostModel>()

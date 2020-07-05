@@ -5,12 +5,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.c0d3in3.finalproject.BasePagerAdapter
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.network.PostsRepository
+import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoriesFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -42,6 +50,9 @@ class DashboardActivity : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.mipmap.ic_launcher)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
+        addPostButton.setOnClickListener {
+            addPosts()
+        }
 
         addViewPagerListener()
         addNavMenuListener()
@@ -70,6 +81,22 @@ class DashboardActivity : AppCompatActivity() {
 
             true
         }
+    }
+
+    private fun addPosts(){
+        val post = PostModel()
+        post.postId = "${(1..1000).random()}"
+        post.postAuthor = UserInfo.userInfo
+        CoroutineScope(Dispatchers.IO).launch{
+            PostsRepository().addPost(post).collect{ state->
+                when(state){
+                    is State.Success ->{
+
+                    }
+                }
+            }
+        }
+
     }
 
     private fun addViewPagerListener(){

@@ -1,10 +1,10 @@
 package com.c0d3in3.finalproject.ui.post.comment
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log.d
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -16,10 +16,10 @@ import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
 import com.c0d3in3.finalproject.network.model.CommentModel
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_comments.*
-import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_error_layout.dialogDescriptionTV
 import kotlinx.android.synthetic.main.dialog_error_layout.dialogTitleTV
 import kotlinx.android.synthetic.main.dialog_remove_layout.*
@@ -67,11 +67,15 @@ class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallb
     private fun addComment(){
         val comment = CommentModel(System.currentTimeMillis(), UserInfo.userInfo, commentEditText.text.toString(), arrayListOf(), arrayListOf())
         post.postComments!!.add(comment)
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(post.postId).update("postComments", post.postComments).addOnSuccessListener {
+        val postRef =  FirebaseHandler.getDatabase().collection(POSTS_REF).document(post.postId)
+        FirebaseHandler.getDatabase().runTransaction { transaction ->
+            transaction.update(postRef, "postComments", post.postComments)
             commentEditText.text.clear()
             adapter.notifyItemInserted(post.postComments!!.size-1)
             commentsRecyclerView.smoothScrollToPosition(adapter.itemCount-1)
-        }
+            null
+        }.addOnSuccessListener { d("AddComment", "Transaction success!") }
+            .addOnFailureListener { e -> d("AddComment", "Transaction failure.", e) }
     }
     override fun removeComment(position: Int) {
         val dialog = Dialog(this)
@@ -86,8 +90,8 @@ class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallb
         params.height = WindowManager.LayoutParams.WRAP_CONTENT
         dialog.window!!.attributes = params
 
-        dialog.dialogDescriptionTV.text = "Do you really want to delete comment: \n${post.postComments?.get(position)?.comment}"
-        dialog.dialogTitleTV.text = "Comment"
+        dialog.dialogDescriptionTV.text = "${getString(R.string.do_you_really_want_to_delete_comment)} \n${post.postComments?.get(position)?.comment}"
+        dialog.dialogTitleTV.text = getString(R.string.comment)
 
         dialog.noDialogButton.setOnClickListener{
             dialog.dismiss()

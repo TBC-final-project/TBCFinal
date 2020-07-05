@@ -34,22 +34,6 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
         }
     }
 
-    fun addPosts(post: PostModel){
-        viewModelScope.launch {
-            addPost(post)
-        }
-    }
-
-    private suspend fun addPost(post: PostModel){
-        repository.addPost(post).collect{state->
-            when(state){
-                is State.Success ->{
-                    posts.value?.add(post)
-                }
-            }
-        }
-    }
-
     private suspend fun loadPosts(lastId: String? = null) {
         repository.getAllPosts(10, lastId).collect { state ->
             when (state) {

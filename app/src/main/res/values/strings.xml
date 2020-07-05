@@ -56,4 +56,10 @@
     <string name="followers">followers</string>
     <string name="following">following</string>
     <string name="upload_photo">Upload Photo</string>
+    <string name="do_you_really_want_to_delete_comment">Do you really want to delete comment:</string>
+    <string name="comment">Comment</string>
+    <string name="username_is_empty">Username is empty</string>
+    <string name="choose_username">Choose username</string>
+    <string name="username">Username</string>
+    <string name="username_is_taken">Username is taken!</string>
 </resources>

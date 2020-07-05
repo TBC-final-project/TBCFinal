@@ -12,28 +12,44 @@ import com.c0d3in3.finalproject.network.model.UserModel
 import com.c0d3in3.finalproject.ui.auth.register.ChooseEmailFragment
 import com.c0d3in3.finalproject.ui.auth.register.ChooseNameFragment
 import com.c0d3in3.finalproject.ui.auth.register.ChoosePasswordFragment
+import com.c0d3in3.finalproject.ui.auth.register.ChooseUsernameFragment
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlin.properties.Delegates
 
 class RegisterActivity : FragmentActivity() {
 
     private val userModel = UserModel()
     private lateinit var password: String
     private lateinit var email: String
+    private var googleAuth by Delegates.notNull<Boolean>()
+    private val auth = FirebaseAuth.getInstance()
 
     lateinit var adapter: BasePagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        init()
+    }
+
+    private fun init(){
+        googleAuth = intent.getBooleanExtra("googleAuth", false)
         adapter = BasePagerAdapter(supportFragmentManager)
         adapter.addFragment(ChooseNameFragment())
-        adapter.addFragment(ChooseEmailFragment())
-        adapter.addFragment(ChoosePasswordFragment())
+        adapter.addFragment(ChooseUsernameFragment())
+        if(googleAuth) {
+            email = auth.currentUser?.email.toString()
+            userModel.userId = auth.currentUser?.uid.toString()
+            userModel.userRegisterDate = System.currentTimeMillis()
+        }
+        else{
+            adapter.addFragment(ChooseEmailFragment())
+            adapter.addFragment(ChoosePasswordFragment())
+        }
         registerViewPager.adapter = adapter
-
     }
 
     fun getEmail(email: String){
@@ -47,6 +63,11 @@ class RegisterActivity : FragmentActivity() {
     fun getPassword(password: String){
         this.password = password
         registerUser()
+    }
+
+    fun getUsername(username: String){
+        userModel.username = username
+        if(googleAuth) uploadUser(auth.currentUser!!.uid)
     }
 
     private fun uploadUser(uid: String){
@@ -63,6 +84,8 @@ class RegisterActivity : FragmentActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    userModel.userId = auth.currentUser?.uid.toString()
+                    userModel.userRegisterDate = System.currentTimeMillis()
                     uploadUser(auth.currentUser!!.uid)
                 } else {
                     // If sign in fails, display a message to the user.

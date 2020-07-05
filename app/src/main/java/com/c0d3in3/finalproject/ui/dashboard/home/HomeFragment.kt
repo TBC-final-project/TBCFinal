@@ -1,21 +1,26 @@
 package com.c0d3in3.finalproject.ui.dashboard.home
 
-import android.util.Log.d
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.c0d3in3.finalproject.BaseFragment
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback{
 
     private lateinit var homeViewModel: HomeViewModel
-    private var posts = listOf<PostModel>()
+    private var posts = arrayListOf<PostModel>()
+    private lateinit var adapter : PostsAdapter
     private var lastId = ""
 
     override fun init() {
         //(activity as DashboardActivity).setToolbarTitle(getString(R.string.news_feed))
+
+        adapter = PostsAdapter(posts,this )
+        rootView!!.postsRecyclerView.adapter = adapter
     }
 
     override fun setUpFragment() {
@@ -27,28 +32,25 @@ class HomeFragment : BaseFragment() {
         })
         homeViewModel.posts.observe(this, Observer { list ->
             posts = list
-            posts.forEach {
-                d("author", it.postAuthor)
-            }
+            adapter = PostsAdapter(posts,this )
+            rootView!!.postsRecyclerView.adapter = adapter
             if(list.isNotEmpty()) lastId = posts[posts.size-1].postId
         })
 
-        rootView!!.refresh.setOnClickListener {
-            homeViewModel.loadMorePosts(lastId)
-        }
-        rootView!!.addPost.setOnClickListener {
-            //addPosts()
-        }
-
+//        rootView!!.refresh.setOnClickListener {
+//            homeViewModel.loadMorePosts(lastId)
+//        }
 
     }
 
-//    private fun addPosts(){
-//        val post = PostModel()
-//        post.postId = "${(1..1000).random()}"
-//        post.postAuthor = "tedo ${(1..100).random()}"
-//        homeViewModel.addPosts(post)
-//    }
+
 
     override fun getLayout() = R.layout.fragment_home
+
+    override fun onLikeButtonClick() {
+
+    }
+
+    override fun onCommentButtonClick() {
+    }
 }
