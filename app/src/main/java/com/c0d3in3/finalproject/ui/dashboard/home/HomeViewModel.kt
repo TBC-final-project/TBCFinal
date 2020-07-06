@@ -24,17 +24,17 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
 
     private fun getAllPosts() {
         viewModelScope.launch {
-            loadPosts(null)
+            loadPostsVM(null)
         }
     }
 
-    fun loadMorePosts(lastId : String){
+    fun loadPosts(lastId : String?){
         viewModelScope.launch {
-            loadPosts(lastId)
+            loadPostsVM(lastId)
         }
     }
 
-    private suspend fun loadPosts(lastId: String? = null) {
+    private suspend fun loadPostsVM(lastId: String? = null) {
         repository.getAllPosts(10, lastId).collect { state ->
             when (state) {
                 is State.Loading -> {

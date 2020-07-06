@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#fff"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
+    android:layout_marginVertical="10dp"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/postHeaderLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
         android:paddingVertical="10dp"
+        android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -18,9 +21,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@id/titleTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/titleTextView"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/fullNameTextView"
@@ -49,11 +52,11 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/profileImageView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textSize="18sp"
+            android:paddingVertical="10dp"
             android:textColor="@android:color/black"
-            android:paddingVertical="10dp"/>
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/profileImageView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,65 +70,68 @@
         android:src="@drawable/post_image" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="#fff"
+        android:orientation="horizontal"
         android:paddingVertical="10dp">
 
-        <ImageView
-            android:id="@+id/likeButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_unfavorite"
-            app:layout_constraintEnd_toStartOf="@id/commentButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:gravity="center"
+            tools:ignore="UseCompoundDrawables">
 
-        <TextView
-            android:id="@+id/likeCountTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/likeButton"
-            app:layout_constraintStart_toEndOf="@id/likeButton"
-            app:layout_constraintTop_toTopOf="@id/likeButton" />
+            <ImageView
+                android:id="@+id/likeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/ic_unfavorite" />
 
-        <ImageView
-            android:id="@+id/commentButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="25dp"
+            <TextView
+                android:id="@+id/likeCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@mipmap/ic_comment"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/likeButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:gravity="center"
+            tools:ignore="UseCompoundDrawables">
 
-        <TextView
-            android:id="@+id/commentCountTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/commentButton"
-            app:layout_constraintStart_toEndOf="@id/commentButton"
-            app:layout_constraintTop_toTopOf="@id/commentButton" />
+            <ImageView
+                android:id="@+id/commentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/ic_comment" />
 
+            <TextView
+                android:id="@+id/commentCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
+        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
 </LinearLayout>

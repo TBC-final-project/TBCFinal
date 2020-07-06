@@ -87,6 +87,9 @@ class DashboardActivity : AppCompatActivity() {
         val post = PostModel()
         post.postId = "${(1..1000).random()}"
         post.postAuthor = UserInfo.userInfo
+        post.postTimestamp = System.currentTimeMillis()
+        post.postComments = arrayListOf()
+        post.postLikes = arrayListOf()
         CoroutineScope(Dispatchers.IO).launch{
             PostsRepository().addPost(post).collect{ state->
                 when(state){

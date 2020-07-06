@@ -1,28 +1,30 @@
 package com.c0d3in3.finalproject.ui.post.post_detailed
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
-import com.c0d3in3.finalproject.network.model.CommentModel
 import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.tools.Utils.checkLike
 import com.c0d3in3.finalproject.tools.Utils.getTimeDiff
 import com.c0d3in3.finalproject.tools.Utils.likePost
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
-import com.google.firebase.firestore.ktx.toObject
 import kotlinx.android.synthetic.main.activity_image_post_detailed.*
+import kotlinx.android.synthetic.main.activity_image_post_detailed.commentButton
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 class ImagePostDetailedActivity : AppCompatActivity() {
 
 
-    private lateinit var post : PostModel
+    private lateinit var post: PostModel
+    private var position by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,59 +32,69 @@ class ImagePostDetailedActivity : AppCompatActivity() {
         init()
     }
 
-    private fun init(){
+    private fun init() {
+        post = intent.extras!!.getParcelable("model")!!
+        position = intent.extras!!.get("position")!! as Int
+        updatePostUI()
         commentButton.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra("post", post)
-            startActivity(intent)
+            intent.putExtra("model", post)
+            intent.putExtra("position", position)
+            startActivityForResult(intent, Constants.OPEN_DETAILED_POST)
         }
 
-        favoriteButton.setOnClickListener {
+        likeButton.setOnClickListener {
             likePost()
         }
 
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document("0X2oV8kQYB3LcJx35mfJ").get().addOnSuccessListener {
-            post = it.toObject<PostModel>()!!
-            println("got post")
-            updatePostUI()
+
+    }
+
+    private fun likePost() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val likePos = post.postLikes?.let { checkLike(it) }
+            if (likePos != null) {
+                if (likePos >= 0) {
+                    post.postLikes!!.removeAt(likePos)
+                    likeButton.setImageResource(R.mipmap.ic_unfavorite)
+                } else {
+                    post.postLikes?.add(UserInfo.userInfo)
+                    likeButton.setImageResource(R.mipmap.ic_favorited)
+                }
+            }
+
+            likePost(post)
+            likesTextView.text = "${post.postLikes?.size ?: 0} likes"
         }
     }
 
-    private fun likePost(){
-        val likePos = post.postLikes?.let { checkLike(it) }
-        likePost(post)
-        if(likePos != -1)
-            favoriteButton.setImageResource(R.mipmap.ic_unfavorite)
-        else
-            favoriteButton.setImageResource(R.mipmap.ic_favorited)
-        likesTextView.text = "${post.postLikes!!.size} likes"
-//        val likePos = post.postLikes?.let { checkLike(it) }
-//        if(likePos != -1){
-//            if (likePos != null) {
-//                post.postLikes!!.removeAt(likePos)
-//            }
-//            favoriteButton.setImageResource(R.mipmap.ic_unfavorite)
-//        }
-//
-//        else{
-//            post.postLikes!!.add(UserInfo.userInfo)
-//            favoriteButton.setImageResource(R.mipmap.ic_favorited)
-//        }
-//        likesTextView.text = "${post.postLikes!!.size} likes"
-//        val postRef =  FirebaseHandler.getDatabase().collection(POSTS_REF).document(post.postId)
-//        FirebaseHandler.getDatabase().runTransaction { transaction ->
-//            transaction.update(postRef, "postLikes", post.postLikes)
-//            null
-//        }.addOnSuccessListener { Log.d("postLikes", "Transaction success!") }
-//            .addOnFailureListener { e -> Log.d("postLikes", "Transaction failure.", e) }
-    }
-
-    private fun updatePostUI(){
-        likesTextView.text = "${post.postLikes!!.size} likes"
-        commentsTextView.text = "${post.postComments!!.size} comments"
+    private fun updatePostUI() {
+        val checkLike = post.postLikes?.let { checkLike(it) }
+        if(checkLike != null && checkLike >= 0) likeButton.setImageResource(R.mipmap.ic_favorited)
+        else likeButton.setImageResource(R.mipmap.ic_unfavorite)
+        likesTextView.text = "${post.postLikes?.size ?: 0} likes"
+        commentsTextView.text = "${post.postComments?.size ?: 0} comments"
         timestampTextView.text = getTimeDiff(post.postTimestamp)
         descriptionTextView.text = post.postDescription
-        //imagePostToolbar.titleTV.text = "${post.postAuthor?.userFullName} post"
+        imagePostToolbar.titleTV.text = "${post.postAuthor?.userFullName}'s post"
+    }
+
+    override fun onBackPressed() {
+       val mIntent = Intent()
+        mIntent.putExtra("model", post)
+        mIntent.putExtra("position", position)
+        setResult(Activity.RESULT_OK, mIntent)
+        super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == Constants.OPEN_DETAILED_POST && resultCode == Activity.RESULT_OK){
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (model != null) {
+                post = model
+                commentsTextView.text = "${post.postComments?.size ?: 0} comments"
+            }
+        }
     }
 }

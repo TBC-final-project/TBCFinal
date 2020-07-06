@@ -5,6 +5,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.network.model.UserModel
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +26,9 @@ class PostsRepository {
 
         val snapshot : QuerySnapshot = if(lastPostId != null){
             println(lastPostId)
-            mPostsCollection.orderBy("postId").startAfter(lastPostId).limit(limit).get().await()
+            mPostsCollection.orderBy("postId").startAfter(lastPostId).limit(limit).orderBy("postTimestamp", Query.Direction.DESCENDING).get().await()
         } else{
-            mPostsCollection.limit(limit).orderBy("postId").get().await()
+            mPostsCollection.limit(limit).orderBy("postTimestamp", Query.Direction.DESCENDING).get().await()
         }
         val posts = snapshot.toObjects(PostModel::class.java) as ArrayList
 
