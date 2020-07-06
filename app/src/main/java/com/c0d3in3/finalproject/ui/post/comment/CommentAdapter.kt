@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.model.CommentModel
+import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import kotlinx.android.synthetic.main.comment_item_layout.view.*
 
@@ -32,6 +33,7 @@ class CommentAdapter(private val comments: ArrayList<CommentModel>, private val 
 
             itemView.fullNameTextView.text = model.commentAuthor?.userFullName
             itemView.commentTextView.text = model.comment
+            itemView.timeTextView.text = "${Utils.getTimeDiffMinimal(model.commentTimestamp)} ago"
 
             if(model.commentAuthor!!.userId == UserInfo.userInfo.userId) {
                 itemView.setOnLongClickListener {

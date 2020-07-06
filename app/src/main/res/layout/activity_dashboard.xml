@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/app_bar_layout"
-        android:id="@+id/toolbarLayout"/>
+        android:id="@+id/toolbarLayout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addPostButton"

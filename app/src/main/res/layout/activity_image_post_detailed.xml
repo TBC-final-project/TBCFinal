@@ -34,7 +34,7 @@
             android:paddingEnd="20dp">
 
             <ImageView
-                android:id="@+id/favoriteButton"
+                android:id="@+id/likeButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="25dp"
@@ -51,7 +51,7 @@
                 android:layout_marginTop="25dp"
                 android:background="@android:color/transparent"
                 android:src="@mipmap/ic_comment"
-                app:layout_constraintStart_toEndOf="@+id/favoriteButton"
+                app:layout_constraintStart_toEndOf="@+id/likeButton"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -60,9 +60,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favoriteButton" />
+                app:layout_constraintTop_toBottomOf="@id/likeButton" />
 
             <TextView
                 android:id="@+id/commentsTextView"
@@ -71,9 +71,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/likesTextView"
-                app:layout_constraintTop_toBottomOf="@id/favoriteButton" />
+                app:layout_constraintTop_toBottomOf="@id/likeButton" />
 
 
             <TextView
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/descriptionColor"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/descriptionTextView" />
 

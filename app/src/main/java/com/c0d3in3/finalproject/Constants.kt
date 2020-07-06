@@ -6,4 +6,6 @@ object Constants {
     const val POST_TYPE_VIDEO = 2
 
     const val RC_SIGN_IN = 9001
+
+    const val OPEN_DETAILED_POST = 8001
 }
