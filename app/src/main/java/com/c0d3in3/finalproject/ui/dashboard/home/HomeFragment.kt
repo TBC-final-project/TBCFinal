@@ -5,7 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.c0d3in3.finalproject.BaseFragment
+import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.model.PostModel
@@ -29,7 +29,6 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback {
     private var lastId = ""
 
     override fun init() {
-        //(activity as DashboardActivity).setToolbarTitle(getString(R.string.news_feed))
 
         adapter = PostsAdapter(this)
         rootView!!.postsRecyclerView.adapter = adapter
@@ -59,10 +58,6 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback {
             if (list.isNotEmpty()) lastId = posts[posts.size - 1].postId
         })
 
-//        rootView!!.refresh.setOnClickListener {
-//            homeViewModel.loadMorePosts(lastId)
-//        }
-
     }
 
 
@@ -78,7 +73,7 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback {
                 if (likePos >= 0)
                     posts[position].postLikes!!.removeAt(likePos)
                 else
-                    posts[position].postLikes?.add(UserInfo.userInfo)
+                    posts[position].postLikes?.add(UserInfo.userInfo.userId)
             }
             likePost(posts[position])
             adapter.notifyItemChanged(position)
