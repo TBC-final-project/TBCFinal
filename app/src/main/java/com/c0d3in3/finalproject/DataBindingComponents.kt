@@ -3,7 +3,9 @@ package com.c0d3in3.finalproject
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.tools.Utils
+import de.hdodenhof.circleimageview.CircleImageView
 
 object DataBindingComponents {
     @JvmStatic
@@ -20,6 +22,13 @@ object DataBindingComponents {
         val mText: String = if(textCount == 'l') "likes"
         else "comments"
         view.text = "${arrayList.size} $mText"
+    }
+
+    @JvmStatic
+    @BindingAdapter("setImage")
+    fun setImage(view: CircleImageView, url: String?){
+        //println("asdas $url")
+        if(url != null) Glide.with(view.context).load(url).into(view)
     }
 
 

@@ -10,4 +10,5 @@ data class CommentModel(
     var commentAuthor : String? = null,
     var comment : String = "",
     var commentLikes : ArrayList<String>? = null,
-    var replies : ArrayList<CommentModel>? = null) : Parcelable
+    var replies : ArrayList<CommentModel>? = null,
+    var commentAuthorModel: UserModel? = null) : Parcelable
