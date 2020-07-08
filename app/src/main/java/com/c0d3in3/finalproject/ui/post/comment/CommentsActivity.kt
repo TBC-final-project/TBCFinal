@@ -1,60 +1,58 @@
 package com.c0d3in3.finalproject.ui.post.comment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log.d
 import android.view.Window
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
 import com.c0d3in3.finalproject.network.model.CommentModel
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.dialog_error_layout.dialogDescriptionTV
 import kotlinx.android.synthetic.main.dialog_error_layout.dialogTitleTV
 import kotlinx.android.synthetic.main.dialog_remove_layout.*
 import kotlin.properties.Delegates
 
-class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallback {
+class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
     private lateinit var adapter: CommentAdapter
-    private var model : PostModel? = null
-    private lateinit var post: PostModel
+    private var model: PostModel? = null
+    private lateinit var post:PostModel
     private var position by Delegates.notNull<Int>()
+    private lateinit var commentViewModel: CommentViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_comments)
+    override fun getLayout() = R.layout.activity_comments
 
-        init()
+    override fun init() {
+
+        commentViewModel =
+            ViewModelProvider(this, CommentViewModelFactory()).get(CommentViewModel::class.java)
+
+        getModel()
+
+        setListeners()
+
+//        adapter = if (post.postComments != null)
+//            CommentAdapter(post.postComments!!, this)
+//        else
+//            CommentAdapter(arrayListOf(), this)
+//        commentsRecyclerView.layoutManager = LinearLayoutManager(this)
+//        commentsRecyclerView.adapter = adapter
     }
 
-    private fun init() {
-
-        model = intent.getParcelableExtra("model")
-        position = intent.getIntExtra("position", -1)
-
-        if(model == null || position == -1) finish()
-        else post = model as PostModel
-
-        if (post.postComments == null) post.postComments = arrayListOf()
-
-        addCommentButton.setOnClickListener {
-            if (commentEditText.text.isNotBlank()) addComment()
-        }
-
+    private fun setListeners() {
         commentEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -78,14 +76,31 @@ class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallb
             }
 
         })
-
-        adapter = if (post.postComments != null)
-            CommentAdapter(post.postComments!!, this)
-        else
-            CommentAdapter(arrayListOf(), this)
-        commentsRecyclerView.layoutManager = LinearLayoutManager(this)
-        commentsRecyclerView.adapter = adapter
     }
+
+    private fun getModel() {
+        model = intent.getParcelableExtra("model")
+        position = intent.getIntExtra("position", -1)
+
+
+
+        if (model == null || position == -1) finish()
+        else
+        {
+            post = model as PostModel
+            commentViewModel.getPostModel(model!!)
+        }
+
+
+        if (post.postComments == null) post.postComments = arrayListOf()
+
+        initToolbar("${post.postAuthorModel?.userFullName}'s post")
+
+        if (UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext)
+            .load(UserInfo.userInfo.userProfileImage).into(profileImageView)
+        else profileImageView.setCircleBackgroundColorResource(android.R.color.black)
+    }
+    //override fun getToolbarTitle() = "${post.postAuthor?.userFullName}'s post"
 
     override fun onBackPressed() {
         val mIntent = Intent()
@@ -94,28 +109,9 @@ class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallb
         setResult(Activity.RESULT_OK, mIntent)
         super.onBackPressed()
     }
-    private fun addComment() {
-        val comment = CommentModel(
-            System.currentTimeMillis(),
-            UserInfo.userInfo,
-            commentEditText.text.toString(),
-            arrayListOf(),
-            arrayListOf()
-        )
-        post.postComments!!.add(comment)
-        val postRef = FirebaseHandler.getDatabase().collection(POSTS_REF).document(post.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            transaction.update(postRef, "postComments", post.postComments)
-            null
-        }.addOnSuccessListener {
-            d("AddComment", "Transaction success!")
-            commentEditText.text.clear()
-            adapter.notifyItemInserted(post.postComments!!.size - 1)
-            commentsRecyclerView.smoothScrollToPosition(adapter.itemCount - 1)
-        }
-            .addOnFailureListener { e -> d("AddComment", "Transaction failure.", e) }
-    }
 
+
+    @SuppressLint("SetTextI18n")
     override fun removeComment(position: Int) {
         val dialog = Dialog(this)
 
@@ -143,11 +139,22 @@ class CommentsActivity : AppCompatActivity(), CommentAdapter.CommentAdapterCallb
             post.postComments!!.removeAt(position)
             FirebaseHandler.getDatabase().collection(POSTS_REF).document(post.postId)
                 .update("postComments", post.postComments).addOnSuccessListener {
-                adapter.notifyItemRemoved(position)
-            }
+                    adapter.notifyItemRemoved(position)
+                }
             dialog.dismiss()
         }
 
         dialog.show()
+    }
+
+    fun addComment() {
+
+        val comment = CommentModel(
+            System.currentTimeMillis(), UserInfo.userInfo.userId, commentEditText.text.toString(),
+            arrayListOf(), arrayListOf()
+        )
+        commentViewModel.addComment(comment)
+        post.postComments!!.add(comment)
+        commentEditText.text.clear()
     }
 }

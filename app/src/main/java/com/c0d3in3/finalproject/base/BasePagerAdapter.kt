@@ -1,4 +1,4 @@
-package com.c0d3in3.finalproject
+package com.c0d3in3.finalproject.base
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

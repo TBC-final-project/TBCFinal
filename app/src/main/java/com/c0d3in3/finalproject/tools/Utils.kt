@@ -1,24 +1,16 @@
 package com.c0d3in3.finalproject.tools
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Button
-import androidx.core.app.ActivityCompat.startActivityForResult
-import com.c0d3in3.finalproject.BaseFragment
-import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.network.model.UserModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
-import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 
 object Utils {
@@ -59,7 +51,7 @@ object Utils {
             diff in 3600001 until 86400000 -> "${diff / 3600000} hours ago"
             diff in 86400001 until 2678400000 -> "${diff / 86400000} days ago"
             diff in 2678400001 until 32140800000 -> "${diff / 2678400000} months ago"
-            else -> "more than years ago"
+            else -> "more than year ago"
         }
     }
 
@@ -76,11 +68,11 @@ object Utils {
         }
     }
 
-    fun checkLike(postArray: ArrayList<UserModel>) : Int{
+    fun checkLike(postArray: ArrayList<String>) : Int{
         var likePos = -1
         if(postArray.isNotEmpty()){
             for(idx in 0 until postArray.size){
-                if(postArray[idx].userId == UserInfo.userInfo.userId){
+                if(postArray[idx] == UserInfo.userInfo.userId){
                     likePos = idx
                     break
                 }
