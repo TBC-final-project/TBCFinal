@@ -5,8 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class UserModel(
-    var userFollowers: ArrayList<String>? = null,
-    var userFollowing : ArrayList<String>?  = null,
+    var userFollowers: ArrayList<UserModel>? = null,
+    var userFollowing : ArrayList<UserModel>?  = null,
     var userFullName: String = "",
     var userId : String = "",
     var userProfileCover : String = "",

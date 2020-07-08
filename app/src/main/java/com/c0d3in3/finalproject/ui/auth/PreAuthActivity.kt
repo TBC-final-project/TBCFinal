@@ -1,8 +1,9 @@
 package com.c0d3in3.finalproject.ui.auth
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.util.Log.d
-import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.Constants.RC_SIGN_IN
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.extensions.setBold
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_pre_auth.*
 
-class PreAuthActivity : BaseActivity() {
+class PreAuthActivity : AppCompatActivity() {
 
     private lateinit var gso : GoogleSignInOptions
 
@@ -31,9 +32,11 @@ class PreAuthActivity : BaseActivity() {
 
     private lateinit var googleSignInClient : GoogleSignInClient
 
-    override fun getLayout() = R.layout.activity_pre_auth
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_pre_auth)
 
-    override fun init(){
+        init()
 
         signInGoogleButton.setOnClickListener {
             gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -49,7 +52,9 @@ class PreAuthActivity : BaseActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
 
+    private fun init(){
         auth = Firebase.auth
 
         welcomeTV.setBold(" ${getString(R.string.app_name)}")
@@ -62,7 +67,6 @@ class PreAuthActivity : BaseActivity() {
             startActivity(intent)
         }
     }
-
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -89,6 +93,16 @@ class PreAuthActivity : BaseActivity() {
                 }
 
             }
+    }
+
+
+    private fun uploadUser(uid: String){
+        val userModel = UserModel()
+        userModel.userFullName = auth.currentUser!!.displayName!!
+        FirebaseHandler.getDatabase().collection("users").document(uid).set(userModel).addOnSuccessListener {
+            UserInfo.userInfo = userModel
+
+        }
     }
 
 

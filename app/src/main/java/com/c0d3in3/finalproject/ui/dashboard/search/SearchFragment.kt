@@ -3,7 +3,7 @@ package com.c0d3in3.finalproject.ui.dashboard.search
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.c0d3in3.finalproject.base.BaseFragment
+import com.c0d3in3.finalproject.BaseFragment
 
 import com.c0d3in3.finalproject.R
 import kotlinx.android.synthetic.main.fragment_search.view.*

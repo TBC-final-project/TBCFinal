@@ -28,10 +28,6 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
         }
     }
 
-    private fun getPostAuthor(){
-
-    }
-
     fun loadPosts(lastId : String?){
         viewModelScope.launch {
             loadPostsVM(lastId)
@@ -48,7 +44,6 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
                 }
 
                 is State.Success -> {
-                    getPostAuthor()
                     posts.value = state.data
                 }
 
