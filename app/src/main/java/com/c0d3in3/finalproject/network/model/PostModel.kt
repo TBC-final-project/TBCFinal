@@ -5,13 +5,24 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PostModel(
-    var postAuthor: String? = null,
+    var postAuthor: UserModel? = null,
     var postComments: ArrayList<CommentModel>? = null,
-    var postLikes: ArrayList<String>? = null,
+    var postLikes: ArrayList<UserModel>? = null,
     val postDescription: String = "",
     var postId: String = "",
     val postLocation: String = "",
     var postTimestamp: Long = 0,
     val postTitle: String = "",
-    val postType: Long = 0,
-    var postAuthorModel: UserModel? = null) :Parcelable
+    val postType: Long = 0) :Parcelable
+
+/*
+    var postAuthor = ""
+    var postComments : ArrayList<CommentModel> = arrayListOf()
+    var postDescription = ""
+    var postId = ""
+    //var postLikes : ArrayList<UserModel> = arrayListOf()
+    var postLocation = ""
+    var postTimestamp : Long = 0
+    var postTitle = ""
+    var postType = 0
+ */

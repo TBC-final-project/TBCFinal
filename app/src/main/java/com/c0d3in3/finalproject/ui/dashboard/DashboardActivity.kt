@@ -1,8 +1,9 @@
 package com.c0d3in3.finalproject.ui.dashboard
 
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.c0d3in3.finalproject.base.BaseActivity
-import com.c0d3in3.finalproject.base.BasePagerAdapter
+import com.c0d3in3.finalproject.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
@@ -13,24 +14,41 @@ import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoriesFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class DashboardActivity : BaseActivity() {
+class DashboardActivity : AppCompatActivity() {
 
     private lateinit var adapter: BasePagerAdapter
 
-    private var currentTitle = "news feed"
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_dashboard)
 
-    override fun getLayout() = R.layout.activity_dashboard
+        adapter =
+            BasePagerAdapter(supportFragmentManager)
 
-    override fun init() {
+        adapter.addFragment(HomeFragment())
+        adapter.addFragment(StoriesFragment())
+        adapter.addFragment(NotificationsFragment())
+        adapter.addFragment(SearchFragment())
 
-        setViewPager()
+        init()
+        dashboardPager.adapter = adapter
 
-        initMainToolbar(currentTitle)
+
+    }
+
+    private fun init(){
+        setToolbarTitle(getString(R.string.news_feed))
+
+        setSupportActionBar(toolbarLayout.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(R.mipmap.ic_launcher)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         addPostButton.setOnClickListener {
             addPosts()
@@ -40,39 +58,51 @@ class DashboardActivity : BaseActivity() {
         addNavMenuListener()
     }
 
-
-    private fun addNavMenuListener() {
+    private fun addNavMenuListener(){
         nav_view.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.navHome ->
+            when(it.itemId){
+                R.id.navHome -> {
                     dashboardPager.setCurrentItem(0, true)
-                R.id.navStories ->
+                    setToolbarTitle(getString(R.string.news_feed))
+                }
+                R.id.navStories -> {
                     dashboardPager.setCurrentItem(1, true)
-                R.id.navNotifications ->
+                    setToolbarTitle(getString(R.string.stories))
+                }
+                R.id.navNotifications -> {
                     dashboardPager.setCurrentItem(2, true)
-                R.id.navSearch ->
+                    setToolbarTitle(getString(R.string.notifications))
+                }
+                R.id.navSearch -> {
                     dashboardPager.setCurrentItem(3, true)
+                    setToolbarTitle(getString(R.string.search))
+                }
             }
-
-            setToolbarTitle(currentTitle)
 
             true
         }
     }
 
-    private fun addPosts() {
+    private fun addPosts(){
         val post = PostModel()
-        post.postAuthor = UserInfo.userInfo.userId
+        post.postId = "${(1..1000).random()}"
+        post.postAuthor = UserInfo.userInfo
         post.postTimestamp = System.currentTimeMillis()
         post.postComments = arrayListOf()
         post.postLikes = arrayListOf()
-        CoroutineScope(Dispatchers.IO).launch {
-            PostsRepository().addPost(post).collect {
+        CoroutineScope(Dispatchers.IO).launch{
+            PostsRepository().addPost(post).collect{ state->
+                when(state){
+                    is State.Success ->{
+
+                    }
+                }
             }
         }
+
     }
 
-    private fun addViewPagerListener() {
+    private fun addViewPagerListener(){
         dashboardPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -93,17 +123,7 @@ class DashboardActivity : BaseActivity() {
         })
     }
 
-
-    private fun setViewPager() {
-        adapter =
-            BasePagerAdapter(supportFragmentManager)
-
-        adapter.addFragment(HomeFragment())
-        adapter.addFragment(StoriesFragment())
-        adapter.addFragment(NotificationsFragment())
-        adapter.addFragment(SearchFragment())
-
-        dashboardPager.offscreenPageLimit = 4
-        dashboardPager.adapter = adapter
+    private fun setToolbarTitle(title: String){
+        toolbarLayout.titleTV.text = title
     }
 }

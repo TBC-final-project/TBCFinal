@@ -1,19 +1,16 @@
 package com.c0d3in3.finalproject.ui.post
 
+import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.network.PostsRepository
-import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.tools.Utils
 import kotlinx.android.synthetic.main.post_image_item_layout.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,7 +18,6 @@ class PostsAdapter(private val callback: CustomPostCallback) :
     RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
 
     private var posts = arrayListOf<PostModel>()
-    private val postsRepository = PostsRepository()
 
     interface CustomPostCallback {
         fun onLikeButtonClick(position: Int)
@@ -54,36 +50,21 @@ class PostsAdapter(private val callback: CustomPostCallback) :
         fun onBind() {
             model = posts[adapterPosition]
 
-            CoroutineScope(Dispatchers.IO).launch {
-                model.postAuthor?.let {
-                    postsRepository.getUser(it).collect { state ->
-                        when (state) {
-
-                            is State.Success -> {
-                                model.postAuthorModel = state.data!!
-                                withContext(Dispatchers.Main){
-                                    itemView.fullNameTextView.text = model.postAuthorModel!!.userFullName
-
-                                    if (model.postAuthorModel!!.userProfileImage.isNotEmpty()) Glide.with(itemView)
-                                        .load(model.postAuthorModel!!.userProfileImage).into(itemView.profileImageView)
-                                    else itemView.profileImageView.setCircleBackgroundColorResource(android.R.color.black)
-                                }
-                            }
-                        }
-                    }
+            CoroutineScope(Dispatchers.Main).launch {
+                val likePos = withContext(Dispatchers.Default) {
+                    posts[adapterPosition].postLikes?.let { Utils.checkLike(it) }
                 }
-            }
-            val likePos =
-                posts[adapterPosition].postLikes?.let { Utils.checkLike(it) }
-            if (likePos != null) {
-                if (likePos >= 0)
-                    itemView.likeButton.setImageResource(R.mipmap.ic_favorited)
-                else
-                    itemView.likeButton.setImageResource(R.mipmap.ic_unfavorite)
+                if (likePos != null) {
+                    if (likePos >= 0)
+                        itemView.likeButton.setImageResource(R.mipmap.ic_favorited)
+                    else
+                        itemView.likeButton.setImageResource(R.mipmap.ic_unfavorite)
+                }
             }
 
             itemView.timeTextView.text = Utils.getTimeDiffMinimal(model.postTimestamp)
             itemView.titleTextView.text = model.postTitle
+            itemView.fullNameTextView.text = model.postAuthor?.userFullName
 
             itemView.commentCountTextView.text = "${model.postComments?.size ?: 0}"
             itemView.likeCountTextView.text = "${model.postLikes?.size ?: 0}"

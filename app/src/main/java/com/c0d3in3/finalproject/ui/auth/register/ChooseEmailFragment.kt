@@ -1,6 +1,6 @@
 package com.c0d3in3.finalproject.ui.auth.register
 
-import com.c0d3in3.finalproject.base.BaseFragment
+import com.c0d3in3.finalproject.BaseFragment
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.RegisterActivity

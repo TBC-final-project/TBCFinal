@@ -1,6 +1,13 @@
 package com.c0d3in3.finalproject.ui.auth.register
 
-import com.c0d3in3.finalproject.base.BaseFragment
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.BaseFragment
 
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.PostsRepository
@@ -8,6 +15,7 @@ import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.RegisterActivity
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.choose_email_layout.view.*
 import kotlinx.android.synthetic.main.choose_email_layout.view.btnBack
 import kotlinx.android.synthetic.main.choose_email_layout.view.btnNext
 import kotlinx.android.synthetic.main.fragment_choose_username.view.*

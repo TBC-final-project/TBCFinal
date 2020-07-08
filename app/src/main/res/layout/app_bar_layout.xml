@@ -7,18 +7,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <FrameLayout
-        android:id="@+id/toolbarFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/messengerImageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical|start"
-            android:layout_marginStart="15dp"
-            android:visibility="gone"
-            android:src="@mipmap/ic_launcher_round"/>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -35,11 +25,13 @@
             android:textStyle="bold" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profileImageButton"
+            android:id="@+id/appbarButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="15dp"/>
+            android:layout_marginEnd="15dp"
+            android:background="@android:color/transparent"
+            android:src="@mipmap/ic_profile" />
     </FrameLayout>
 
 

@@ -2,42 +2,40 @@ package com.c0d3in3.finalproject.ui.post.post_detailed
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
-import androidx.databinding.DataBindingUtil
-import com.c0d3in3.finalproject.base.BaseActivity
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.tools.Utils.checkLike
+import com.c0d3in3.finalproject.tools.Utils.getTimeDiff
 import com.c0d3in3.finalproject.tools.Utils.likePost
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import kotlinx.android.synthetic.main.activity_image_post_detailed.*
+import kotlinx.android.synthetic.main.activity_image_post_detailed.commentButton
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-
-class ImagePostDetailedActivity : BaseActivity() {
+class ImagePostDetailedActivity : AppCompatActivity() {
 
 
     private lateinit var post: PostModel
     private var position by Delegates.notNull<Int>()
 
-    override fun getLayout() = R.layout.activity_image_post_detailed
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_image_post_detailed)
+        init()
+    }
 
-    override fun init() {
+    private fun init() {
         post = intent.extras!!.getParcelable("model")!!
         position = intent.extras!!.get("position")!! as Int
-
-        val binding : ActivityImagePostDetailedBinding = DataBindingUtil.setContentView(this, getLayout())
-        binding.imagePostModel = post
-
-        initToolbar("${post.postAuthorModel?.userFullName}'s post")
-
+        updatePostUI()
         commentButton.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
             intent.putExtra("model", post)
@@ -49,16 +47,8 @@ class ImagePostDetailedActivity : BaseActivity() {
             likePost()
         }
 
-        postImageView.setOnClickListener {
-            hideBottomView()
-        }
-    }
 
-    private fun hideBottomView() {
-        if(bottomView.visibility == View.VISIBLE) bottomView.visibility = View.GONE
-        else bottomView.visibility = View.VISIBLE
     }
-    //override fun getToolbarTitle() = "${post.postAuthor?.userFullName}'s post"
 
     private fun likePost() {
         CoroutineScope(Dispatchers.Main).launch {
@@ -68,7 +58,7 @@ class ImagePostDetailedActivity : BaseActivity() {
                     post.postLikes!!.removeAt(likePos)
                     likeButton.setImageResource(R.mipmap.ic_unfavorite)
                 } else {
-                    post.postLikes?.add(UserInfo.userInfo.userId)
+                    post.postLikes?.add(UserInfo.userInfo)
                     likeButton.setImageResource(R.mipmap.ic_favorited)
                 }
             }
@@ -76,6 +66,17 @@ class ImagePostDetailedActivity : BaseActivity() {
             likePost(post)
             likesTextView.text = "${post.postLikes?.size ?: 0} likes"
         }
+    }
+
+    private fun updatePostUI() {
+        val checkLike = post.postLikes?.let { checkLike(it) }
+        if(checkLike != null && checkLike >= 0) likeButton.setImageResource(R.mipmap.ic_favorited)
+        else likeButton.setImageResource(R.mipmap.ic_unfavorite)
+        likesTextView.text = "${post.postLikes?.size ?: 0} likes"
+        commentsTextView.text = "${post.postComments?.size ?: 0} comments"
+        timestampTextView.text = getTimeDiff(post.postTimestamp)
+        descriptionTextView.text = post.postDescription
+        imagePostToolbar.titleTV.text = "${post.postAuthor?.userFullName}'s post"
     }
 
     override fun onBackPressed() {
