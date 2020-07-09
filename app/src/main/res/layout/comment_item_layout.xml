@@ -4,9 +4,6 @@
 
     <data>
         <variable
-            name="utils"
-            type="com.c0d3in3.finalproject.tools.Utils" />
-        <variable
             name="commentModel"
             type="com.c0d3in3.finalproject.network.model.CommentModel" />
     </data>
@@ -43,8 +40,8 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textStyle="normal"
-            android:textSize="14sp"
-            android:text="@{utils.getTimeDiffMinimal(commentModel.commentTimestamp)}"
+            android:textSize="12sp"
+            getTimeDiffMinimal="@{commentModel.commentTimestamp}"
             app:layout_constraintStart_toEndOf="@id/fullNameTextView"
             app:layout_constraintTop_toTopOf="@id/fullNameTextView"
             app:layout_constraintBottom_toBottomOf="@id/fullNameTextView"

@@ -12,9 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.network.model.CommentModel
 import com.c0d3in3.finalproject.network.model.PostModel
 import com.c0d3in3.finalproject.tools.DialogCallback
@@ -42,41 +42,20 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
         setListeners()
 
-        commentViewModel.getComments().observe(this, Observer {
-            if (adapter == null) {
-                adapter = CommentAdapter(this)
-                commentsRecyclerView.layoutManager = LinearLayoutManager(this)
-                commentsRecyclerView.adapter = adapter
-            }
+        if (adapter == null) {
+            adapter = CommentAdapter(this)
+            commentsRecyclerView.adapter = adapter
+            post.postComments?.let { adapter!!.setList(it) }
+        }
 
+        commentViewModel.getComments().observe(this, Observer {
             adapter?.setList(it)
+            post.postComments = it
         })
     }
 
     private fun setListeners() {
-        commentEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) addCommentButton.setTextColor(
-                    ContextCompat.getColor(
-                        this@CommentsActivity,
-                        R.color.colorBlue
-                    )
-                )
-                else addCommentButton.setTextColor(
-                    ContextCompat.getColor(
-                        this@CommentsActivity,
-                        R.color.colorLightBlue
-                    )
-                )
-            }
-
-        })
+        commentEditText.setListenerColor(addCommentButton, R.color.colorLightBlue, R.color.colorBlue)
     }
 
     private fun getModel() {
@@ -98,9 +77,8 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
         if (UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext)
             .load(UserInfo.userInfo.userProfileImage).into(profileImageView)
-        else profileImageView.setCircleBackgroundColorResource(android.R.color.black)
+        else profileImageView.setImageResource(R.mipmap.img_profile)
     }
-    //override fun getToolbarTitle() = "${post.postAuthor?.userFullName}'s post"
 
     override fun onBackPressed() {
         val mIntent = Intent()
@@ -133,8 +111,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
     }
 
     fun addComment(v: View) {
-
-        println("shemovidass")
+        if(commentEditText.text.isBlank()) return
         val comment = CommentModel(
             System.currentTimeMillis(), UserInfo.userInfo.userId, commentEditText.text.toString(),
             arrayListOf(), arrayListOf()

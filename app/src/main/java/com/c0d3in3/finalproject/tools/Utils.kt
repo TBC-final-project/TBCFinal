@@ -44,44 +44,19 @@ object Utils {
         dialog.show()
     }
 
-    fun getTimeDiff(timestamp : Long): String {
-        val currentStamp = System.currentTimeMillis()
-        val diff = currentStamp - timestamp
-        return when {
-            diff < 60000 -> "${diff / 1000} second ago"
-            diff in 60001 until 3600000 -> "${diff / 60000} minutes ago"
-            diff in 3600001 until 86400000 -> "${diff / 3600000} hours ago"
-            diff in 86400001 until 2678400000 -> "${diff / 86400000} days ago"
-            diff in 2678400001 until 32140800000 -> "${diff / 2678400000} months ago"
-            else -> "more than year ago"
-        }
-    }
-
-    fun getTimeDiffMinimal(timestamp : Long): String {
-        val currentStamp = System.currentTimeMillis()
-        val diff = currentStamp - timestamp
-        return when {
-            diff < 60000 -> "${diff / 1000}s"
-            diff in 60001 until 3600000 -> "${diff / 60000}m"
-            diff in 3600001 until 86400000 -> "${diff / 3600000}h"
-            diff in 86400001 until 2678400000 -> "${diff / 86400000}d"
-            diff in 2678400001 until 32140800000 -> "${diff / 2678400000}m"
-            else -> "1y"
-        }
-    }
-
-    fun checkLike(postArray: ArrayList<String>) : Int{
-        var likePos = -1
-        if(postArray.isNotEmpty()){
-            for(idx in 0 until postArray.size){
-                if(postArray[idx] == UserInfo.userInfo.userId){
-                    likePos = idx
-                    break
-                }
-            }
-        }
-        return likePos
-    }
+//
+//    fun checkLike(postArray: ArrayList<String>) : Int{
+//        var likePos = -1
+//        if(postArray.isNotEmpty()){
+//            for(idx in 0 until postArray.size){
+//                if(postArray[idx] == UserInfo.userInfo.userId){
+//                    likePos = idx
+//                    break
+//                }
+//            }
+//        }
+//        return likePos
+//    }
 
     fun likePost(post: PostModel){
         val postRef =  FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF).document(post.postId)

@@ -9,7 +9,6 @@ import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.tools.Utils.checkLike
 import com.c0d3in3.finalproject.tools.Utils.likePost
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
@@ -64,20 +63,14 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback {
     override fun getLayout() = R.layout.fragment_home
 
     override fun onLikeButtonClick(position: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-
-            val likePos = withContext(Dispatchers.Default) {
-                posts[position].postLikes?.let { checkLike(it) }
-            }
-            if (likePos != null) {
-                if (likePos >= 0)
-                    posts[position].postLikes!!.removeAt(likePos)
-                else
-                    posts[position].postLikes?.add(UserInfo.userInfo.userId)
-            }
-            likePost(posts[position])
-            adapter.notifyItemChanged(position)
+        if (posts[position].postLikes?.contains(UserInfo.userInfo.userId)!!){
+            val index = posts[position].postLikes?.indexOf(UserInfo.userInfo.userId)
+            posts[position].postLikes!!.removeAt(index!!)
         }
+        else
+            posts[position].postLikes?.add(UserInfo.userInfo.userId)
+        likePost(posts[position])
+        adapter.notifyItemChanged(position)
     }
     private fun startPostActionActivity(act : Activity, model: PostModel, position: Int){
         val intent = Intent(activity, act::class.java)

@@ -1,21 +1,13 @@
 package com.c0d3in3.finalproject.ui.post.comment
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.databinding.CommentItemLayoutBinding
-import com.c0d3in3.finalproject.network.State
-import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.network.model.CommentModel
-import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.UserInfo
-import kotlinx.android.synthetic.main.comment_item_layout.view.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 
 class CommentAdapter(private val callback: CommentAdapterCallback) : RecyclerView.Adapter<CommentAdapter.ViewHolder>(){
 

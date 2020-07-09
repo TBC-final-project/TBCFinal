@@ -4,12 +4,6 @@
     <data>
 
         <variable
-            name="utils"
-            type="com.c0d3in3.finalproject.tools.Utils" />
-
-        <import type="com.c0d3in3.finalproject.DataBindingComponents" />
-
-        <variable
             name="imagePostModel"
             type="com.c0d3in3.finalproject.network.model.PostModel" />
     </data>
@@ -21,6 +15,7 @@
         android:orientation="vertical"
         tools:context=".ui.post.post_detailed.ImagePostDetailedActivity">
 
+
         <include layout="@layout/app_bar_layout" />
 
 
@@ -30,12 +25,11 @@
 
 
             <ImageView
-                android:onClick="hideBottomView"
                 android:id="@+id/postImageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/post_image" />
+                setImage="@{imagePostModel.postImage}" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,8 +71,7 @@
                     android:layout_marginTop="10dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    textCount="@{'l'}"
-                    arrayList="@{imagePostModel.postLikes}"
+                    android:text="@{String.valueOf(imagePostModel.postLikes.size) + ` likes`}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/likeButton" />
 
@@ -90,8 +83,7 @@
                     android:layout_marginTop="10dp"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    textCount="@{'c'}"
-                    arrayList="@{imagePostModel.postComments}"
+                    android:text="@{String.valueOf(imagePostModel.postComments.size) + ` comments`}"
                     app:layout_constraintStart_toEndOf="@id/likesTextView"
                     app:layout_constraintTop_toBottomOf="@id/likeButton"
                     />
@@ -105,7 +97,6 @@
                     android:text="@{imagePostModel.postDescription}"
                     android:textColor="@color/descriptionColor"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/likesTextView" />
 
@@ -114,9 +105,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@{utils.getTimeDiff(imagePostModel.postTimestamp)}"
+                    getTimeDiff="@{imagePostModel.postTimestamp}"
                     android:textColor="@color/descriptionColor"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/descriptionTextView" />
 
