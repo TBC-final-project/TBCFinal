@@ -20,8 +20,7 @@ class PostViewModel: ViewModel() {
 
     fun likePost(){
         if (post.value?.postLikes?.contains(UserInfo.userInfo.userId)!!) {
-            val index = post.value?.postLikes!!.indexOf(UserInfo.userInfo.userId)
-            post.value?.postLikes!!.removeAt(index)
+            post.value?.postLikes!!.remove(UserInfo.userInfo.userId)
         } else
             post.value!!.postLikes?.add(UserInfo.userInfo.userId)
         post.value?.let { Utils.likePost(it) }

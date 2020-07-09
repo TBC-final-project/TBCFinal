@@ -5,6 +5,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
@@ -14,6 +16,7 @@ import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,47 +32,65 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback {
 
     override fun init() {
 
-        adapter = PostsAdapter(this)
-        rootView!!.postsRecyclerView.adapter = adapter
-
-        rootView!!.homeSwipeLayout.setOnRefreshListener {
-            if (rootView!!.homeSwipeLayout.isRefreshing) {
-                posts.clear()
-                adapter.setPostsList(posts)
-                homeViewModel.loadPosts(null)
-            }
-        }
+//        adapter = PostsAdapter(this)
+//        rootView!!.postsRecyclerView.adapter = adapter
+//
+//        rootView!!.homeSwipeLayout.setOnRefreshListener {
+//            if (rootView!!.homeSwipeLayout.isRefreshing) {
+//                posts.clear()
+//                adapter.setPostsList(posts)
+//                homeViewModel.loadPosts(null)
+//            }
+//        }
     }
 
+
+//    private val loadMoreListener = object :
+//        PostsAdapter.OnLoadMoreListener {
+//        override fun onLoadMore() {
+//            if (posts.size != 0) {
+//                if (!posts[posts.size - 1].isLast) {
+//                    rootView!!.postsRecyclerView.post {
+//                        val postModel = PostModel()
+//                        postModel.isLast = true
+//                        posts.add(postModel)
+//                        adapter.notifyItemInserted(posts.size - 1)
+//                        //loadNews(news[news.size - 1].id.toString())
+//                    }
+//                }
+//            }
+//        }
+//    }
     override fun setUpFragment() {
 
+        adapter = PostsAdapter(rootView!!.postsRecyclerView, this)
+        //adapter.setOnLoadMoreListener(loadMoreListener)
+        rootView!!.postsRecyclerView.adapter = adapter
 
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory()).get(HomeViewModel::class.java)
-        homeViewModel.posts.observe(viewLifecycleOwner, Observer {
-            if (rootView!!.homeSwipeLayout.isRefreshing) rootView!!.homeSwipeLayout.isRefreshing =
-                false
-            posts = it
-        })
         homeViewModel.posts.observe(this, Observer { list ->
+            if (rootView!!.homeSwipeLayout.isRefreshing) rootView!!.homeSwipeLayout.isRefreshing = false
             posts = list
             adapter.setPostsList(posts)
             if (list.isNotEmpty()) lastId = posts[posts.size - 1].postId
         })
 
+        rootView!!.homeSwipeLayout.setOnRefreshListener {
+            if (rootView!!.homeSwipeLayout.isRefreshing) {
+                posts.clear()
+                adapter.setPostsList(posts)
+                adapter.notifyDataSetChanged()
+                homeViewModel.loadPosts(null)
+            }
+        }
     }
 
 
     override fun getLayout() = R.layout.fragment_home
 
     override fun onLikeButtonClick(position: Int) {
-        if (posts[position].postLikes?.contains(UserInfo.userInfo.userId)!!){
-            val index = posts[position].postLikes?.indexOf(UserInfo.userInfo.userId)
-            posts[position].postLikes!!.removeAt(index!!)
-        }
-        else
-            posts[position].postLikes?.add(UserInfo.userInfo.userId)
-        likePost(posts[position])
+        homeViewModel.likePost(position)
         adapter.notifyItemChanged(position)
     }
     private fun startPostActionActivity(act : Activity, model: PostModel, position: Int){

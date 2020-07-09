@@ -29,25 +29,6 @@ class CommentViewModel(private val repository: UsersRepository) : ViewModel() {
     fun setPostModel(postModel: PostModel) {
         post = postModel
         //commentsList.value = post.postComments
-        getUsers()
-    }
-
-    private fun getUsers() {
-        CoroutineScope(Dispatchers.IO).launch {
-            post.postComments?.forEach {
-                if (it.commentAuthorModel == null) {
-                    repository.getUser(it.commentAuthor!!).collect { state -> when (state) {
-                        is State.Success -> {
-                            val model = post.postComments?.indexOf(it)
-                            withContext(Dispatchers.Main){
-                                post.postComments?.get(model!!)?.commentAuthorModel = state.data
-                                commentsList.value = post.postComments
-                            }
-                        } }
-                    }
-                }
-            }
-        }
     }
 
 

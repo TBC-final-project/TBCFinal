@@ -18,7 +18,6 @@ class ChooseNameFragment : BaseFragment() {
             val lastName = rootView!!.lastNameET.text.toString()
             if(firstName.isBlank() || lastName.isBlank()) return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.fields_are_empty))
             (activity as RegisterActivity).getName(firstName, lastName)
-            (activity as RegisterActivity).registerViewPager.currentItem = (activity as RegisterActivity).registerViewPager.currentItem + 1
         }
 
         rootView!!.btnBack.setOnClickListener {

@@ -16,4 +16,5 @@ data class PostModel(
     var postTimestamp: Long = 0,
     val postTitle: String = "",
     val postType: Long = 0,
-    @get:Exclude var postAuthorModel: UserModel? = null) :Parcelable
+    @get:Exclude var postAuthorModel: UserModel? = null,
+    @get:Exclude var isLast: Boolean = false) :Parcelable

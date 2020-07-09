@@ -33,6 +33,7 @@
                 android:id="@+id/profileImageView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                setImage="@{postModel.postAuthorModel.userProfileImage}"
                 app:layout_constraintBottom_toTopOf="@id/titleTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -81,7 +82,6 @@
             setImage="@{postModel.postImage}"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_weight="1"
             android:scaleType="centerCrop" />
 
 
@@ -104,6 +104,7 @@
                     android:id="@+id/likeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    setLikeButtonResource="@{postModel.postLikes}"
                     android:background="@android:color/transparent"
                     android:src="@mipmap/ic_unfavorite" />
 

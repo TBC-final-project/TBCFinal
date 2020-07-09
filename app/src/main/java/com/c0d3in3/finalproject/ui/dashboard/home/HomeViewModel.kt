@@ -9,6 +9,8 @@ import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.auth.UserInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -18,23 +20,27 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
 
     val posts by lazy{
         MutableLiveData<ArrayList<PostModel>>().also {
-            getAllPosts()
-        }
-    }
-
-    private fun getAllPosts() {
-        viewModelScope.launch {
-            loadPostsVM(null)
+            viewModelScope.launch {
+                getPosts(null)
+            }
         }
     }
 
     fun loadPosts(lastId : String?){
         viewModelScope.launch {
-            loadPostsVM(lastId)
+            getPosts(lastId)
         }
     }
 
-    private suspend fun loadPostsVM(lastId: String? = null) {
+    fun likePost(position: Int){
+        if (posts.value!![position].postLikes?.contains(UserInfo.userInfo.userId)!!)
+            posts.value!![position].postLikes!!.remove(UserInfo.userInfo.userId)
+         else
+            posts.value!![position].postLikes!!.add(UserInfo.userInfo.userId)
+        Utils.likePost(posts.value!![position])
+    }
+
+    private suspend fun getPosts(lastId: String? = null) {
         repository.getAllPosts(10, lastId).collect { state ->
             when (state) {
                 is State.Loading -> {

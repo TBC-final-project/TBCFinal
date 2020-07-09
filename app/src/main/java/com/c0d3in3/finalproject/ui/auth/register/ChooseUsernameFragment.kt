@@ -44,22 +44,19 @@ class ChooseUsernameFragment : BaseFragment() {
 
     private fun checkUsername(username: String) {
         CoroutineScope(Dispatchers.IO).launch {
-
             UsersRepository().checkUser(username).collect { state ->
                 when (state) {
                     is State.Success -> {
                         val model = state.data
-                        if (model != null) Utils.createDialog(
-                            activity as RegisterActivity,
-                            "Error",
-                            getString(R.string.username_is_taken)
-                        )
-                        else {
-                            (activity as RegisterActivity).getUsername(username)
-                            (activity as RegisterActivity).registerViewPager.currentItem =
-                                (activity as RegisterActivity).registerViewPager.currentItem + 1
-
-                        }
+                        if (model != null)
+                            withContext(Dispatchers.Main) {
+                                Utils.createDialog(
+                                    activity as RegisterActivity,
+                                    "Error",
+                                    getString(R.string.username_is_taken)
+                                )
+                            }
+                        else withContext(Dispatchers.Main) {(activity as RegisterActivity).getUsername(username)}
                     }
 
                     is State.Failed -> withContext(Dispatchers.Main) {

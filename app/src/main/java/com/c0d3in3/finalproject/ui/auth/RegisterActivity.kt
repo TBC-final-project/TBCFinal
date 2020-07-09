@@ -15,6 +15,7 @@ import com.c0d3in3.finalproject.ui.auth.register.ChooseUsernameFragment
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
+import java.util.*
 import kotlin.properties.Delegates
 
 class RegisterActivity : BaseActivity() {
@@ -51,10 +52,13 @@ class RegisterActivity : BaseActivity() {
 
     fun getEmail(email: String){
         this.email = email
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
     }
 
     fun getName(firstName: String, lastName: String){
         userModel.userFullName = "$firstName $lastName"
+        userModel.userFullNameToLowerCase = userModel.userFullName.toLowerCase(Locale.ROOT)
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
     }
 
     fun getPassword(password: String){
@@ -64,6 +68,7 @@ class RegisterActivity : BaseActivity() {
 
     fun getUsername(username: String){
         userModel.username = username
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
         if(googleAuth) uploadUser(auth.currentUser!!.uid)
     }
 

@@ -44,17 +44,25 @@ class DashboardActivity : BaseActivity() {
     private fun addNavMenuListener() {
         nav_view.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.navHome ->
+                R.id.navHome ->{
+                    currentTitle = getString(R.string.news_feed)
                     dashboardPager.setCurrentItem(0, true)
-                R.id.navStories ->
+                }
+                R.id.navStories ->{
+                    currentTitle = getString(R.string.stories)
                     dashboardPager.setCurrentItem(1, true)
-                R.id.navNotifications ->
+                }
+                R.id.navNotifications ->{
+                    currentTitle = getString(R.string.notifications)
                     dashboardPager.setCurrentItem(2, true)
-                R.id.navSearch ->
+                }
+                R.id.navSearch ->{
+                    currentTitle = getString(R.string.search)
                     dashboardPager.setCurrentItem(3, true)
+                }
             }
-
             setToolbarTitle(currentTitle)
+
 
             true
         }

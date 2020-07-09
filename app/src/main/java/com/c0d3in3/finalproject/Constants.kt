@@ -8,4 +8,7 @@ object Constants {
     const val RC_SIGN_IN = 9001
 
     const val OPEN_DETAILED_POST = 8001
+
+    const val VIEW_TYPE_WALL_ITEM = 0
+    const val VIEW_TYPE_LOADING = 1
 }

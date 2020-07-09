@@ -8,6 +8,7 @@ data class UserModel(
     var userFollowers: ArrayList<String>? = null,
     var userFollowing : ArrayList<String>?  = null,
     var userFullName: String = "",
+    var userFullNameToLowerCase : String = "",
     var userId : String = "",
     var userProfileCover : String = "",
     var userProfileImage : String = "",
