@@ -40,7 +40,7 @@
     <string name="upload_picture">Upload Picture</string>
     <string name="update">Update</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="posts">Posts</string>
+    <string name="posts">posts</string>
     <string name="email_is_empty">Email is empty</string>
     <string name="email_is_not_valid">Email is not valid</string>
     <string name="fields_are_empty">Fields are empty</string>
@@ -62,4 +62,7 @@
     <string name="choose_username">Choose username</string>
     <string name="username">Username</string>
     <string name="username_is_taken">Username is taken!</string>
+    <string name="email_is_taken">Email is taken!</string>
+    <string name="password_length">Password length should be in range of 6–32</string>
+    <string name="search_">Search…</string>
 </resources>

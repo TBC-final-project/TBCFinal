@@ -9,6 +9,8 @@ import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.auth.UserInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,25 +19,31 @@ import kotlinx.coroutines.withContext
 class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
 
     val posts by lazy{
-        MutableLiveData<ArrayList<PostModel>>().also {
-            getAllPosts()
-        }
+        MutableLiveData<ArrayList<PostModel>>()
+//        MutableLiveData<ArrayList<PostModel>>().also {
+//            viewModelScope.launch {
+//                getPosts(null)
+//            }
+//        }
     }
 
-    private fun getAllPosts() {
+    fun loadPosts(lastPost : PostModel?){
         viewModelScope.launch {
-            loadPostsVM(null)
+            if(lastPost == null && posts.value != null) posts.value = null
+            getPosts(lastPost)
         }
     }
 
-    fun loadPosts(lastId : String?){
-        viewModelScope.launch {
-            loadPostsVM(lastId)
-        }
+    fun likePost(position: Int){
+        if (posts.value!![position].postLikes?.contains(UserInfo.userInfo.userId)!!)
+            posts.value!![position].postLikes!!.remove(UserInfo.userInfo.userId)
+         else
+            posts.value!![position].postLikes!!.add(UserInfo.userInfo.userId)
+        Utils.likePost(posts.value!![position])
     }
 
-    private suspend fun loadPostsVM(lastId: String? = null) {
-        repository.getAllPosts(10, lastId).collect { state ->
+    private suspend fun getPosts(lastPost: PostModel? = null) {
+        repository.getAllPosts(10, lastPost).collect { state ->
             when (state) {
                 is State.Loading -> {
                     withContext(Dispatchers.Main) {
@@ -44,7 +52,11 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
                 }
 
                 is State.Success -> {
-                    posts.value = state.data
+                    if(posts.value != null){
+                        posts.value?.addAll(state.data)
+                        posts.value = posts.value
+                    }
+                    else posts.value = state.data
                 }
 
                 is State.Failed -> withContext(Dispatchers.Main) {

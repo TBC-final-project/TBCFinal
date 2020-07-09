@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="userModel"
+            type="com.c0d3in3.finalproject.network.model.UserModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/searchImageView"
+            setImage="@{userModel.userProfileImage}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/searchNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@{userModel.userFullName}"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="@id/searchImageView"
+            app:layout_constraintStart_toEndOf="@id/searchImageView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:text="@{`@` + userModel.username}"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/searchNameTextView"
+            app:layout_constraintTop_toBottomOf="@id/searchNameTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/dialogTitleTV"
+        android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -17,7 +17,7 @@
         android:layout_gravity="center_horizontal" />
 
     <TextView
-        android:id="@+id/dialogDescriptionTV"
+        android:id="@+id/dialogDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"

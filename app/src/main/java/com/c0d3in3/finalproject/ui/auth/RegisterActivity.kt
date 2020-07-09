@@ -1,11 +1,10 @@
 package com.c0d3in3.finalproject.ui.auth
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log.d
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import com.c0d3in3.finalproject.BasePagerAdapter
+import com.c0d3in3.finalproject.base.BaseActivity
+import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.model.UserModel
@@ -15,11 +14,11 @@ import com.c0d3in3.finalproject.ui.auth.register.ChoosePasswordFragment
 import com.c0d3in3.finalproject.ui.auth.register.ChooseUsernameFragment
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
+import java.util.*
 import kotlin.properties.Delegates
 
-class RegisterActivity : FragmentActivity() {
+class RegisterActivity : BaseActivity() {
 
     private val userModel = UserModel()
     private lateinit var password: String
@@ -28,16 +27,14 @@ class RegisterActivity : FragmentActivity() {
     private val auth = FirebaseAuth.getInstance()
 
     lateinit var adapter: BasePagerAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
 
-        init()
-    }
 
-    private fun init(){
+    override fun getLayout() = R.layout.activity_register
+
+    override fun init(){
         googleAuth = intent.getBooleanExtra("googleAuth", false)
-        adapter = BasePagerAdapter(supportFragmentManager)
+        adapter =
+            BasePagerAdapter(supportFragmentManager)
         adapter.addFragment(ChooseNameFragment())
         adapter.addFragment(ChooseUsernameFragment())
         if(googleAuth) {
@@ -52,12 +49,16 @@ class RegisterActivity : FragmentActivity() {
         registerViewPager.adapter = adapter
     }
 
+
     fun getEmail(email: String){
         this.email = email
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
     }
 
     fun getName(firstName: String, lastName: String){
         userModel.userFullName = "$firstName $lastName"
+        userModel.userFullNameToLowerCase = userModel.userFullName.toLowerCase(Locale.ROOT)
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
     }
 
     fun getPassword(password: String){
@@ -67,6 +68,7 @@ class RegisterActivity : FragmentActivity() {
 
     fun getUsername(username: String){
         userModel.username = username
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
         if(googleAuth) uploadUser(auth.currentUser!!.uid)
     }
 

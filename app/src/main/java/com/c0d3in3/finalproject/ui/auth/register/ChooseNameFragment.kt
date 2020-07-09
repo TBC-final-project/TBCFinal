@@ -1,7 +1,7 @@
 package com.c0d3in3.finalproject.ui.auth.register
 
 import android.content.Intent
-import com.c0d3in3.finalproject.BaseFragment
+import com.c0d3in3.finalproject.base.BaseFragment
 
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.tools.Utils
@@ -18,7 +18,6 @@ class ChooseNameFragment : BaseFragment() {
             val lastName = rootView!!.lastNameET.text.toString()
             if(firstName.isBlank() || lastName.isBlank()) return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.fields_are_empty))
             (activity as RegisterActivity).getName(firstName, lastName)
-            (activity as RegisterActivity).registerViewPager.currentItem = (activity as RegisterActivity).registerViewPager.currentItem + 1
         }
 
         rootView!!.btnBack.setOnClickListener {
