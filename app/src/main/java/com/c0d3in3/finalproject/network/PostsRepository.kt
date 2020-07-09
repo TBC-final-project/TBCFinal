@@ -19,16 +19,14 @@ class PostsRepository {
     private val mPostsCollection = FirebaseHandler.getDatabase().collection(POSTS_REF)
 
 
-    fun getAllPosts(limit:Long = 10, lastPostId: String? = null) = flow<State<ArrayList<PostModel>>> {
+    fun getAllPosts(limit:Long = 10, lastPost: PostModel? = null) = flow<State<ArrayList<PostModel>>> {
 
         emit(State.loading())
 
-        val snapshot : QuerySnapshot = if(lastPostId != null){
-            println(lastPostId)
-            mPostsCollection.orderBy("postId").startAfter(lastPostId).limit(limit).orderBy("postTimestamp", Query.Direction.DESCENDING).get().await()
-        } else{
-            mPostsCollection.limit(limit).orderBy("postTimestamp", Query.Direction.DESCENDING).get().await()
-        }
+        val snapshot : QuerySnapshot = if(lastPost != null)
+            mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING).startAfter(lastPost.postTimestamp).limit(limit).get().await()
+        else
+            mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING).limit(limit).get().await()
         val posts = snapshot.toObjects(PostModel::class.java) as ArrayList
 
         emit(State.success(posts))

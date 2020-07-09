@@ -19,16 +19,18 @@ import kotlinx.coroutines.withContext
 class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
 
     val posts by lazy{
-        MutableLiveData<ArrayList<PostModel>>().also {
-            viewModelScope.launch {
-                getPosts(null)
-            }
-        }
+        MutableLiveData<ArrayList<PostModel>>()
+//        MutableLiveData<ArrayList<PostModel>>().also {
+//            viewModelScope.launch {
+//                getPosts(null)
+//            }
+//        }
     }
 
-    fun loadPosts(lastId : String?){
+    fun loadPosts(lastPost : PostModel?){
         viewModelScope.launch {
-            getPosts(lastId)
+            if(lastPost == null && posts.value != null) posts.value = null
+            getPosts(lastPost)
         }
     }
 
@@ -40,8 +42,8 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
         Utils.likePost(posts.value!![position])
     }
 
-    private suspend fun getPosts(lastId: String? = null) {
-        repository.getAllPosts(10, lastId).collect { state ->
+    private suspend fun getPosts(lastPost: PostModel? = null) {
+        repository.getAllPosts(10, lastPost).collect { state ->
             when (state) {
                 is State.Loading -> {
                     withContext(Dispatchers.Main) {
@@ -50,7 +52,11 @@ class HomeViewModel(private val repository: PostsRepository) : ViewModel() {
                 }
 
                 is State.Success -> {
-                    posts.value = state.data
+                    if(posts.value != null){
+                        posts.value?.addAll(state.data)
+                        posts.value = posts.value
+                    }
+                    else posts.value = state.data
                 }
 
                 is State.Failed -> withContext(Dispatchers.Main) {

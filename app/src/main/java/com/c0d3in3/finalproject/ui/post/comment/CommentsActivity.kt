@@ -8,12 +8,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
+import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.network.model.CommentModel
 import com.c0d3in3.finalproject.network.model.PostModel
@@ -40,7 +43,11 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
         getModel()
 
+        val binding : ActivityCommentsBinding = DataBindingUtil.setContentView(this, getLayout())
+        binding.postModel = post
+
         setListeners()
+
 
         if (adapter == null) {
             adapter = CommentAdapter(this)

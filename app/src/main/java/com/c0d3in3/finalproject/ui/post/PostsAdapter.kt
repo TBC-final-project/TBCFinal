@@ -25,26 +25,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PostsAdapter(private val recyclerView: RecyclerView? = null, private val callback: CustomPostCallback) :
-    RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
-
-    interface OnLoadMoreListener {
-        fun onLoadMore()
-    }
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var posts = arrayListOf<PostModel>()
     private val usersRepository = UsersRepository()
-    private var onLoadMoreListener: OnLoadMoreListener? = null
     private var isLoading = false
-    private var lastVisibleItem: Int = 0
-    private var totalItemCount: Int = 0
-    private val visibleThreshold = 10
+    private val visibleThreshold = 5
     interface CustomPostCallback {
         fun onLikeButtonClick(position: Int)
         fun onCommentButtonClick(position: Int)
         fun openDetailedPost(position: Int)
+        fun onLoadMore()
     }
 
     init {
+        if(posts.isEmpty() && !isLoading) {
+            callback.onLoadMore()
+            isLoading = true
+        }
         recyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -52,8 +50,7 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
                 val totalItemCount = linearLayoutManager.itemCount
                 val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
                 if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                    if (onLoadMoreListener != null)
-                        onLoadMoreListener!!.onLoadMore()
+                    callback.onLoadMore()
                     isLoading = true
                 }
             }
@@ -62,9 +59,7 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
 
     fun setPostsList(list: ArrayList<PostModel>) {
         posts = list
-        //println("size ${posts.size} ; ${list.size}");
         for (idx in 0 until posts.size) {
-            println(idx)
             if(posts[idx].postAuthorModel != null) continue
             if (idx == posts.size - 1) getUser(posts[idx], true)
             else getUser(posts[idx], false)
@@ -88,8 +83,10 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
 
     override fun getItemCount() = posts.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.onBind()
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ViewHolder -> holder.onBind()
+        }
     }
 
     inner class ViewHolder(private val binding: PostImageItemLayoutBinding) :
@@ -128,7 +125,10 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
                 when (state) {
                     is State.Success -> {
                         model.postAuthorModel = state.data!!
-                        if (isLast) withContext(Dispatchers.Main) {notifyDataSetChanged() }
+                        if (isLast) withContext(Dispatchers.Main) {
+                            notifyDataSetChanged()
+                            isLoading = false
+                        }
                     }
                 }
             }
@@ -137,13 +137,6 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
 
     inner class LoadMorePostsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    fun setOnLoadMoreListener(mOnLoadMoreListener: OnLoadMoreListener) {
-        this.onLoadMoreListener = mOnLoadMoreListener
-    }
-
-    fun setLoaded() {
-        isLoading = false
-    }
 
     override fun getItemViewType(position: Int): Int {
         return when {
@@ -151,4 +144,5 @@ class PostsAdapter(private val recyclerView: RecyclerView? = null, private val c
             else -> VIEW_TYPE_WALL_ITEM
         }
     }
+
 }
