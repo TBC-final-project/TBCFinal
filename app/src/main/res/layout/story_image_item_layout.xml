@@ -19,7 +19,7 @@
         android:id="@+id/storyImageLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.dashboard.stories.StoryViewActivity"
+        tools:context=".ui.dashboard.stories.story_view.StoryViewActivity"
         android:background="#000">
 
         <de.hdodenhof.circleimageview.CircleImageView

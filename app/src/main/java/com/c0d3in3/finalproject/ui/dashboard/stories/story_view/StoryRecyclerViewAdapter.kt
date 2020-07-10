@@ -1,19 +1,15 @@
-package com.c0d3in3.finalproject.ui.dashboard.stories
+package com.c0d3in3.finalproject.ui.dashboard.stories.story_view
 
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.c0d3in3.finalproject.CustomProgressBar
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.databinding.StoryImageItemLayoutBinding
 import com.c0d3in3.finalproject.tools.Utils
-import kotlinx.android.synthetic.main.story_image_item_layout.view.*
 
 class StoryRecyclerViewAdapter(private val storyList: ArrayList<StoryModel>, private val mvViewType: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 

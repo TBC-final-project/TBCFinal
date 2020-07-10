@@ -1,4 +1,4 @@
-package com.c0d3in3.finalproject.ui.dashboard.stories
+package com.c0d3in3.finalproject.ui.dashboard.stories.story_view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,23 +14,21 @@ import com.c0d3in3.finalproject.CustomProgressBar
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
 import kotlinx.android.synthetic.main.story_base_layout.view.*
-import kotlinx.android.synthetic.main.story_image_item_layout.view.*
-import kotlinx.android.synthetic.main.story_progressbar_layout.view.*
 import kotlinx.android.synthetic.main.story_progressbar_layout.view.storyTimeProgressBar
 
 
 class StoryViewPagerAdapter(
     private val ctx: Context,
     private val list: ArrayList<ArrayList<StoryModel>>,
-    private val callback: ViewPagerInterface,
-    _currentPosition: Int
-) : PagerAdapter() {
+    private val callback: ViewPagerInterface) : PagerAdapter() {
 
-    private val gestureDetector = GestureDetector(ctx, SingleTapConfirm())
+    private val gestureDetector = GestureDetector(ctx,
+        SingleTapConfirm()
+    )
 
-    private var currentPosition = _currentPosition
+    private var currentPosition = 0
+    var defaultPosition = 0
     private val viewContainer = arrayListOf<View>()
-    private var defaultPosition = _currentPosition
 
     interface ViewPagerInterface {
         fun nextViewPagerItem(): Boolean
@@ -48,11 +46,19 @@ class StoryViewPagerAdapter(
 
         view.storyListRecyclerView.layoutManager =
             LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false)
-        val storyAdapter = StoryRecyclerViewAdapter(list[position], 0)
+        val storyAdapter =
+            StoryRecyclerViewAdapter(
+                list[position],
+                0
+            )
         view.storyListRecyclerView.adapter = storyAdapter
 
         view.progressBarRecyclerView.layoutManager = GridLayoutManager(ctx, list[position].size)
-        val adapter = StoryRecyclerViewAdapter(list[position], 1)
+        val adapter =
+            StoryRecyclerViewAdapter(
+                list[position],
+                1
+            )
         view.progressBarRecyclerView.adapter = adapter
 
         view.storyListRecyclerView.setOnTouchListener { v, event ->
@@ -63,7 +69,6 @@ class StoryViewPagerAdapter(
         }
         container.addView(view)
         viewContainer.add(view)
-        //if(position == currentPosition) setProgressBar(view.progressBarRecyclerView[0].storyTimeProgressBar, view)
         return view
     }
 
@@ -95,6 +100,7 @@ class StoryViewPagerAdapter(
     override fun getCount() = list.size
 
     private fun nextViewPagerItem() {
+        println("nextViewPagerItem $currentPosition")
         val currentView = viewContainer[currentPosition]
         val recyclerView = currentView.storyListRecyclerView
         val progressBarRecyclerView = currentView.progressBarRecyclerView
@@ -102,18 +108,14 @@ class StoryViewPagerAdapter(
         val visibleItem = layoutManager.findFirstCompletelyVisibleItemPosition()
         if (recyclerView.adapter!!.itemCount - 1 > visibleItem) {
             progressBarRecyclerView[visibleItem].storyTimeProgressBar.cancelProgress()
-//            println("oho")
-//            println(visibleItem)
             progressBarRecyclerView[visibleItem].storyTimeProgressBar.progress = 9999
             setProgressBar(
                 progressBarRecyclerView[visibleItem + 1].storyTimeProgressBar
             )
             recyclerView.scrollToPosition(visibleItem + 1)
         } else {
-            if (callback.nextViewPagerItem()) {
-                currentPosition++
-                updateCurrentItem()
-            }
+            progressBarRecyclerView[visibleItem].storyTimeProgressBar.cancelProgress()
+            callback.nextViewPagerItem()
         }
     }
 
@@ -130,25 +132,25 @@ class StoryViewPagerAdapter(
             )
             recyclerView.scrollToPosition(visibleItem - 1)
         } else {
-            if (callback.previousViewPagerItem()) {
-                currentPosition--
-                updateCurrentItem()
-            }
+            progressBarRecyclerView[visibleItem].storyTimeProgressBar.cancelProgress()
+            callback.previousViewPagerItem()
         }
     }
 
-    private fun updateCurrentItem() {
-        if(defaultPosition != 0 && currentPosition != defaultPosition) currentPosition ++
-        if(currentPosition >= viewContainer.size) currentPosition = 0
+
+    fun updateCurrentItem(position: Int) {
+        currentPosition = position
+        if(currentPosition >= viewContainer.size || defaultPosition == position) currentPosition = 0
+        if(defaultPosition != 0 && position != defaultPosition) currentPosition += 1
+
+        println("currentPosition $currentPosition defaultPosition $defaultPosition position $position")
         val currentView = viewContainer[currentPosition]
-        val progressBarRecyclerView = currentView.progressBarRecyclerView
-        val recyclerView = currentView.storyListRecyclerView
-        println("shemovida")
-        recyclerView.scrollToPosition(0)
-        for(idx in 0 until recyclerView.adapter!!.itemCount){
-            progressBarRecyclerView[idx].storyTimeProgressBar.cancelProgress()
+        for(idx in 0 until currentView.storyListRecyclerView.adapter!!.itemCount){
+            currentView.progressBarRecyclerView[idx].storyTimeProgressBar.cancelProgress()
         }
-        setProgressBar(progressBarRecyclerView[0].storyTimeProgressBar)
+
+        currentView.storyListRecyclerView.scrollToPosition(0)
+        setProgressBar(currentView.progressBarRecyclerView[0].storyTimeProgressBar)
     }
 
     open class SingleTapConfirm : SimpleOnGestureListener() {
@@ -164,7 +166,7 @@ class StoryViewPagerAdapter(
             override fun onProgressChanged(myProgressBar: CustomProgressBar?) {
                 if (myProgressBar != null) {
                     if (myProgressBar.progress == 10000) {
-                        myProgressBar.progress = 0
+                        myProgressBar.cancelProgress()
                         nextViewPagerItem()
                     }
                 }

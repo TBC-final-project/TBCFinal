@@ -12,7 +12,7 @@ class CustomProgressBar : ProgressBar {
     private var objectAnimator = ObjectAnimator.ofInt(this, "progress", this.progress, 10000)
 
     fun setOnProgressBarChangeListener(l: OnMyProgressBarChangeListener) {
-        listener = l
+         listener = l
     }
 
     constructor(context: Context?) : super(context)
@@ -29,6 +29,7 @@ class CustomProgressBar : ProgressBar {
 
     override fun setProgress(progress: Int) {
         super.setProgress(progress)
+
         listener?.onProgressChanged(this)
     }
 
@@ -39,11 +40,11 @@ class CustomProgressBar : ProgressBar {
     fun startProgress() {
         objectAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
-
+                println("start")
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                //timeWatcher.onEnd(index)
+                println("ended")
             }
 
             override fun onAnimationCancel(animation: Animator?) {
@@ -62,9 +63,9 @@ class CustomProgressBar : ProgressBar {
 
 
     fun cancelProgress() {
+        this.progress = 0
         objectAnimator.apply {
             cancel()
         }
-        this.progress = 0
     }
 }

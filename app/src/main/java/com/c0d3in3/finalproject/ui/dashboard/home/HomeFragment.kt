@@ -13,7 +13,7 @@ import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoryAdapter
-import com.c0d3in3.finalproject.ui.dashboard.stories.StoryViewActivity
+import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
