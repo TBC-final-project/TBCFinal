@@ -8,7 +8,7 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.databinding.CommentItemLayoutBinding
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
-import com.c0d3in3.finalproject.network.model.CommentModel
+import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

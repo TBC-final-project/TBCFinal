@@ -10,19 +10,16 @@ import kotlinx.android.synthetic.main.fragment_stories.view.*
 class StoriesFragment : BaseFragment() {
 
     private lateinit var storiesViewModel: StoriesViewModel
+    private var adapter : StoryAdapter? = null
 
     override fun init() {
-        //(activity as DashboardActivity).setToolbarTitle(getString(R.string.stories))
+
     }
 
     override fun setUpFragment() {
 
-
         storiesViewModel = ViewModelProvider(this).get(StoriesViewModel::class.java)
-        val textView: TextView = rootView!!.text_dashboard
-        storiesViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
     }
 
     override fun getLayout() = R.layout.fragment_stories

@@ -1,4 +1,4 @@
-package com.c0d3in3.finalproject.network.model
+package com.c0d3in3.finalproject.bean
 
 import android.os.Parcelable
 import com.google.firebase.firestore.Exclude
@@ -17,4 +17,4 @@ data class PostModel(
     val postTitle: String = "",
     val postType: Long = 0,
     @get:Exclude var postAuthorModel: UserModel? = null,
-    @get:Exclude var isLast: Boolean = false) :Parcelable
+    @get:Exclude var isLast: Boolean = false) :Parcelable, CustomInterface

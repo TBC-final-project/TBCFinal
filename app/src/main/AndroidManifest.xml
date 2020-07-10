@@ -16,12 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:clearTaskOnLaunch="true"
         android:windowSoftInputMode="stateHidden">
-        <activity android:name=".ui.post.create_post.CreatePostActivity"></activity>
+        <activity android:name=".ui.dashboard.stories.StoryViewActivity" />
+        <activity android:name=".ui.post.create_post.CreatePostActivity" />
         <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

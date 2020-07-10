@@ -6,7 +6,7 @@
 
         <variable
             name="userModel"
-            type="com.c0d3in3.finalproject.network.model.UserModel" />
+            type="com.c0d3in3.finalproject.bean.UserModel" />
 
     </data>
 

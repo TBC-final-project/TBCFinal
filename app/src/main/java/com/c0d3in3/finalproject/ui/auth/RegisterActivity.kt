@@ -7,7 +7,7 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.register.ChooseEmailFragment
 import com.c0d3in3.finalproject.ui.auth.register.ChooseNameFragment
 import com.c0d3in3.finalproject.ui.auth.register.ChoosePasswordFragment
@@ -87,6 +87,8 @@ class RegisterActivity : BaseActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     userModel.userId = auth.currentUser?.uid.toString()
+                    userModel.userFollowers = arrayListOf()
+                    userModel.userFollowing = arrayListOf()
                     userModel.userRegisterDate = System.currentTimeMillis()
                     uploadUser(auth.currentUser!!.uid)
                 } else {

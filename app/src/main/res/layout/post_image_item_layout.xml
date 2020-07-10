@@ -11,7 +11,7 @@
 
         <variable
             name="postModel"
-            type="com.c0d3in3.finalproject.network.model.PostModel" />
+            type="com.c0d3in3.finalproject.bean.PostModel" />
     </data>
 
     <LinearLayout

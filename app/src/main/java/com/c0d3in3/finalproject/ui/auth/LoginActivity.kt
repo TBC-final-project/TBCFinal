@@ -9,7 +9,7 @@ import com.c0d3in3.finalproject.extensions.isEmailValid
 import com.c0d3in3.finalproject.extensions.setColor
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.tools.Utils.isValidEmail
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity

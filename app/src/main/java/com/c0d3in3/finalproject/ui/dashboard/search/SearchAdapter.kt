@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.databinding.SearchItemLayoutBinding
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.UserModel
 
 class SearchAdapter(private val callback: SearchAdapterCallback) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 

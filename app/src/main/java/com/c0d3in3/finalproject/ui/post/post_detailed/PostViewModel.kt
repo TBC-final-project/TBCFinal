@@ -2,7 +2,7 @@ package com.c0d3in3.finalproject.ui.post.post_detailed
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 
