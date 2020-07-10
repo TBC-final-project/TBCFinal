@@ -1,6 +1,5 @@
 package com.c0d3in3.finalproject.ui.post.post_detailed
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.view.View
@@ -11,7 +10,7 @@ import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
-import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import kotlinx.android.synthetic.main.activity_image_post_detailed.*

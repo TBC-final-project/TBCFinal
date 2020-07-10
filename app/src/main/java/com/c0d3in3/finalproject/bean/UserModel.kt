@@ -1,4 +1,4 @@
-package com.c0d3in3.finalproject.network.model
+package com.c0d3in3.finalproject.bean
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

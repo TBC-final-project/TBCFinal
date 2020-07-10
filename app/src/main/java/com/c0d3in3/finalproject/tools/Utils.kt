@@ -2,16 +2,17 @@ package com.c0d3in3.finalproject.tools
 
 import android.app.Dialog
 import android.content.Context
+import android.content.res.Resources
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
+import android.util.TypedValue
 import android.view.Window
 import android.view.WindowManager
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.bean.PostModel
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
 
@@ -93,5 +94,22 @@ object Utils {
         }
 
         dialog.show()
+    }
+
+    fun getScreenWidth(): Int {
+        return Resources.getSystem().displayMetrics.widthPixels
+    }
+
+    fun getScreenHeight(): Int {
+        return Resources.getSystem().displayMetrics.heightPixels
+    }
+
+    fun convertDp(dp: Float): Int {
+        val r: Resources = App.getInstance().resources
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            r.displayMetrics
+        ).toInt()
     }
 }

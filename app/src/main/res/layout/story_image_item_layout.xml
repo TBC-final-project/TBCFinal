@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="storyModel"
+            type="com.c0d3in3.finalproject.bean.StoryModel" />
+
+        <variable
+            name="storyAuthorModel"
+            type="com.c0d3in3.finalproject.bean.UserModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/storyImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.dashboard.stories.story_view.StoryViewActivity"
+        android:background="#000">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            setImage="@{storyAuthorModel.userProfileImage}"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="#fff"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/fullNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="@{storyAuthorModel.userFullName}"
+            app:layout_constraintStart_toEndOf="@id/profileImageView"
+            app:layout_constraintTop_toTopOf="@id/profileImageView"
+            android:layout_marginStart="10dp" />
+
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            getTimeDiffMinimal="@{storyModel.storyCreatedAt}"
+            app:layout_constraintStart_toStartOf="@id/fullNameTextView"
+            app:layout_constraintTop_toBottomOf="@id/fullNameTextView" />
+
+        <ImageView
+            android:id="@+id/storyImageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            setImage="@{storyModel.storyImage}"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@id/profileImageView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

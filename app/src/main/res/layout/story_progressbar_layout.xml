@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.c0d3in3.finalproject.CustomProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/storyTimeProgressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:progress="0"
+    android:padding="5dp"
+    android:progressBackgroundTint="#C4A8ED"
+    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+    android:max="10000">
+</com.c0d3in3.finalproject.CustomProgressBar>

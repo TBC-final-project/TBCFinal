@@ -1,14 +1,12 @@
 package com.c0d3in3.finalproject.network
 
-import com.c0d3in3.finalproject.network.model.UserModel
-import com.google.firebase.firestore.auth.User
+import com.c0d3in3.finalproject.bean.UserModel
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
-import java.util.*
 import kotlin.collections.ArrayList
 
 class UsersRepository {

@@ -5,8 +5,10 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.PostsRepository
-import com.c0d3in3.finalproject.network.State
-import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
@@ -69,15 +71,29 @@ class DashboardActivity : BaseActivity() {
     }
 
     private fun addPosts() {
-        val post = PostModel()
-        post.postAuthor = UserInfo.userInfo.userId
-        post.postTimestamp = System.currentTimeMillis()
-        post.postComments = arrayListOf()
-        post.postLikes = arrayListOf()
-        CoroutineScope(Dispatchers.IO).launch {
-            PostsRepository().addPost(post).collect {
-            }
-        }
+//        val post = PostModel()
+//        post.postAuthor = UserInfo.userInfo.userId
+//        post.postTimestamp = System.currentTimeMillis()
+//        post.postComments = arrayListOf()
+//        post.postLikes = arrayListOf()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            PostsRepository().addPost(post).collect {
+//            }
+//        }
+        val userModel = UserModel()
+        userModel.userId = (0..10000).random().toString()
+        userModel.userFullName = "ted ${userModel.userId}"
+        userModel.userFullNameToLowerCase = "ted ${userModel.userId}"
+        userModel.userProfileImage = "https://firebasestorage.googleapis.com/v0/b/postit-tbc.appspot.com/o/user_profile_pictures%2F160f636c40c160cf9e37ec0d7a67a807.jpg?alt=media"
+        FirebaseHandler.getDatabase().collection("users").document(userModel.userId).set(userModel)
+        val storyModel = StoryModel()
+        storyModel.storyAuthorId = userModel.userId
+        storyModel.storyCreatedAt = System.currentTimeMillis()
+        storyModel.storyValidUntil = storyModel.storyCreatedAt+10000000
+        val mStoriesCollection = FirebaseHandler.getDatabase().collection("${FirebaseHandler.USERS_REF}/${userModel.userId}/${FirebaseHandler.STORIES_REF}")
+        mStoriesCollection.add(storyModel)
+        UserInfo.userInfo.userFollowing?.add(userModel.userId)
+        FirebaseHandler.getDatabase().collection("users").document(UserInfo.userInfo.userId).update("userFollowing", UserInfo.userInfo.userFollowing)
     }
 
     private fun addViewPagerListener() {

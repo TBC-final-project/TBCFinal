@@ -9,7 +9,7 @@ import com.c0d3in3.finalproject.extensions.setBold
 import com.c0d3in3.finalproject.extensions.setUnderline
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn

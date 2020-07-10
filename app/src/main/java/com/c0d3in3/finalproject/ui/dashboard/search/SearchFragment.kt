@@ -2,19 +2,14 @@ package com.c0d3in3.finalproject.ui.dashboard.search
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.c0d3in3.finalproject.base.BaseFragment
 
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.network.model.UserModel
-import kotlinx.android.synthetic.main.fragment_search.*
+import com.c0d3in3.finalproject.bean.UserModel
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.fragment_search.view.searchEditText
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class SearchFragment : BaseFragment(), SearchAdapter.SearchAdapterCallback {
 
@@ -40,8 +35,10 @@ class SearchFragment : BaseFragment(), SearchAdapter.SearchAdapterCallback {
         searchViewModel = ViewModelProvider(this, SearchViewModelFactory()).get(SearchViewModel::class.java)
 
         searchViewModel.getSearchList().observe(viewLifecycleOwner, Observer {
-            searchList = it
-            if(adapter != null) adapter!!.setList(searchList)
+            if(adapter != null && it != null){
+                searchList = it
+                adapter!!.setList(searchList)
+            }
         })
 
         setListeners()

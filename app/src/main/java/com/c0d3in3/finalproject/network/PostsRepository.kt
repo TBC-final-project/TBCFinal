@@ -1,13 +1,10 @@
 package com.c0d3in3.finalproject.network
 
 import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
-import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
-import com.c0d3in3.finalproject.network.model.PostModel
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.PostModel
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -52,7 +49,4 @@ class PostsRepository {
         emit(State.failed(it.message.toString()))
     }.flowOn(Dispatchers.IO)
 
-    fun updatePost(){
-
-    }
 }

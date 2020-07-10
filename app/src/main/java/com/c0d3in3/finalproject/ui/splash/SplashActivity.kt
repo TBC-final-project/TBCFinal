@@ -6,7 +6,7 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
-import com.c0d3in3.finalproject.network.model.UserModel
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
 import com.c0d3in3.finalproject.ui.auth.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity

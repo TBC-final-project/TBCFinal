@@ -5,7 +5,7 @@
     <data>
         <variable
             name="commentModel"
-            type="com.c0d3in3.finalproject.network.model.CommentModel" />
+            type="com.c0d3in3.finalproject.bean.CommentModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

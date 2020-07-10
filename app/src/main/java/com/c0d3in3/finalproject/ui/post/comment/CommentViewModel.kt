@@ -5,16 +5,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
-import com.c0d3in3.finalproject.network.model.CommentModel
-import com.c0d3in3.finalproject.network.model.PostModel
+import com.c0d3in3.finalproject.bean.CommentModel
+import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.ui.auth.UserInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CommentViewModel(private val repository: UsersRepository) : ViewModel() {
 
