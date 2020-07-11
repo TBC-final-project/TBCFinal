@@ -11,7 +11,13 @@ import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.databinding.StoryImageItemLayoutBinding
 import com.c0d3in3.finalproject.tools.Utils
 
-class StoryRecyclerViewAdapter(private val storyList: ArrayList<StoryModel>, private val mvViewType: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class StoryRecyclerViewAdapter(private val storyList: ArrayList<StoryModel>, private val mvViewType: Int, private val callback: StoryRecyclerViewAdapterCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+
+    private var firstLoad = false
+
+    interface StoryRecyclerViewAdapterCallback{
+        fun storyLoaded()
+    }
 
     companion object {
         private const val VIEW_TYPE_STORY = 0
@@ -23,12 +29,16 @@ class StoryRecyclerViewAdapter(private val storyList: ArrayList<StoryModel>, pri
         fun onBind(){
             binding.storyModel = storyList[adapterPosition]
             binding.storyAuthorModel = storyList[0].storyAuthorModel
+
+            if(!firstLoad){
+                callback.storyLoaded()
+                firstLoad = true
+            }
         }
     }
 
     inner class ProgressBarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun onBind(){
-            val px = Utils.convertDp(10.toFloat())
             val lp = itemView.layoutParams as GridLayoutManager.LayoutParams
             lp.width = Utils.getScreenWidth() / storyList.size
         }

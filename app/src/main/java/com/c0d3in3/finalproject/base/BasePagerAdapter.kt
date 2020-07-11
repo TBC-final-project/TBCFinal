@@ -9,6 +9,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class BasePagerAdapter(fm: FragmentManager) :
     FragmentStatePagerAdapter(fm) {
 
+    private var isFirst = false
+
     private val fragmentsList = arrayListOf<Fragment>()
 
     fun addFragment(fragment: Fragment) {
@@ -19,5 +21,6 @@ class BasePagerAdapter(fm: FragmentManager) :
     override fun getItem(position: Int) = fragmentsList[position]
 
     override fun getCount() = fragmentsList.size
+
 
 }

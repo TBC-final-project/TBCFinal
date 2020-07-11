@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.register.ChooseEmailFragment

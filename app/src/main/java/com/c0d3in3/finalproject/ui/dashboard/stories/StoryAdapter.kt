@@ -1,21 +1,23 @@
 package com.c0d3in3.finalproject.ui.dashboard.stories
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.MyDiffCallback
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.databinding.StoryBigItemLayoutBinding
 import com.c0d3in3.finalproject.databinding.StorySmallItemLayoutBinding
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
-import com.c0d3in3.finalproject.ui.auth.UserInfo
-import kotlinx.android.synthetic.main.add_story_big_layout.view.*
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.UserInfo
+import kotlinx.android.synthetic.main.story_big_item_layout.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -25,17 +27,12 @@ import kotlinx.coroutines.withContext
 
 class StoryAdapter(
     private val recyclerView: RecyclerView,
-    private val callback: CustomStoryCallback
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val callback: CustomStoryCallback,
+    private val bigStories: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface CustomStoryCallback {
         fun onStoryClick(position: Int)
         fun onLoadMoreStories()
-    }
-
-    companion object{
-        const val ADD_STORY_TYPE = 0
-        const val DEFAULT_STORY_TYPE = 1
     }
 
     private var storyList = mutableListOf<ArrayList<StoryModel>>()
@@ -45,17 +42,13 @@ class StoryAdapter(
     private val visibleThreshold = 3
 
     init {
-        if (storyList.isEmpty() && !isLoading) {
-            callback.onLoadMoreStories()
-            isLoading = true
-        }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = linearLayoutManager.itemCount
                 val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-                if (!isLoading && visibleThreshold < totalItemCount && visibleThreshold >= totalItemCount - lastVisibleItem) {
+                if (!isLoading && 5 <= totalItemCount && visibleThreshold >= totalItemCount - lastVisibleItem) {
                     callback.onLoadMoreStories()
                     isLoading = true
                 }
@@ -80,29 +73,26 @@ class StoryAdapter(
         }
     }
 
-    inner class AddStoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun onBind(){
-            Glide.with(itemView).load(UserInfo.userInfo.userProfileImage).into(itemView.addStoryProfileImageView)
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            ADD_STORY_TYPE -> {
-                val layout = LayoutInflater.from(parent.context).inflate(R.layout.add_story_big_layout, parent, false)
-                AddStoryViewHolder(layout)
-            }
-            else -> {
-                val binding: StorySmallItemLayoutBinding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context),
-                    R.layout.story_small_item_layout,
-                    parent,
-                    false
-                )
-                ViewHolder(binding)
-            }
+        if(!bigStories){
+            val binding: StorySmallItemLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.story_small_item_layout,
+                parent,
+                false
+            )
+            return ViewHolder(binding)
         }
-
+        else{
+            val binding: StoryBigItemLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.story_big_item_layout,
+                parent,
+                false
+            )
+            return BigItemViewHolder(binding)
+        }
     }
 
     override fun getItemCount() = storyList.size
@@ -110,7 +100,7 @@ class StoryAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
             is ViewHolder -> holder.onBind()
-            is AddStoryViewHolder ->holder.onBind()
+            is BigItemViewHolder -> holder.onBind()
         }
     }
 
@@ -121,8 +111,29 @@ class StoryAdapter(
         fun onBind() {
             model = storyList[adapterPosition][0]
 
-            if(model.storyAuthorId == UserInfo.userInfo.userId) model.storyAuthorModel?.userFullName = "Your story"
             binding.storyModel = model
+            itemView.setOnClickListener { callback.onStoryClick(adapterPosition) }
+        }
+    }
+
+    inner class BigItemViewHolder(private val binding: StoryBigItemLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private lateinit var model: StoryModel
+
+        fun onBind() {
+            model = storyList[adapterPosition][0]
+
+            if(model.storyAuthorId != "self"){
+                Glide.with(itemView).load(model.storyAuthorModel?.userProfileImage).into(itemView.addStoryBigImageButton)
+            }
+            else itemView.addStoryBigImageButton.setImageResource(R.drawable.floating_button_background)
+
+            binding.storyModel = model
+            val lp = itemView.layoutParams as GridLayoutManager.LayoutParams
+            val px = Utils.convertDp(10.toFloat())
+            if(adapterPosition % 2 == 0) lp.setMargins(px, px, px/2, px)
+            else lp.setMargins(px/2, px, px, px)
+            // gadastania listi story fragmentze  homedan
             itemView.setOnClickListener { callback.onStoryClick(adapterPosition) }
         }
     }
@@ -141,13 +152,6 @@ class StoryAdapter(
                     }
                 }
             }
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (storyList[position][0].storyAuthorId) {
-            "self" -> ADD_STORY_TYPE
-            else -> DEFAULT_STORY_TYPE
         }
     }
 }

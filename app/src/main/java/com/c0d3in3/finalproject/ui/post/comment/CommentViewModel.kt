@@ -8,7 +8,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 
 class CommentViewModel(private val repository: UsersRepository) : ViewModel() {
 

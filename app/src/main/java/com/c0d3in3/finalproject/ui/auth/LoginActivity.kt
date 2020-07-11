@@ -5,6 +5,7 @@ import android.util.Log.d
 import androidx.core.content.ContextCompat
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.extensions.isEmailValid
 import com.c0d3in3.finalproject.extensions.setColor
 import com.c0d3in3.finalproject.network.FirebaseHandler
