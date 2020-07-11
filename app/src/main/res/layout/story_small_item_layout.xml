@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" alias="v"/>
+        <import type="com.c0d3in3.finalproject.UserInfo" alias="user"/>
         <variable
             name="storyModel"
             type="com.c0d3in3.finalproject.bean.StoryModel" />
@@ -15,6 +17,7 @@
         android:paddingHorizontal="10dp"
         android:layout_height="wrap_content">
 
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/storyProfileImage"
             android:layout_width="60dp"
@@ -26,10 +29,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/addStoryImageButton"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="@{storyModel.storyAuthorId == `self` ?  v.VISIBLE : v.GONE}"
+            android:src="@drawable/floating_button_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@{storyModel.storyAuthorModel.userFullName}"
+            android:text="@{storyModel.storyAuthorModel.userId == user.INSTANCE.userInfo.userId ? `Your story` : storyModel.storyAuthorModel.userFullName}"
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="12sp"

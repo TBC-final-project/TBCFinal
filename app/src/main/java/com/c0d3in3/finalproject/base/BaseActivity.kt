@@ -5,7 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 import kotlinx.android.synthetic.main.app_bar_layout.*
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 
@@ -22,7 +22,8 @@ abstract class BaseActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        if(UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(UserInfo.userInfo.userProfileImage).into(toolbarFrameLayout.profileImageButton)
+        if(UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(
+            UserInfo.userInfo.userProfileImage).into(toolbarFrameLayout.profileImageButton)
         else toolbarFrameLayout.profileImageButton.setCircleBackgroundColorResource(android.R.color.black)
         if(title != null) toolbarFrameLayout.titleTV.text = title
     }
@@ -32,7 +33,8 @@ abstract class BaseActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         if(title != null) toolbarFrameLayout.titleTV.text = title
-        if(UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(UserInfo.userInfo.userProfileImage).into(toolbarFrameLayout.profileImageButton)
+        if(UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(
+            UserInfo.userInfo.userProfileImage).into(toolbarFrameLayout.profileImageButton)
         else toolbarFrameLayout.profileImageButton.setCircleBackgroundColorResource(android.R.color.black)
         toolbarFrameLayout.messengerImageView.visibility = View.VISIBLE
         toolbarFrameLayout.messengerImageView.setOnClickListener{

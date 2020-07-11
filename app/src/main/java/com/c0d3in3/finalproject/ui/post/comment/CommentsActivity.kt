@@ -12,13 +12,12 @@ import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
-import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlin.properties.Delegates
 

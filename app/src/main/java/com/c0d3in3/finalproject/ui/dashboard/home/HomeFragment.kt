@@ -12,6 +12,7 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoryAdapter
 import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
@@ -52,9 +53,9 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
         if (storyAdapter == null) {
             rootView!!.storyRecyclerView.layoutManager =
                 LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            storyAdapter = StoryAdapter(rootView!!.storyRecyclerView, this)
+            storyAdapter = StoryAdapter(rootView!!.storyRecyclerView, this, false)
             rootView!!.storyRecyclerView.adapter = storyAdapter
-            homeViewModel.loadStories(null)
+            homeViewModel.loadStories(false)
 
         }
 
@@ -75,6 +76,7 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
             if (it != null && it.isNotEmpty()) {
                 stories = it
                 storyAdapter!!.setList(stories)
+                (activity as DashboardActivity).sendStoryList(stories)
             }
         })
 
@@ -85,7 +87,7 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
                 stories.clear()
                 storyAdapter!!.setList(stories)
 
-                homeViewModel.loadStories(null)
+                homeViewModel.loadStories(true)
                 homeViewModel.loadPosts(null)
 
             }
@@ -151,14 +153,19 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     }
 
     override fun onStoryClick(position: Int) {
-        val intent = Intent(activity, StoryViewActivity::class.java)
-        val listJson = Gson().toJson(stories)
-        intent.putExtra("storiesList", listJson)
-        intent.putExtra("position", position)
-        startActivity(intent)
+        if(position != 0){
+            val intent = Intent(activity, StoryViewActivity::class.java)
+            val listJson = Gson().toJson(stories)
+            intent.putExtra("storiesList", listJson)
+            intent.putExtra("position", position)
+            startActivity(intent)
+        }
     }
 
     override fun onLoadMoreStories() {
-        if (stories.isNotEmpty()) homeViewModel.loadStories(stories.size)
+        if (stories.isNotEmpty()){
+            println("success 2")
+            homeViewModel.loadStories(false)
+        }
     }
 }

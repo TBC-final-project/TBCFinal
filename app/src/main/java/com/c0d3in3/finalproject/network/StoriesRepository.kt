@@ -3,7 +3,7 @@ package com.c0d3in3.finalproject.network
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.network.FirebaseHandler.STORIES_REF
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.Dispatchers
@@ -14,37 +14,54 @@ import kotlinx.coroutines.tasks.await
 
 class StoriesRepository {
 
-    fun getAllStories(limit:Long = 10, lastStory: Int? = null) = flow<State<ArrayList<ArrayList<StoryModel>>>> {
+    fun getAllStories(limit: Long = 10, lastStoryUserId: String?) =
+        flow<State<ArrayList<ArrayList<StoryModel>>>> {
 
-        emit(State.loading())
+            emit(State.loading())
 
-        val searchList = UserInfo.userInfo.userFollowing
+            val searchList = UserInfo.userInfo.userFollowing
 
-        val resultList = arrayListOf<ArrayList<StoryModel>>()
-        var counter = 0
-        if(lastStory != null) counter  = lastStory+1
-        else{
-            val mStoriesCollection = FirebaseHandler.getDatabase().collection("$USERS_REF/${UserInfo.userInfo.userId}/$STORIES_REF")
-            val snapshot : QuerySnapshot = mStoriesCollection.orderBy("storyValidUntil").orderBy("storyCreatedAt", Query.Direction.DESCENDING).whereGreaterThan("storyValidUntil", System.currentTimeMillis()).get().await()
-            val result = snapshot.toObjects(StoryModel::class.java) as ArrayList<StoryModel>
-            if(result.isNotEmpty()) resultList.add(result)
-        }
-
-        if (searchList != null) {
-            while(resultList.size <= 10 && counter < searchList.size){
-                val mStoriesCollection = FirebaseHandler.getDatabase().collection("$USERS_REF/${UserInfo.userInfo.userFollowing?.get(counter)}/$STORIES_REF")
-                val snapshot : QuerySnapshot = mStoriesCollection.orderBy("storyValidUntil").orderBy("storyCreatedAt", Query.Direction.DESCENDING).whereGreaterThan("storyValidUntil", System.currentTimeMillis()).get().await()
+            val resultList = arrayListOf<ArrayList<StoryModel>>()
+            var counter = 0
+            if (lastStoryUserId != null) {
+                if (searchList != null)
+                    counter = searchList.indexOf(lastStoryUserId) + 1
+            } else {
+                val mStoriesCollection = FirebaseHandler.getDatabase()
+                    .collection("$USERS_REF/${UserInfo.userInfo.userId}/$STORIES_REF")
+                val snapshot: QuerySnapshot = mStoriesCollection.orderBy("storyValidUntil")
+                    .orderBy("storyCreatedAt", Query.Direction.DESCENDING)
+                    .whereGreaterThan("storyValidUntil", System.currentTimeMillis()).get().await()
                 val result = snapshot.toObjects(StoryModel::class.java) as ArrayList<StoryModel>
-                if(result.isNotEmpty()) resultList.add(result)
-                counter++
+                if (result.isNotEmpty()) {
+                    result[0].storyAuthorModel = UserInfo.userInfo
+                    resultList.add(result)
+                }
             }
-        }
 
-        emit(State.success(resultList))
+            if (searchList != null) {
+                if (searchList.size > counter) {
+                    while (resultList.size <= 10 && counter < searchList.size) {
+                        val mStoriesCollection = FirebaseHandler.getDatabase()
+                            .collection("$USERS_REF/${UserInfo.userInfo.userFollowing?.get(counter)}/$STORIES_REF")
+                        val snapshot: QuerySnapshot = mStoriesCollection.orderBy("storyValidUntil")
+                            .orderBy("storyCreatedAt", Query.Direction.DESCENDING)
+                            .whereGreaterThan("storyValidUntil", System.currentTimeMillis()).get()
+                            .await()
+                        val result =
+                            snapshot.toObjects(StoryModel::class.java) as ArrayList<StoryModel>
+                        if (result.isNotEmpty()) resultList.add(result)
+                        counter++
+                    }
+                }
+            }
 
-    }.catch {
-        emit(State.failed(it.message.toString()))
-    }.flowOn(Dispatchers.IO)
+
+            emit(State.success(resultList))
+
+        }.catch {
+            emit(State.failed(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
 
 //    fun addStory(story: StoryModel) = flow<State<DocumentReference>> {
 //        emit(State.loading())

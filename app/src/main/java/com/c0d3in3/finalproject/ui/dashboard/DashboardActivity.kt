@@ -4,21 +4,15 @@ import androidx.viewpager.widget.ViewPager
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.network.PostsRepository
-import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoriesFragment
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class DashboardActivity : BaseActivity() {
 
@@ -129,5 +123,10 @@ class DashboardActivity : BaseActivity() {
 
         dashboardPager.offscreenPageLimit = 4
         dashboardPager.adapter = adapter
+    }
+
+    fun sendStoryList(list: ArrayList<ArrayList<StoryModel>>){
+        val frag = adapter.getItem(1) as StoriesFragment
+        frag.setStoryList(list)
     }
 }

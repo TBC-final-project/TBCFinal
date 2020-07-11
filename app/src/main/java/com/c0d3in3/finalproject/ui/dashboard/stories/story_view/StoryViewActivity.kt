@@ -55,6 +55,7 @@ class StoryViewActivity : AppCompatActivity() {
     }
 
     fun previousViewPagerItem(){
+        if(storyViewPager.currentItem == 1) finish()
         if(storyViewPager.currentItem > 0){
             storyViewPager.currentItem = storyViewPager.currentItem - 1
             val frag = adapter.getItem(storyViewPager.currentItem) as StoryViewFragment

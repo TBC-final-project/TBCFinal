@@ -39,7 +39,6 @@ class StoryRecyclerViewAdapter(private val storyList: ArrayList<StoryModel>, pri
 
     inner class ProgressBarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun onBind(){
-            val px = Utils.convertDp(10.toFloat())
             val lp = itemView.layoutParams as GridLayoutManager.LayoutParams
             lp.width = Utils.getScreenWidth() / storyList.size
         }

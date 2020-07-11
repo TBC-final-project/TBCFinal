@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.ui.auth.UserInfo
+import com.c0d3in3.finalproject.UserInfo
 
 class PostViewModel: ViewModel() {
 

@@ -4,9 +4,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.ui.auth.UserInfo
-import de.hdodenhof.circleimageview.CircleImageView
 
 object DataBindingComponents {
     @JvmStatic
