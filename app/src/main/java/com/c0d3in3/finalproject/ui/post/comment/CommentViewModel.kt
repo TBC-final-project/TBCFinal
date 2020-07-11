@@ -22,7 +22,7 @@ class CommentViewModel(private val repository: UsersRepository) : ViewModel() {
 
     fun setPostModel(postModel: PostModel) {
         post = postModel
-        //commentsList.value = post.postComments
+        commentsList.value = post.postComments
     }
 
 

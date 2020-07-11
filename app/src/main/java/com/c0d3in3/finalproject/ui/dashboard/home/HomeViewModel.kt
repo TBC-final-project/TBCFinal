@@ -58,6 +58,7 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
          else
             posts.value!![position].postLikes!!.add(UserInfo.userInfo.userId)
         Utils.likePost(posts.value!![position])
+        posts.value = posts.value
     }
 
     private suspend fun getPosts(lastPost: PostModel? = null) {

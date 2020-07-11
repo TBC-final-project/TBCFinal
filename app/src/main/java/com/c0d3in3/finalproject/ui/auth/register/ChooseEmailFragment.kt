@@ -21,7 +21,7 @@ class ChooseEmailFragment : BaseFragment() {
     override fun init() {
         rootView!!.btnNext.setOnClickListener {
             val email = rootView!!.emailET.text.toString()
-            if (email.isEmpty()) return@setOnClickListener Utils.createDialog(
+            if (email.isBlank()) return@setOnClickListener Utils.createDialog(
                 requireActivity(),
                 "Error",
                 getString(R.string.email_is_empty)

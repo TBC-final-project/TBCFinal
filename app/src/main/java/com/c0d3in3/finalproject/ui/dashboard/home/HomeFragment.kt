@@ -138,11 +138,14 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.OPEN_DETAILED_POST && resultCode == RESULT_OK) {
             val position = data?.extras?.getInt("position")
-            if (position != null) {
-                val model = data.extras!!.getParcelable<PostModel>("model")
-                posts[position] = model!!
-                adapter?.notifyItemChanged(position)
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (position != null && model != null) {
+                println("shemodis?")
+                homeViewModel.posts.value?.set(position, model)
+                posts[position] = model
+                adapter!!.updateSingleItem(model, position)
             }
+            //posts[position] = model!!
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

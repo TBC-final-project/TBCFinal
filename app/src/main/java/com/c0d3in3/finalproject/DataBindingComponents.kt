@@ -22,6 +22,7 @@ object DataBindingComponents {
     @JvmStatic
     @BindingAdapter("setImage")
     fun setImage(view: ImageView, url: String?){
+        println(url)
          if(url != null) Glide.with(view.context).load(url).into(view)
     }
 
