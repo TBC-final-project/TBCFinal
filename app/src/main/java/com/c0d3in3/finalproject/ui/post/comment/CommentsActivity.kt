@@ -85,6 +85,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
     override fun onBackPressed() {
         val mIntent = Intent()
+        //post.postComments = commentViewModel.getComments().value
         mIntent.putExtra("model", post)
         mIntent.putExtra("position", position)
         setResult(Activity.RESULT_OK, mIntent)

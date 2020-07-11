@@ -31,6 +31,11 @@ class PostsAdapter(private val callback: CustomPostCallback) :
         fun openDetailedPost(position: Int)
     }
 
+    fun updateSingleItem(model: PostModel,position: Int){
+        posts[position] = model
+        notifyItemChanged(position)
+    }
+
     fun setPostsList(list: List<PostModel>) {
 
         if (list.isNotEmpty()) {

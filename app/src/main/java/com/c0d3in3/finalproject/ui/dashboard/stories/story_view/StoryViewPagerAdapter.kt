@@ -145,6 +145,9 @@ class StoryViewPagerAdapter(
 
         println("currentPosition $currentPosition defaultPosition $defaultPosition position $position")
         val currentView = viewContainer[currentPosition]
+        println("currentPositionView0 ${viewContainer[0].storyListRecyclerView.adapter!!.itemCount}")
+        println("currentPositionView1 ${viewContainer[1].storyListRecyclerView.adapter!!.itemCount}")
+        println("currentPositionView2 ${viewContainer[2].storyListRecyclerView.adapter!!.itemCount}")
         for(idx in 0 until currentView.storyListRecyclerView.adapter!!.itemCount){
             currentView.progressBarRecyclerView[idx].storyTimeProgressBar.cancelProgress()
         }

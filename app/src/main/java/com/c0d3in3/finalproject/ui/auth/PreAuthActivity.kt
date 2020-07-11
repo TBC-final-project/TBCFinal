@@ -104,7 +104,7 @@ class PreAuthActivity : BaseActivity() {
                 d("GoogleSignIn", "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                Utils.createDialog(this, "Error", "Google sign in failed")
+                //Utils.createDialog(this, "Error", "Google sign in failed")
                 d("GoogleSignIn", "Google sign in failed", e)
                 // ...
             }

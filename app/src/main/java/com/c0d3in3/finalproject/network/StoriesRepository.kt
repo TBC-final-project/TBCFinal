@@ -23,6 +23,12 @@ class StoriesRepository {
         val resultList = arrayListOf<ArrayList<StoryModel>>()
         var counter = 0
         if(lastStory != null) counter  = lastStory+1
+        else{
+            val mStoriesCollection = FirebaseHandler.getDatabase().collection("$USERS_REF/${UserInfo.userInfo.userId}/$STORIES_REF")
+            val snapshot : QuerySnapshot = mStoriesCollection.orderBy("storyValidUntil").orderBy("storyCreatedAt", Query.Direction.DESCENDING).whereGreaterThan("storyValidUntil", System.currentTimeMillis()).get().await()
+            val result = snapshot.toObjects(StoryModel::class.java) as ArrayList<StoryModel>
+            if(result.isNotEmpty()) resultList.add(result)
+        }
 
         if (searchList != null) {
             while(resultList.size <= 10 && counter < searchList.size){

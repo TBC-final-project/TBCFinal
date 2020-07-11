@@ -27,7 +27,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="have_an_account_already">Have an account already? Log In</string>
+    <string name="have_an_account_already">Have an account already?</string>
     <string name="welcome_to">Welcome to PostIt</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
@@ -65,4 +65,5 @@
     <string name="email_is_taken">Email is taken!</string>
     <string name="password_length">Password length should be in range of 6–32</string>
     <string name="search_">Search…</string>
+    <string name="add_to_story">Add to Story</string>
 </resources>
