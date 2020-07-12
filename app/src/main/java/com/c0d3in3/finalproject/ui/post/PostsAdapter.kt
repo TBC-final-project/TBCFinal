@@ -40,18 +40,15 @@ class PostsAdapter(private val callback: CustomPostCallback) :
 
         if (list.isNotEmpty()) {
             val mutableList = list.toMutableList()
-            if(mutableList.size > posts.size){
-                val diffResult = DiffUtil.calculateDiff(
-                    MyDiffCallback(mutableList, posts)
-                )
-                posts = mutableList
-                for (idx in 0 until posts.size) {
-                    if (posts[idx].postAuthorModel != null) continue
-                    if (idx == posts.size - 1) getUser(posts[idx], true, diffResult)
-                    else getUser(posts[idx], false, null)
-                }
+            val diffResult = DiffUtil.calculateDiff(
+                MyDiffCallback(mutableList, posts)
+            )
+            posts = mutableList
+            for (idx in 0 until posts.size) {
+                if (posts[idx].postAuthorModel != null) continue
+                if (idx == posts.size - 1) getUser(posts[idx], true, diffResult)
+                else getUser(posts[idx], false, null)
             }
-
         }
         else{
             posts.clear()

@@ -2,13 +2,13 @@ package com.c0d3in3.finalproject.ui.splash
 
 import android.content.Intent
 import android.os.Handler
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -39,7 +39,7 @@ class SplashActivity : BaseActivity() {
             .addOnSuccessListener {
                 val userInfo = it.toObject(UserModel::class.java)
                 if (userInfo != null) {
-                    UserInfo.userInfo = userInfo
+                    App.setCurrentUser(userInfo)
                     dataLoaded = true
                     stopSplash()
                 } else stopSplash()

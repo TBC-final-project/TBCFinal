@@ -4,7 +4,9 @@
 
     <data>
         <import type="android.view.View" alias="v"/>
-        <import type="com.c0d3in3.finalproject.UserInfo" alias="user"/>
+        <variable
+            name="currentUser"
+            type="com.c0d3in3.finalproject.bean.UserModel" />
         <variable
             name="storyModel"
             type="com.c0d3in3.finalproject.bean.StoryModel" />
@@ -43,7 +45,7 @@
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@{storyModel.storyAuthorModel.userId == user.INSTANCE.userInfo.userId ? `Your story` : storyModel.storyAuthorModel.userFullName}"
+            android:text="@{storyModel.storyAuthorModel.userId == currentUser.userId ? `Your story` : storyModel.storyAuthorModel.userFullName}"
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="12sp"

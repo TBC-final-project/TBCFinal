@@ -23,10 +23,6 @@ class SearchFragment : BaseFragment(), SearchAdapter.SearchAdapterCallback {
 
     override fun init() {
 
-    }
-
-    override fun setUpFragment() {
-
         if(adapter == null){
             adapter = SearchAdapter(this)
             rootView!!.searchRecyclerView.adapter = adapter
@@ -42,6 +38,9 @@ class SearchFragment : BaseFragment(), SearchAdapter.SearchAdapterCallback {
         })
 
         setListeners()
+    }
+
+    override fun setUpFragment() {
     }
 
     private fun setListeners(){

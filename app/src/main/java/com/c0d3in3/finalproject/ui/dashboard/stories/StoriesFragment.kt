@@ -1,15 +1,13 @@
 package com.c0d3in3.finalproject.ui.dashboard.stories
 
 import android.content.Intent
-import android.widget.GridLayout
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_stories.view.*
@@ -21,29 +19,22 @@ class StoriesFragment : BaseFragment(), StoryAdapter.CustomStoryCallback {
     private lateinit var stories: ArrayList<ArrayList<StoryModel>>
 
     override fun init() {
+        storiesViewModel = ViewModelProvider(this, StoriesViewModelFactory()).get(StoriesViewModel::class.java)
 
+        rootView!!.storiesFragmentRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        adapter = StoryAdapter(rootView!!.storiesFragmentRecyclerView, this, true)
+        rootView!!.storiesFragmentRecyclerView.adapter = adapter
+
+        storiesViewModel.getStoriesList().observe(this, Observer {
+            if (it != null && it.isNotEmpty()) {
+                stories = it
+                adapter!!.setList(stories)
+                (activity as DashboardActivity).sendStoryList(stories)
+            }
+        })
     }
 
     override fun setUpFragment() {
-
-        storiesViewModel = ViewModelProvider(this).get(StoriesViewModel::class.java)
-
-        rootView!!.storiesFragmentRecyclerView.layoutManager = GridLayoutManager(activity, 2)
-//        val list = arrayListOf<ArrayList<StoryModel>>()
-//        val storyModel = StoryModel()
-//        storyModel.storyAuthorId = "self"
-//        list.add(arrayListOf(storyModel))
-//        list.add(arrayListOf(storyModel))
-//        list.add(arrayListOf(storyModel))
-//        list.add(arrayListOf(storyModel))
-//        storyModel.storyAuthorId = "se!lf"
-//        storyModel.storyAuthorModel = UserInfo.userInfo
-//        list.add(arrayListOf(storyModel))
-//        list.add(arrayListOf(storyModel))
-        adapter = StoryAdapter(rootView!!.storiesFragmentRecyclerView, this, true)
-        //adapter!!.setList(list)
-        rootView!!.storiesFragmentRecyclerView.adapter = adapter
-
     }
 
     override fun getLayout() = R.layout.fragment_stories
@@ -59,7 +50,11 @@ class StoriesFragment : BaseFragment(), StoryAdapter.CustomStoryCallback {
     }
 
     override fun onLoadMoreStories() {
+        if (stories.isNotEmpty())
+            storiesViewModel.loadStories(false)
+    }
 
+    override fun scrollToPosition(position: Int) {
     }
 
     fun setStoryList(list: ArrayList<ArrayList<StoryModel>>){

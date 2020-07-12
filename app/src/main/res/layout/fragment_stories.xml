@@ -5,4 +5,4 @@
     android:layout_width="match_parent"
     android:id="@+id/storiesFragmentRecyclerView"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.stories.StoriesFragment"/>
+    tools:context=".ui.dashboard.stories.StoriesFragment" />

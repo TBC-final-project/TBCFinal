@@ -3,10 +3,10 @@ package com.c0d3in3.finalproject.ui.auth
 import android.content.Intent
 import android.util.Log.d
 import android.widget.Toast
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.register.ChooseEmailFragment
@@ -75,7 +75,7 @@ class RegisterActivity : BaseActivity() {
 
     private fun uploadUser(uid: String){
         FirebaseHandler.getDatabase().collection("users").document(uid).set(userModel).addOnSuccessListener {
-            UserInfo.userInfo = userModel
+            App.setCurrentUser(userModel)
             val intent = Intent(this, DashboardActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
