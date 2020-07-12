@@ -29,6 +29,18 @@ class EditProfileActivity : AppCompatActivity() {
         choosePhoto.setOnClickListener{
             ImageChooserUtils.choosePhoto(this)
         }
+
+        btnUpdateProfile.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra("fullName", etEditProfileFullName.text.toString())
+            intent.putExtra("image", imageFile?.uri.toString())
+            intent.putExtra("userName", etEditProfileUserName.text.toString())
+            intent.putExtra("email", etEditProfileEmail.text.toString())
+
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
+
     }
 
 

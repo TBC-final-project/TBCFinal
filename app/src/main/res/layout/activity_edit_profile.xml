@@ -1,127 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.profile.EditProfileActivity">
 
-    <ImageView
-        android:layout_marginStart="24dp"
-        android:id="@+id/btnBackEditProfile"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="24dp"
-        android:contentDescription="@string/back_button"
-        android:src="@mipmap/ic_back_arrow" />
-
     <LinearLayout
-        android:background="#A92676E1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_marginTop="25dp"
-            android:id="@+id/editProfileImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/img_profile" />
-
-        <TextView
-            android:id="@+id/choosePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#fff"
-            android:text="@string/upload_photo"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp"/>
-
-        <!--ImageButton
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="-25dp"
-            android:background="@drawable/btn_add_photo"
-            android:paddingVertical="10dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/camera"
-            android:layout_marginBottom="25dp"/-->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="@string/first_name"
-            android:textColor="#000"
-            android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/btnBackEditProfile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@string/back_button"
+            android:src="@mipmap/ic_back_arrow" />
 
-        <EditText
-            android:id="@+id/etEditProfileFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:paddingVertical="20dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/last_name"
-            android:textColor="#000"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/etEditProfileLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:paddingVertical="20dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/email"
-            android:textColor="#000"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/etEditProfileEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="20dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/updateProfile"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_save_changes"
-            android:paddingVertical="20dp"
-            android:text="@string/update"
-            android:textColor="#fff" />
+            android:background="#A92676E1"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/editProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/img_profile" />
+
+            <TextView
+                android:id="@+id/choosePhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:text="@string/upload_photo"
+                android:textColor="#fff"
+                android:textSize="20sp" />
+
+            <!--ImageButton
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="-25dp"
+                android:background="@drawable/btn_add_photo"
+                android:paddingVertical="10dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/camera"
+                android:layout_marginBottom="25dp"/-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Full Name"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/etEditProfileFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:paddingVertical="15dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/email"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/etEditProfileUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/username"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/etEditProfileEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="15dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUpdateProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/btn_save_changes"
+                android:paddingVertical="20dp"
+                android:text="@string/update"
+                android:textColor="#fff" />
+        </LinearLayout>
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>

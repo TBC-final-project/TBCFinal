@@ -66,4 +66,5 @@
     <string name="password_length">Password length should be in range of 6–32</string>
     <string name="search_">Search…</string>
     <string name="add_to_story">Add to Story</string>
+    <string name="full_name">Full Name</string>
 </resources>
