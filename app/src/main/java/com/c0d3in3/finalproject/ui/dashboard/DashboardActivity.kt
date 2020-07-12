@@ -1,13 +1,13 @@
 package com.c0d3in3.finalproject.ui.dashboard
 
 import androidx.viewpager.widget.ViewPager
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
@@ -64,6 +64,7 @@ class DashboardActivity : BaseActivity() {
         }
     }
 
+
     private fun addPosts() {
 //        val post = PostModel()
 //        post.postAuthor = UserInfo.userInfo.userId
@@ -86,8 +87,8 @@ class DashboardActivity : BaseActivity() {
         storyModel.storyValidUntil = storyModel.storyCreatedAt+10000000
         val mStoriesCollection = FirebaseHandler.getDatabase().collection("${FirebaseHandler.USERS_REF}/${userModel.userId}/${FirebaseHandler.STORIES_REF}")
         mStoriesCollection.add(storyModel)
-        UserInfo.userInfo.userFollowing?.add(userModel.userId)
-        FirebaseHandler.getDatabase().collection("users").document(UserInfo.userInfo.userId).update("userFollowing", UserInfo.userInfo.userFollowing)
+        App.getCurrentUser().userFollowing?.add(userModel.userId)
+        FirebaseHandler.getDatabase().collection("users").document(App.getCurrentUser().userId).update("userFollowing", App.getCurrentUser().userFollowing)
     }
 
     private fun addViewPagerListener() {

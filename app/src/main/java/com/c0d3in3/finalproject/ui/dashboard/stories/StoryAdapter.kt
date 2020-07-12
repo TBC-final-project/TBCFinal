@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.MyDiffCallback
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
@@ -16,7 +17,6 @@ import com.c0d3in3.finalproject.databinding.StorySmallItemLayoutBinding
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.UserInfo
 import kotlinx.android.synthetic.main.story_big_item_layout.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +33,7 @@ class StoryAdapter(
     interface CustomStoryCallback {
         fun onStoryClick(position: Int)
         fun onLoadMoreStories()
+        fun scrollToPosition(position: Int)
     }
 
     private var storyList = mutableListOf<ArrayList<StoryModel>>()
@@ -42,18 +43,36 @@ class StoryAdapter(
     private val visibleThreshold = 3
 
     init {
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val totalItemCount = linearLayoutManager.itemCount
-                val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-                if (!isLoading && 5 <= totalItemCount && visibleThreshold >= totalItemCount - lastVisibleItem) {
-                    callback.onLoadMoreStories()
-                    isLoading = true
+        if(!bigStories){
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val totalItemCount = linearLayoutManager.itemCount
+                    val lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
+                    if (!isLoading && 5 <= totalItemCount && visibleThreshold >= totalItemCount - lastVisibleItem) {
+                        callback.onLoadMoreStories()
+                        isLoading = true
+                    }
                 }
-            }
-        })
+            })
+        }
+        else{
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val totalItemCount = gridLayoutManager.itemCount
+                    val lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition()
+                    if (!isLoading && 5 <= totalItemCount && visibleThreshold >= totalItemCount - lastVisibleItem) {
+                        callback.onLoadMoreStories()
+                        isLoading = true
+                    }
+                }
+            })
+        }
+
+
     }
 
     fun setList(list: List<ArrayList<StoryModel>>) {
@@ -111,6 +130,7 @@ class StoryAdapter(
         fun onBind() {
             model = storyList[adapterPosition][0]
 
+            binding.currentUser = App.getCurrentUser()
             binding.storyModel = model
             itemView.setOnClickListener { callback.onStoryClick(adapterPosition) }
         }
@@ -128,6 +148,7 @@ class StoryAdapter(
             }
             else itemView.addStoryBigImageButton.setImageResource(R.drawable.floating_button_background)
 
+            binding.currentUser = App.getCurrentUser()
             binding.storyModel = model
             val lp = itemView.layoutParams as GridLayoutManager.LayoutParams
             val px = Utils.convertDp(10.toFloat())
@@ -148,7 +169,11 @@ class StoryAdapter(
                 when (state) {
                     is State.Success -> {
                         model.storyAuthorModel = state.data!!
-                        if(isLast) withContext(Dispatchers.Main){ diffResult?.dispatchUpdatesTo(this@StoryAdapter); isLoading = false}
+                        if(isLast) withContext(Dispatchers.Main){
+                            diffResult?.dispatchUpdatesTo(this@StoryAdapter)
+                            //callback.scrollToPosition(storyList.size-1)
+                            isLoading = false
+                        }
                     }
                 }
             }

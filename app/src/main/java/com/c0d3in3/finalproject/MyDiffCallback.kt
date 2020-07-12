@@ -2,6 +2,7 @@ package com.c0d3in3.finalproject
 
 import androidx.annotation.Nullable
 import androidx.recyclerview.widget.DiffUtil
+import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
 
@@ -24,6 +25,7 @@ class MyDiffCallback<T>(private val newList: MutableList<T>, private val oldList
         return when {
             oldList[oldItemPosition] is PostModel -> (oldList[oldItemPosition] as PostModel).postId === (newList[newItemPosition] as PostModel).postId
             oldList[oldItemPosition] is StoryModel -> (oldList[oldItemPosition] as StoryModel).storyId === (newList[newItemPosition] as StoryModel).storyId
+            oldList[oldItemPosition] is CommentModel -> (oldList[oldItemPosition] as CommentModel).commentAuthor === (newList[newItemPosition] as CommentModel).commentAuthor
             else -> false
         }
     }

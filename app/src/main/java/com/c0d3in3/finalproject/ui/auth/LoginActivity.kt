@@ -3,9 +3,9 @@ package com.c0d3in3.finalproject.ui.auth
 import android.content.Intent
 import android.util.Log.d
 import androidx.core.content.ContextCompat
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.extensions.isEmailValid
 import com.c0d3in3.finalproject.extensions.setColor
 import com.c0d3in3.finalproject.network.FirebaseHandler
@@ -52,7 +52,7 @@ class LoginActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     println(auth.currentUser!!.uid)
                     FirebaseHandler.getDatabase().collection(USERS_REF).document(auth.currentUser!!.uid).get().addOnSuccessListener {
-                        UserInfo.userInfo = it.toObject<UserModel>()!!
+                        App.setCurrentUser(it.toObject<UserModel>()!!)
 
                         val intent = Intent(this, DashboardActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

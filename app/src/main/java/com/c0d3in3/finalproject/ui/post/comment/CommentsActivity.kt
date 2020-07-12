@@ -3,21 +3,24 @@ package com.c0d3in3.finalproject.ui.post.comment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.c0d3in3.finalproject.base.BaseActivity
+import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.CustomLinearLayoutManager
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
-import com.c0d3in3.finalproject.extensions.setListenerColor
+import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
+import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.UserInfo
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlin.properties.Delegates
 
@@ -41,19 +44,38 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
         val binding : ActivityCommentsBinding = DataBindingUtil.setContentView(this, getLayout())
         binding.postModel = post
 
+
+        initToolbar("${post.postAuthorModel?.userFullName}'s post")
+
+        if (App.getCurrentUser().userProfileImage.isNotEmpty()) Glide.with(applicationContext)
+            .load(App.getCurrentUser().userProfileImage).into(profileImageView)
+        else profileImageView.setImageResource(R.mipmap.img_profile)
+
         setListeners()
 
 
         if (adapter == null) {
             adapter = CommentAdapter(this)
+            commentsRecyclerView.layoutManager = CustomLinearLayoutManager(this)
             commentsRecyclerView.adapter = adapter
-            post.postComments?.let { adapter!!.setList(it) }
+            //post.postComments?.let { adapter!!.setList(it) }
         }
 
-        commentViewModel.getComments().observe(this, Observer {
-            adapter?.setList(it)
-            post.postComments = it
+        commentViewModel.getPost().observe(this, Observer {
+            if(it != null) {
+                post = it
+                if(commentSwipeRefreshLayout.isRefreshing) commentSwipeRefreshLayout.isRefreshing = false
+                if(it.postComments != null) {
+                    adapter?.setList(it.postComments!!)
+                }
+            }
         })
+
+        commentSwipeRefreshLayout.setOnRefreshListener {
+            if (commentSwipeRefreshLayout.isRefreshing)
+                commentViewModel.loadPost()
+        }
+
     }
 
     private fun setListeners() {
@@ -66,7 +88,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
 
 
-        if (model == null || position == -1) finish()
+        if (model == null) finish()
         else {
             post = model as PostModel
             commentViewModel.setPostModel(model!!)
@@ -74,12 +96,6 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
 
         if (post.postComments == null) post.postComments = arrayListOf()
-
-        initToolbar("${post.postAuthorModel?.userFullName}'s post")
-
-        if (UserInfo.userInfo.userProfileImage.isNotEmpty()) Glide.with(applicationContext)
-            .load(UserInfo.userInfo.userProfileImage).into(profileImageView)
-        else profileImageView.setImageResource(R.mipmap.img_profile)
     }
 
     override fun onBackPressed() {
@@ -113,13 +129,22 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
         )
     }
 
+    override fun likeComment(position: Int) {
+        commentViewModel.likeComment(position)
+        adapter?.notifyItemChanged(position)
+    }
+
     fun addComment(v: View) {
         if(commentEditText.text.isBlank()) return
         val comment = CommentModel(
-            System.currentTimeMillis(), UserInfo.userInfo.userId, commentEditText.text.toString(),
+            System.currentTimeMillis(), App.getCurrentUser().userId, commentEditText.text.toString(),
             arrayListOf(), arrayListOf()
         )
         commentViewModel.addComment(comment)
         commentEditText.text.clear()
+        commentEditText.clearFocus()
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(commentEditText.windowToken, 0)
     }
 }

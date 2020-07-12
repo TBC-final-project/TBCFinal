@@ -33,13 +33,6 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     private var isLoading = false
 
     override fun init() {
-
-    }
-
-
-    override fun setUpFragment() {
-
-
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory()).get(HomeViewModel::class.java)
 
@@ -108,6 +101,11 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     }
 
 
+    override fun setUpFragment() {
+
+    }
+
+
     override fun getLayout() = R.layout.fragment_home
 
     override fun onLikeButtonClick(position: Int) {
@@ -142,7 +140,6 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
             val position = data?.extras?.getInt("position")
             val model = data?.extras!!.getParcelable<PostModel>("model")
             if (position != null && model != null) {
-                println("shemodis?")
                 homeViewModel.posts.value?.set(position, model)
                 posts[position] = model
                 adapter!!.updateSingleItem(model, position)
@@ -163,9 +160,11 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     }
 
     override fun onLoadMoreStories() {
-        if (stories.isNotEmpty()){
-            println("success 2")
+        if (stories.isNotEmpty())
             homeViewModel.loadStories(false)
-        }
+    }
+
+    override fun scrollToPosition(position: Int) {
+        rootView!!.storyRecyclerView.scrollToPosition(position)
     }
 }

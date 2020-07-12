@@ -13,4 +13,4 @@ data class UserModel(
     var userProfileCover : String = "",
     var userProfileImage : String = "",
     var userRegisterDate : Long = 0,
-    var username : String = ""): Parcelable{}
+    var username : String = ""): Parcelable

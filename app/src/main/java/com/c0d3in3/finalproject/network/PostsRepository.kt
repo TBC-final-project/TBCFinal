@@ -1,5 +1,6 @@
 package com.c0d3in3.finalproject.network
 
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
 import com.c0d3in3.finalproject.bean.PostModel
 import com.google.firebase.firestore.DocumentReference
@@ -16,17 +17,62 @@ class PostsRepository {
     private val mPostsCollection = FirebaseHandler.getDatabase().collection(POSTS_REF)
 
 
-    fun getAllPosts(limit:Long = 10, lastPost: PostModel? = null) = flow<State<ArrayList<PostModel>>> {
+    fun getAllPosts(limit: Long = 10, lastPost: PostModel? = null) =
+        flow<State<ArrayList<PostModel>>> {
+
+            emit(State.loading())
+
+            val collectionSize = mPostsCollection.get().await().documents.size
+            var counter = 0
+            var lastPostModel: PostModel? = lastPost
+
+            val searchList = App.getCurrentUser().userFollowing
+
+            val resultList = arrayListOf<PostModel>()
+
+            while (counter < collectionSize) {
+                if (resultList.size >= 10){
+                    emit(State.success(resultList))
+                    break
+                }
+                val snapshot: QuerySnapshot = if (lastPostModel != null)
+                    mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING)
+                        .startAfter(lastPostModel.postTimestamp)
+                        .limit(limit).get()
+                        .await()
+                else
+                    mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING)
+                        .limit(limit).get()
+                        .await()
+                val result =
+                    snapshot.toObjects(PostModel::class.java) as ArrayList<PostModel>
+                result.forEach {
+                    if (it.postAuthor == App.getCurrentUser().userId || searchList?.contains(
+                            it.postAuthor.toString()
+                        )!!
+                    )
+                        resultList.add(it)
+                }
+                if(result.isNotEmpty()) lastPostModel = result[result.size - 1]
+                counter += limit.toInt()
+                if(counter >= collectionSize){
+                    emit(State.Success(resultList))
+                    break
+                }
+            }
+
+        }.catch {
+            emit(State.failed(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
+    fun getPost(postId: String) = flow<State<PostModel?>> {
 
         emit(State.loading())
 
-        val snapshot : QuerySnapshot = if(lastPost != null)
-            mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING).startAfter(lastPost.postTimestamp).limit(limit).get().await()
-        else
-            mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING).limit(limit).get().await()
-        val posts = snapshot.toObjects(PostModel::class.java) as ArrayList
+        val snapshot = mPostsCollection.document(postId).get().await()
+        val post = snapshot.toObject(PostModel::class.java)
 
-        emit(State.success(posts))
+        emit(State.success(post))
 
     }.catch {
         emit(State.failed(it.message.toString()))

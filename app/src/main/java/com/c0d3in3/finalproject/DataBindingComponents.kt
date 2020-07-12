@@ -10,7 +10,7 @@ object DataBindingComponents {
     @BindingAdapter("setLikeButtonResource")
     fun setLikeButtonResource(view: ImageView, arrayList: ArrayList<String>?) {
         if(arrayList != null){
-            if (UserInfo.userInfo.userId in arrayList) view.setImageResource(R.mipmap.ic_favorited)
+            if (App.getCurrentUser().userId in arrayList) view.setImageResource(R.mipmap.ic_favorited)
             else view.setImageResource(R.mipmap.ic_unfavorite)
         }
     }
@@ -19,7 +19,6 @@ object DataBindingComponents {
     @JvmStatic
     @BindingAdapter("setImage")
     fun setImage(view: ImageView, url: String?){
-        println(url)
          if(url != null) Glide.with(view.context).load(url).into(view)
     }
 

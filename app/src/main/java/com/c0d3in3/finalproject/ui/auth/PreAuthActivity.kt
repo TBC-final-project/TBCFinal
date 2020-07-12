@@ -2,10 +2,10 @@ package com.c0d3in3.finalproject.ui.auth
 
 import android.content.Intent
 import android.util.Log.d
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.Constants.RC_SIGN_IN
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.extensions.setBold
 import com.c0d3in3.finalproject.extensions.setUnderline
 import com.c0d3in3.finalproject.network.FirebaseHandler
@@ -72,7 +72,7 @@ class PreAuthActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     FirebaseHandler.getDatabase().collection(USERS_REF).document(auth.uid!!).get().addOnSuccessListener {
                         if(it.exists()){
-                            UserInfo.userInfo = it.toObject<UserModel>()!!
+                            App.setCurrentUser(it.toObject<UserModel>()!!)
                             val intent = Intent(this, DashboardActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)

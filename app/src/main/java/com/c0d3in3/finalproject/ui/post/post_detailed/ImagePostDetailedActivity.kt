@@ -6,12 +6,12 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
 import com.c0d3in3.finalproject.bean.PostModel
-import com.c0d3in3.finalproject.UserInfo
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import kotlinx.android.synthetic.main.activity_image_post_detailed.*
 import kotlin.properties.Delegates
@@ -78,7 +78,7 @@ class ImagePostDetailedActivity : BaseActivity() {
     }
 
     private fun likePost() {
-        if(post.postLikes?.contains(UserInfo.userInfo.userId)!!) likeButton.setImageResource(R.mipmap.ic_unfavorite)
+        if(post.postLikes?.contains(App.getCurrentUser().userId)!!) likeButton.setImageResource(R.mipmap.ic_unfavorite)
         else likeButton.setImageResource(R.mipmap.ic_favorited)
         postViewModel.likePost()
     }
