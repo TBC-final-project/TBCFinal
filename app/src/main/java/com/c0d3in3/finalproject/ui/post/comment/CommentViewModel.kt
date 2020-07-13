@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.bean.CommentModel
@@ -54,13 +55,35 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             Log.d("AddComment", "Transaction success!")
 
         }.addOnFailureListener { e -> Log.d("AddComment", "Transaction failure.", e) }
+
+        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+            Utils.addNotification(
+                App.getCurrentUser().userId,
+                _post.value!!.postAuthor.toString(),
+                Constants.NOTIFICATION_COMMENT,
+                comment.comment
+            )
+        }
     }
 
     fun likeComment(position: Int){
         if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
             _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
-        else
+        else{
             _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
+
+            val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
+            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+                if (receiver != null) {
+                    Utils.addNotification(
+                        App.getCurrentUser().userId,
+                        receiver,
+                        Constants.NOTIFICATION_LIKE_COMMENT,
+                        _post.value!!.postComments?.get(position)?.comment
+                    )
+                }
+            }
+        }
 
         val postRef =  FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF).document(
             _post.value!!.postId)

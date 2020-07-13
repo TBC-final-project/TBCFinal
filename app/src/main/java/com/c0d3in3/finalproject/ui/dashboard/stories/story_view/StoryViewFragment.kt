@@ -32,15 +32,17 @@ class StoryViewFragment(private val storyList: ArrayList<StoryModel>, private va
         val recyclerView = rootView!!.storyListRecyclerView
         val progressBarRecyclerView =  rootView!!.progressBarRecyclerView
 
-        adapter =  StoryRecyclerViewAdapter(storyList, 0,this)
-
-        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.adapter = adapter
+        adapter =  StoryRecyclerViewAdapter(0,this)
 
         progressBarRecyclerView.layoutManager = GridLayoutManager(activity, storyList.size)
 
-        progressBarAdapter = StoryRecyclerViewAdapter(storyList, 1, this)
+        progressBarAdapter = StoryRecyclerViewAdapter(1, this)
+        progressBarAdapter.setList(storyList)
         progressBarRecyclerView.adapter = progressBarAdapter
+
+        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        adapter.setList(storyList)
+        recyclerView.adapter = adapter
 
         recyclerView.setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) onSingleTapUp(
@@ -137,7 +139,6 @@ class StoryViewFragment(private val storyList: ArrayList<StoryModel>, private va
         if(isFirst) {
             val progressBarRecyclerView =  rootView!!.progressBarRecyclerView
             setProgressBar(progressBarRecyclerView[0].storyTimeProgressBar)
-            println("shemodis")
         }
 
     }
