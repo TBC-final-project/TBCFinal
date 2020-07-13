@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.bean.PostModel
@@ -52,8 +53,16 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
     fun likePost(position: Int){
         if (posts.value!![position].postLikes?.contains(App.getCurrentUser().userId)!!)
             posts.value!![position].postLikes!!.remove(App.getCurrentUser().userId)
-         else
+         else{
             posts.value!![position].postLikes!!.add(App.getCurrentUser().userId)
+            if(posts.value!![position].postAuthor != App.getCurrentUser().userId){
+                Utils.addNotification(
+                    App.getCurrentUser().userId,
+                    posts.value!![position].postAuthor!!,
+                    Constants.NOTIFICATION_LIKE_POST
+                )
+            }
+        }
         Utils.likePost(posts.value!![position])
         posts.value = posts.value
     }

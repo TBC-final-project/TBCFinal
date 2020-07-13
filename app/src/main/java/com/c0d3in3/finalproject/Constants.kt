@@ -13,4 +13,9 @@ object Constants {
 
     const val VIEW_TYPE_WALL_ITEM = 0
     const val VIEW_TYPE_LOADING = 1
+
+    const val NOTIFICATION_START_FOLLOW = 0
+    const val NOTIFICATION_LIKE_POST = 1
+    const val NOTIFICATION_COMMENT = 2
+    const val NOTIFICATION_LIKE_COMMENT = 3
 }
