@@ -71,6 +71,7 @@ object Utils {
             null
         }.addOnSuccessListener { Log.d("postLikes", "Transaction success!") }
             .addOnFailureListener { e -> Log.d("postLikes", "Transaction failure.", e) }
+
     }
 
     fun addNotification(
