@@ -11,16 +11,23 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import com.bumptech.glide.Glide
+import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.base.BaseActivity
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.image_chooser.EasyImage
 import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
 import com.c0d3in3.finalproject.image_chooser.MediaFile
 import com.c0d3in3.finalproject.image_chooser.MediaSource
+import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.choose_resource_file.*
 
-class EditProfileActivity : AppCompatActivity() {
+class EditProfileActivity : BaseActivity() {
 
+    private lateinit var model: UserModel
     private var imageFile: MediaFile? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,18 +38,33 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         btnUpdateProfile.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra("fullName", etEditProfileFullName.text.toString())
-            intent.putExtra("image", imageFile?.uri.toString())
-            intent.putExtra("userName", etEditProfileUserName.text.toString())
-            intent.putExtra("email", etEditProfileEmail.text.toString())
+            //intent.putExtra("image", imageFile?.uri.toString())
 
-            setResult(Activity.RESULT_OK, intent)
+            //App.getCurrentUser().userFullName = etEditProfileFullName.text.toString()
+
+            App.getCurrentUser().username = etEditProfileUserName.text.toString()
+
+            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF).document(
+                App.getCurrentUser().userId
+            ).set(App.getCurrentUser())
+
             finish()
         }
 
+
     }
 
+    override fun getLayout() = R.layout.activity_edit_profile
+
+    override fun init() {
+       model = intent.getParcelableExtra("model")!!
+
+        val name = model.userFullName.split(" ")
+        etEditProfileFirstName.setText(name[0])
+        etEditProfileLastName.setText(name[1])
+        etEditProfileUserName.setText(model.username)
+
+    }
 
 
     //fun choosePhotoOnClick(view: View) {

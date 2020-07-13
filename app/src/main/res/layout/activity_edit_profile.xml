@@ -71,12 +71,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Full Name"
+                android:text="@string/first_name"
                 android:textColor="#000"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/etEditProfileFullName"
+                android:id="@+id/etEditProfileFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -87,18 +87,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/email"
+                android:layout_marginTop="30dp"
+                android:text="@string/last_name"
                 android:textColor="#000"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/etEditProfileUserName"
+                android:id="@+id/etEditProfileLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
                 android:paddingVertical="15dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp" />
+
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,7 +112,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/etEditProfileEmail"
+                android:id="@+id/etEditProfileUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="15dp"

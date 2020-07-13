@@ -39,6 +39,7 @@
     <string name="edit_image">Edit Image</string>
     <string name="upload_picture">Upload Picture</string>
     <string name="update">Update</string>
+    <string name="update_profile">Update Profile</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="posts">posts</string>
     <string name="email_is_empty">Email is empty</string>
