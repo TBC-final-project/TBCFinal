@@ -14,7 +14,7 @@
         android:layout_height="60dp"
         android:hint="@string/search_"
         android:inputType="text"
-        android:drawableStart="@mipmap/ic_search"
+
         android:paddingHorizontal="10dp"
         android:drawablePadding="12dp"
         android:maxLines="1"

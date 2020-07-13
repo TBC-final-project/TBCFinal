@@ -2,6 +2,7 @@ package com.c0d3in3.finalproject.ui.splash
 
 import android.content.Intent
 import android.os.Handler
+import android.util.Log.d
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.R
@@ -10,6 +11,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
+import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : BaseActivity() {
@@ -60,7 +62,9 @@ class SplashActivity : BaseActivity() {
 
     private fun stopSplash() {
         if (dataLoaded) {
-            val intent = Intent(this, DashboardActivity::class.java)
+            val intent = Intent(this, ProfileActivity::class.java) // dashboard
+            intent.putExtra("model", App.getCurrentUser())
+            //d("useruser", App.getCurrentUser().userId)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {
