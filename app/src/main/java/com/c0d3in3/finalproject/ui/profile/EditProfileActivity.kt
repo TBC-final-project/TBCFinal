@@ -24,14 +24,22 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.choose_resource_file.*
+import java.util.*
 
 class EditProfileActivity : BaseActivity() {
 
     private lateinit var model: UserModel
     private var imageFile: MediaFile? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
+
+    override fun getLayout() = R.layout.activity_edit_profile
+
+    override fun init() {
+        model = intent.getParcelableExtra("model")!!
+
+        val name = model.userFullName.split(" ")
+        etEditProfileFirstName.setText(name[0])
+        etEditProfileLastName.setText(name[1])
+        etEditProfileUserName.setText(model.username)
 
         choosePhoto.setOnClickListener{
             ImageChooserUtils.choosePhoto(this)
@@ -40,7 +48,10 @@ class EditProfileActivity : BaseActivity() {
         btnUpdateProfile.setOnClickListener {
             //intent.putExtra("image", imageFile?.uri.toString())
 
-            //App.getCurrentUser().userFullName = etEditProfileFullName.text.toString()
+            App.getCurrentUser().userFullName = "${etEditProfileFirstName.text} ${etEditProfileLastName.text}"
+
+            App.getCurrentUser().userFullNameToLowerCase = App.getCurrentUser().userFullName.toLowerCase(
+                Locale.ROOT)
 
             App.getCurrentUser().username = etEditProfileUserName.text.toString()
 
@@ -48,22 +59,9 @@ class EditProfileActivity : BaseActivity() {
                 App.getCurrentUser().userId
             ).set(App.getCurrentUser())
 
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
-
-
-    }
-
-    override fun getLayout() = R.layout.activity_edit_profile
-
-    override fun init() {
-       model = intent.getParcelableExtra("model")!!
-
-        val name = model.userFullName.split(" ")
-        etEditProfileFirstName.setText(name[0])
-        etEditProfileLastName.setText(name[1])
-        etEditProfileUserName.setText(model.username)
-
     }
 
 
