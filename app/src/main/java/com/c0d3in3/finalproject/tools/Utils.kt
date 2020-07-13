@@ -9,12 +9,29 @@ import android.util.Patterns
 import android.util.TypedValue
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants.NOTIFICATION_COMMENT
+import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_COMMENT
+import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_POST
+import com.c0d3in3.finalproject.Constants.NOTIFICATION_START_FOLLOW
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.network.State
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 object Utils {
     fun isValidEmail(target: CharSequence?): Boolean {
@@ -22,7 +39,7 @@ object Utils {
             .matches()
     }
 
-    fun createDialog(ctx: Context, title: String, description : String){
+    fun createDialog(ctx: Context, title: String, description: String) {
         val dialog = Dialog(ctx)
 
         dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
@@ -38,37 +55,98 @@ object Utils {
         dialog.dialogDescriptionTV.text = description
         dialog.dialogTitleTV.text = title
 
-        dialog.dialogOkButton.setOnClickListener{
+        dialog.dialogOkButton.setOnClickListener {
             dialog.dismiss()
         }
 
         dialog.show()
     }
 
-//
-//    fun checkLike(postArray: ArrayList<String>) : Int{
-//        var likePos = -1
-//        if(postArray.isNotEmpty()){
-//            for(idx in 0 until postArray.size){
-//                if(postArray[idx] == UserInfo.userInfo.userId){
-//                    likePos = idx
-//                    break
-//                }
-//            }
-//        }
-//        return likePos
-//    }
 
-    fun likePost(post: PostModel){
-        val postRef =  FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF).document(post.postId)
+    fun likePost(post: PostModel) {
+        val postRef = FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+            .document(post.postId)
         FirebaseHandler.getDatabase().runTransaction { transaction ->
             transaction.update(postRef, "postLikes", post.postLikes)
             null
         }.addOnSuccessListener { Log.d("postLikes", "Transaction success!") }
             .addOnFailureListener { e -> Log.d("postLikes", "Transaction failure.", e) }
+
     }
 
-    fun createOptionalDialog(ctx: Context, title: String, description: String, callback: DialogCallback){
+    fun addNotification(
+        senderId: String,
+        receiverId: String,
+        notificationType: Int,
+        text: String? = null
+    ) {
+        val notificationModel = NotificationModel()
+        notificationModel.notificationAuthorId = receiverId
+        notificationModel.notificationSenderId = senderId
+        notificationModel.notificationTimestamp = System.currentTimeMillis()
+        when (notificationType) {
+            NOTIFICATION_START_FOLLOW -> notificationModel.notificationText =
+                App.getContext().getString(R.string.started_following_you)
+            NOTIFICATION_LIKE_POST -> notificationModel.notificationText =
+                App.getContext().getString(R.string.liked_your_post)
+            NOTIFICATION_COMMENT -> notificationModel.notificationText = "Commented: $text"
+            NOTIFICATION_LIKE_COMMENT -> notificationModel.notificationText =
+                "Liked your comment: $text"
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            checkNotification(notificationModel).collect { state ->
+                when (state) {
+
+                    is State.Success -> {
+                        if (state.data)
+                            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF)
+                                .document(receiverId).collection("notifications")
+                                .add(notificationModel).addOnSuccessListener {
+                                    FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF)
+                                        .document(receiverId).collection("notifications").document(it.id).update("notificationId", it.id)
+                                }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkNotification(notificationModel: NotificationModel) = flow<State<Boolean>> {
+        val mNotificationsCollection =
+            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF)
+                .document(notificationModel.notificationAuthorId).collection("notifications")
+        emit(State.loading())
+
+        val snapshot = mNotificationsCollection.get().await()
+
+        var foundSameNotification = false
+
+        if (snapshot != null) {
+            val list = snapshot.toObjects(NotificationModel::class.java)
+            list.forEach {
+                if (it.notificationAuthorId == notificationModel.notificationAuthorId && it.notificationSenderId == notificationModel.notificationSenderId &&
+                    it.notificationText == notificationModel.notificationText
+                ) {
+                    mNotificationsCollection.document(it.notificationId).delete()
+                    foundSameNotification = true
+                    emit(State.success(true))
+                    return@forEach
+                }
+            }
+            if(!foundSameNotification)emit(State.success(true))
+        }
+
+    }.catch {
+        emit(State.failed(it.message.toString()))
+    }.flowOn(Dispatchers.IO)
+
+    fun createOptionalDialog(
+        ctx: Context,
+        title: String,
+        description: String,
+        callback: DialogCallback
+    ) {
         val dialog = Dialog(ctx)
 
         dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
