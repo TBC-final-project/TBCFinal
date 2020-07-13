@@ -1,8 +1,5 @@
 package com.c0d3in3.finalproject.network
 
-import android.widget.ProgressBar
-import com.c0d3in3.finalproject.bean.StoryModel
-
 
 sealed class State<T> {
     class Loading<T> : State<T>()

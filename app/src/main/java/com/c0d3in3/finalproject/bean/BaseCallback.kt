@@ -1,5 +1,5 @@
 package com.c0d3in3.finalproject.bean
 
-interface BaseCallback<T> {
-    fun onClickItem(data: T)
+interface BaseCallback {
+    fun onClickItem(position: Int)
 }

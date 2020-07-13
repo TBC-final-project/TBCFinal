@@ -154,7 +154,6 @@ class StoryAdapter(
             val px = Utils.convertDp(10.toFloat())
             if(adapterPosition % 2 == 0) lp.setMargins(px, px, px/2, px)
             else lp.setMargins(px/2, px, px, px)
-            // gadastania listi story fragmentze  homedan
             itemView.setOnClickListener { callback.onStoryClick(adapterPosition) }
         }
     }
