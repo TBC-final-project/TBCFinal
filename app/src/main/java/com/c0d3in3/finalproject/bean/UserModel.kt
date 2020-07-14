@@ -14,4 +14,5 @@ data class UserModel(
     var userProfileImage : String = "",
     var userRegisterDate : Long = 0,
     var userPosts: ArrayList<String>? = null,
+    var userProfileDescription: String = "",
     var username : String = ""): Parcelable

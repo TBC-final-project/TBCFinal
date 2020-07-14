@@ -70,4 +70,7 @@
       <string name="full_name">Full Name</string>
       <string name="started_following_you">Started following you.</string>
     <string name="liked_your_post">Liked your post.</string>
+    <string name="add_post">Publish Your Post</string>
+    <string name="add_a_description">Add a Description</string>
+    <string name="add_a_title">Add a Title</string>
 </resources>
