@@ -34,7 +34,7 @@ class EditProfileActivity : BaseActivity() {
     override fun getLayout() = R.layout.activity_edit_profile
 
     override fun init() {
-       model = intent.getParcelableExtra("model")!!
+        model = intent.getParcelableExtra("model")!!
 
         val name = model.userFullName.split(" ")
         etEditProfileFirstName.setText(name[0])
@@ -82,6 +82,7 @@ class EditProfileActivity : BaseActivity() {
             }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

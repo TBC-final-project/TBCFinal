@@ -10,11 +10,11 @@ data class PostModel(
     var postComments: ArrayList<CommentModel>? = null,
     var postLikes: ArrayList<String>? = null,
     var postImage : String = "",
-    val postDescription: String = "",
+    var postDescription: String = "",
     var postId: String = "",
     val postLocation: String = "",
     var postTimestamp: Long = 0,
-    val postTitle: String = "",
+    var postTitle: String = "",
     val postType: Long = 0,
     @get:Exclude var postAuthorModel: UserModel? = null,
     @get:Exclude var isLast: Boolean = false) :Parcelable, CustomInterface

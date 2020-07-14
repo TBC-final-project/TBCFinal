@@ -1,6 +1,5 @@
 package com.c0d3in3.finalproject.ui.profile
 
-import android.app.Activity
 import android.content.Intent
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -13,37 +12,23 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityProfileBinding
-import com.c0d3in3.finalproject.ui.dashboard.home.HomeViewModel
-import com.c0d3in3.finalproject.ui.dashboard.home.HomeViewModelFactory
-import com.c0d3in3.finalproject.ui.post.PostsAdapter
-import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
-import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
-import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
-
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: ActivityProfileBinding
     private var adapter : PostsAdapter? = null
     private var posts = arrayListOf<PostModel>()
     private var isLoading = false
-
     override fun getLayout() = R.layout.activity_profile
 
     override fun init() {
-
-        profileViewModel =
-            ViewModelProvider(this, ProfileViewModelFactory()).get(ProfileViewModel::class.java)
-
         binding = DataBindingUtil.setContentView(this, getLayout())
 
         val userModel = intent.getParcelableExtra<UserModel>("model")
 
         binding.userModel = userModel
         initToolbar("Profile")
-
         profileViewModel.setUserId(userModel.userId)
 
         if (adapter == null) {
@@ -137,5 +122,5 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
         intent.putExtra("model", posts[position].postAuthorModel)
         startActivity(intent)
     }
-}
 
+}
