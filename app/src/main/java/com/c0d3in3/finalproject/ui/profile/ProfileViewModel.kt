@@ -6,31 +6,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants
-import com.c0d3in3.finalproject.network.PostsRepository
-import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.Constants.NOTIFICATION_START_FOLLOW
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
-import com.c0d3in3.finalproject.network.StoriesRepository
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.network.*
+import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfileViewModel(private val repository: PostsRepository) : ViewModel() {
+class ProfileViewModel(private val repository: PostsRepository, private val usersRepository: UsersRepository) : ViewModel() {
 
     private val _posts by lazy{
         MutableLiveData<ArrayList<PostModel>>()
     }
 
-    private var userId = ""
+    private val _user by lazy{
+        MutableLiveData<UserModel>()
+    }
 
     fun getPosts()  = _posts
 
 
-    fun setUserId(userId: String){
-        this.userId = userId
+    fun getUser() = _user
+
+    fun setUser(user: UserModel){
+        _user.value = user
     }
 
     fun loadPosts(lastPost : PostModel?){
@@ -58,26 +62,67 @@ class ProfileViewModel(private val repository: PostsRepository) : ViewModel() {
         _posts.value = _posts.value
     }
 
-    private suspend fun getUserPosts(lastPost: PostModel? = null) {
-        repository.getUserPosts(10, lastPost, userId).collect { state ->
-            when (state) {
+    fun updateUser(){
+        viewModelScope.launch {
+            updateUserInternal()
+        }
+    }
 
-                is State.Success -> {
-                    if(_posts.value != null){
-                        _posts.value?.addAll(state.data)
-                        _posts.value = _posts.value
+    fun follow(){
+        if(App.getCurrentUser().userFollowing!!.contains(_user.value?.userId)){
+            _user.value?.userFollowers!!.add(App.getCurrentUser().userId)
+            Utils.addNotification(App.getCurrentUser().userId, _user.value!!.userId, NOTIFICATION_START_FOLLOW)
+        }
+        else
+            _user.value?.userFollowers!!.remove(App.getCurrentUser().userId)
+        FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userFollowing", App.getCurrentUser().userFollowing)
+        FirebaseHandler.getDatabase().collection(USERS_REF).document(_user.value!!.userId).update("userFollowers", _user.value?.userFollowers!!)
+        setUser(_user.value!!)
+    }
+
+
+    private suspend fun updateUserInternal() {
+        _user.value?.userId?.let {
+            usersRepository.getUser(it).collect { state ->
+                when (state) {
+
+                    is State.Success -> {
+                        if(state.data != null) setUser(state.data)
                     }
-                    else _posts.value = state.data
-                }
 
-                is State.Failed -> withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        App.getInstance().applicationContext,
-                        "Error while loading posts",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } // END when
+                    is State.Failed -> withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            App.getInstance().applicationContext,
+                            "Error while loading user profile",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } // END when
+            }
+        } // END collect
+    }
+
+    private suspend fun getUserPosts(lastPost: PostModel? = null) {
+        _user.value?.userId?.let {
+            repository.getUserPosts(10, lastPost, it).collect { state ->
+                when (state) {
+
+                    is State.Success -> {
+                        if(_posts.value != null){
+                            _posts.value?.addAll(state.data)
+                            _posts.value = _posts.value
+                        } else _posts.value = state.data
+                    }
+
+                    is State.Failed -> withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            App.getInstance().applicationContext,
+                            "Error while loading posts",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } // END when
+            }
         } // END collect
     }
 }

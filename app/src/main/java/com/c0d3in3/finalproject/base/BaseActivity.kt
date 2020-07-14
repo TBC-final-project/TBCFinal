@@ -1,5 +1,6 @@
 package com.c0d3in3.finalproject.base
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,6 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.c0d3in3.finalproject.tools.DialogCallback
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.app_bar_layout.*
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
@@ -54,6 +59,30 @@ abstract class BaseActivity : AppCompatActivity() {
             intent.putExtra("model", App.getCurrentUser())
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+        }
+    }
+    fun initProfileToolbar(){
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        if(App.getCurrentUser().userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(
+            App.getCurrentUser().userProfileImage).into(toolbarFrameLayout.profileImageButton)
+        else toolbarFrameLayout.profileImageButton.setCircleBackgroundColorResource(android.R.color.black)
+        if(title != null) toolbarFrameLayout.titleTV.text = "Your profile"
+        toolbarFrameLayout.profileImageButton.setOnClickListener {
+            Utils.createOptionalDialog(this, "Log out", "Do you really want to log out?", object: DialogCallback{
+                override fun onResponse(dialog: Dialog) {
+                    dialog.dismiss()
+                    FirebaseHandler.getAuth().signOut()
+                    val intent = Intent(this@BaseActivity, PreAuthActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+
+                override fun onCancel() {
+                }
+
+            })
         }
     }
 

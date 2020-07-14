@@ -28,7 +28,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="have_an_account_already">Have an account already?</string>
-    <string name="welcome_to">Welcome to PostIt</string>
+    <string name="welcome_to">Welcome to</string>
     <string name="continue_with_google">Continue with google</string>
     <string name="create_account">Create account</string>
     <string name="password_tip">Your password must include at least one\nsymbol and be 8 or more characters long.</string>
@@ -73,4 +73,5 @@
     <string name="add_post">Publish Your Post</string>
     <string name="add_a_description">Add a Description</string>
     <string name="add_a_title">Add a Title</string>
+    <string name="unfollow">Unfollow</string>
 </resources>

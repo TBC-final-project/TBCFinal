@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.c0d3in3.finalproject.CustomGridLayoutManager
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
@@ -21,7 +22,7 @@ class StoriesFragment : BaseFragment(), StoryAdapter.CustomStoryCallback {
     override fun init() {
         storiesViewModel = ViewModelProvider(this, StoriesViewModelFactory()).get(StoriesViewModel::class.java)
 
-        rootView!!.storiesFragmentRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        rootView!!.storiesFragmentRecyclerView.layoutManager = CustomGridLayoutManager(activity, 2)
         adapter = StoryAdapter(rootView!!.storiesFragmentRecyclerView, this, true)
         rootView!!.storiesFragmentRecyclerView.adapter = adapter
 

@@ -6,25 +6,19 @@
     android:orientation="vertical"
     tools:context=".ui.profile.EditProfileActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/btnBackEditProfile"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:contentDescription="@string/back_button"
-            android:src="@mipmap/ic_back_arrow" />
+        <include layout="@layout/app_bar_layout"/>
 
         <LinearLayout
+            android:id="@+id/choosePhotoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#A92676E1"
+            android:background="@drawable/gradient_background"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -79,7 +73,9 @@
                 android:id="@+id/etEditProfileFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:maxLength="32"
                 android:paddingVertical="15dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp" />
@@ -96,7 +92,9 @@
                 android:id="@+id/etEditProfileLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:maxLength="32"
                 android:paddingVertical="15dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp" />
@@ -107,6 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/username"
+                android:maxLines="1"
+                android:maxLength="32"
                 android:textColor="#000"
                 android:textSize="20sp" />
 
