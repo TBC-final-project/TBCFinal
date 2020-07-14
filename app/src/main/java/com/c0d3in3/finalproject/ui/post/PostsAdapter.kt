@@ -29,6 +29,7 @@ class PostsAdapter(private val callback: CustomPostCallback) :
         fun onLikeButtonClick(position: Int)
         fun onCommentButtonClick(position: Int)
         fun openDetailedPost(position: Int)
+        fun openProfile(position: Int)
     }
 
     fun updateSingleItem(model: PostModel,position: Int){
@@ -90,6 +91,8 @@ class PostsAdapter(private val callback: CustomPostCallback) :
             itemView.postImageView.setOnClickListener(this)
             itemView.commentButton.setOnClickListener(this)
             itemView.likeButton.setOnClickListener(this)
+            itemView.fullNameTextView.setOnClickListener(this)
+            itemView.profileImageView.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
@@ -99,6 +102,7 @@ class PostsAdapter(private val callback: CustomPostCallback) :
                 )
                 itemView.commentButton.id -> callback.onCommentButtonClick(adapterPosition)
                 itemView.likeButton.id -> callback.onLikeButtonClick(adapterPosition)
+                itemView.profileImageView.id, itemView.fullNameTextView.id -> callback.openProfile(adapterPosition)
 
             }
         }

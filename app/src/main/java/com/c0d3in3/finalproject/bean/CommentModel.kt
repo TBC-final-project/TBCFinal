@@ -11,4 +11,4 @@ data class CommentModel(
     var comment : String = "",
     var commentLikes : ArrayList<String>? = null,
     var replies : ArrayList<CommentModel>? = null,
-    @get:Exclude var commentAuthorModel: UserModel? = null) : Parcelable
+    @get:Exclude var commentAuthorModel: UserModel? = null) : Parcelable, CustomInterface

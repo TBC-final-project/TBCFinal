@@ -1,6 +1,7 @@
 package com.c0d3in3.finalproject.ui.post.comment
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -28,6 +29,7 @@ class CommentAdapter(private val callback: CommentAdapterCallback) :
     interface CommentAdapterCallback {
         fun removeComment(position: Int)
         fun likeComment(position: Int)
+        fun openProfile(position: Int)
     }
 
     fun setList(list: ArrayList<CommentModel>) {
@@ -66,7 +68,7 @@ class CommentAdapter(private val callback: CommentAdapterCallback) :
     }
 
     inner class ViewHolder(private val binding: CommentItemLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener{
         private lateinit var model: CommentModel
 
         fun onBind() {
@@ -81,8 +83,19 @@ class CommentAdapter(private val callback: CommentAdapterCallback) :
                 }
             }
 
-            itemView.likeButton.setOnClickListener {
-                callback.likeComment(adapterPosition)
+            itemView.likeButton.setOnClickListener(this)
+
+            itemView.fullNameTextView.setOnClickListener(this)
+
+            itemView.profileImageView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            when (v?.id) {
+                itemView.likeButton.id -> callback.likeComment(adapterPosition)
+                itemView.profileImageView.id, itemView.fullNameTextView.id -> callback.openProfile(
+                    adapterPosition
+                )
             }
         }
     }
