@@ -62,9 +62,7 @@ class SplashActivity : BaseActivity() {
 
     private fun stopSplash() {
         if (dataLoaded) {
-            val intent = Intent(this, ProfileActivity::class.java) // dashboard
-            intent.putExtra("model", App.getCurrentUser())
-            //d("useruser", App.getCurrentUser().userId)
+            val intent = Intent(this, DashboardActivity::class.java) // dashboard
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {

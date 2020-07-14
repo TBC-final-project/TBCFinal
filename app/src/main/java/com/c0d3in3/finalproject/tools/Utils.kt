@@ -1,7 +1,9 @@
 package com.c0d3in3.finalproject.tools
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.text.TextUtils
 import android.util.Log
@@ -9,8 +11,8 @@ import android.util.Patterns
 import android.util.TypedValue
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_COMMENT
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_COMMENT
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_POST
@@ -19,7 +21,6 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.PostModel
-import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.network.State
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
@@ -31,7 +32,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 object Utils {
     fun isValidEmail(target: CharSequence?): Boolean {
@@ -81,7 +81,7 @@ object Utils {
         text: String? = null
     ) {
         val notificationModel = NotificationModel()
-        notificationModel.notificationAuthorId = receiverId
+        notificationModel.notificationReceiverId = receiverId
         notificationModel.notificationSenderId = senderId
         notificationModel.notificationTimestamp = System.currentTimeMillis()
         when (notificationType) {
@@ -115,7 +115,7 @@ object Utils {
     private fun checkNotification(notificationModel: NotificationModel) = flow<State<Boolean>> {
         val mNotificationsCollection =
             FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF)
-                .document(notificationModel.notificationAuthorId).collection("notifications")
+                .document(notificationModel.notificationReceiverId).collection("notifications")
         emit(State.loading())
 
         val snapshot = mNotificationsCollection.get().await()
@@ -125,7 +125,7 @@ object Utils {
         if (snapshot != null) {
             val list = snapshot.toObjects(NotificationModel::class.java)
             list.forEach {
-                if (it.notificationAuthorId == notificationModel.notificationAuthorId && it.notificationSenderId == notificationModel.notificationSenderId &&
+                if (it.notificationReceiverId == notificationModel.notificationReceiverId && it.notificationSenderId == notificationModel.notificationSenderId &&
                     it.notificationText == notificationModel.notificationText
                 ) {
                     mNotificationsCollection.document(it.notificationId).delete()

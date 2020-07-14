@@ -6,10 +6,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class NotificationModel(
-    var notificationAuthorId: String = "",
+    var notificationReceiverId: String = "",
     var notificationText: String = "",
     var notificationSenderId: String = "",
     var notificationType : Long = 0,
     var notificationId: String = "",
     var notificationTimestamp: Long = 0,
-    @get:Exclude var notificationSenderModel: UserModel? = null) : Parcelable
+    @get:Exclude var notificationSenderModel: UserModel? = null) : Parcelable, CustomInterface

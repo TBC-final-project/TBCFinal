@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.c0d3in3.finalproject.Constants
+import com.c0d3in3.finalproject.CustomLinearLayoutManager
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.bean.PostModel
@@ -18,6 +19,7 @@ import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivit
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
+import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
@@ -45,7 +47,7 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
 
         if (storyAdapter == null) {
             rootView!!.storyRecyclerView.layoutManager =
-                LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                CustomLinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             storyAdapter = StoryAdapter(rootView!!.storyRecyclerView, this, false)
             rootView!!.storyRecyclerView.adapter = storyAdapter
             homeViewModel.loadStories(false)
@@ -126,6 +128,12 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
 
     override fun openDetailedPost(position: Int) {
         startPostActionActivity(ImagePostDetailedActivity(), posts[position], position)
+    }
+
+    override fun openProfile(position: Int) {
+        val intent = Intent(activity, ProfileActivity::class.java)
+        intent.putExtra("model", posts[position].postAuthorModel)
+        startActivity(intent)
     }
 
     private fun onLoadMore() {
