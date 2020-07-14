@@ -19,14 +19,12 @@
         android:clearTaskOnLaunch="true"
         android:windowSoftInputMode="stateHidden">
         <activity android:name=".ui.dashboard.stories.story_view.StoryViewActivity" />
-        <activity android:name=".ui.post.create_post.CreatePostActivity" >
+        <activity android:name=".ui.post.create_post.CreatePostActivity" />
+        <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ui.splash.SplashActivity">
-
         </activity>
         <activity android:name=".ui.post.comment.CommentsActivity" />
         <activity android:name=".ui.post.post_detailed.ImagePostDetailedActivity" />

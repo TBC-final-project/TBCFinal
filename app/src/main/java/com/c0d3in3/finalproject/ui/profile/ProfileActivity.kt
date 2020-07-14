@@ -1,10 +1,13 @@
 package com.c0d3in3.finalproject.ui.profile
 
+import android.app.Activity
 import android.content.Intent
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.R
@@ -12,24 +15,40 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityProfileBinding
+import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.network.UsersRepository
+import com.c0d3in3.finalproject.ui.post.PostsAdapter
+import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
+import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
+import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: ActivityProfileBinding
-    private var adapter : PostsAdapter? = null
+    private lateinit var userModel: UserModel
+    private var adapter: PostsAdapter? = null
     private var posts = arrayListOf<PostModel>()
     private var isLoading = false
     override fun getLayout() = R.layout.activity_profile
 
     override fun init() {
+
+        profileViewModel =
+            ViewModelProvider(this, ProfileViewModelFactory()).get(ProfileViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, getLayout())
 
-        val userModel = intent.getParcelableExtra<UserModel>("model")
+        userModel = intent.getParcelableExtra<UserModel>("model")
 
         binding.userModel = userModel
-        initToolbar("Profile")
-        profileViewModel.setUserId(userModel.userId)
+        if (userModel.userId == App.getCurrentUser().userId)
+            initProfileToolbar()
+        else initToolbar("${userModel.userFullName}'s profile")
+        profileViewModel.setUser(userModel)
 
         if (adapter == null) {
             adapter = PostsAdapter(this)
@@ -38,6 +57,14 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
             onLoadMore()
         }
 
+        profileViewModel.getUser().observe(this, Observer {
+            if (it != null) {
+                if (App.getCurrentUser().userId == it.userId) App.setCurrentUser(it)
+                binding.userModel = it
+                Glide.with(this).load(it.userProfileImage).into(profileImageView)
+                binding.notifyChange()
+            }
+        })
         profileViewModel.getPosts().observe(this, Observer { list ->
             if (profileSwipeRefreshLayout.isRefreshing) profileSwipeRefreshLayout.isRefreshing =
                 false
@@ -53,42 +80,56 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
                 posts.clear()
                 adapter!!.setPostsList(posts)
 
+                profileViewModel.updateUser()
                 profileViewModel.loadPosts(null)
 
             }
         }
 
-//        rootView!!.homeScrollView.viewTreeObserver
-//            .addOnScrollChangedListener {
-//                val layout = rootView!!.homeScrollView
-//                val view: View = layout.getChildAt(layout.childCount - 1) as View
-//                val diff: Int = view.bottom - (layout.height + layout.scrollY)
-//                if (diff == 0 && posts.size >= 6) {
-//                    if (!isLoading) {
-//                        onLoadMore()
-//                        isLoading = true
-//                    }
-//                }
-//            }
+        profileScrollView.viewTreeObserver
+            .addOnScrollChangedListener {
+                val layout = profileScrollView
+                val view: View = layout.getChildAt(layout.childCount - 1) as View
+                val diff: Int = view.bottom - (layout.height + layout.scrollY)
+                if (diff == 0 && posts.size >= 6) {
+                    if (!isLoading) {
+                        onLoadMore()
+                        isLoading = true
+                    }
+                }
+            }
 
         if (App.getCurrentUser().userId == userModel?.userId) {
-            binding.btnProfile.text = getString(R.string.update_profile)
+            btnProfile.text = getString(R.string.update_profile)
 
-            binding.btnProfile.setOnClickListener {
+            btnProfile.setOnClickListener {
                 val intent = Intent(this, EditProfileActivity::class.java)
                 intent.putExtra("model", userModel)
                 startActivityForResult(intent, 0)
             }
-
+        } else {
+            btnProfile.setOnClickListener {
+                if (App.getCurrentUser().userFollowing!!.contains(userModel.userId))
+                    App.getCurrentUser().userFollowing!!.remove(userModel.userId)
+                else
+                    App.getCurrentUser().userFollowing!!.add(userModel.userId)
+                profileViewModel.follow()
+                checkFollowStatus()
+            }
+            checkFollowStatus()
         }
 
     }
 
+    private fun checkFollowStatus() {
+        if (App.getCurrentUser().userFollowing?.contains(userModel.userId)!!)
+            btnProfile.text = getString(R.string.unfollow)
+        else btnProfile.text = getString(R.string.follow)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == 0 && resultCode ==  RESULT_OK) {
-            binding.userModel = (App.getCurrentUser())
-            binding.notifyChange()
-        }
+        if (requestCode == 0 && resultCode == RESULT_OK)
+            profileViewModel.updateUser()
         super.onActivityResult(requestCode, resultCode, data)
     }
 

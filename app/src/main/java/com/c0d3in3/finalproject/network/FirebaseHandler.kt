@@ -23,4 +23,6 @@ object FirebaseHandler {
 
     fun getAuth() = auth
 
+    fun getStorage() = storage
+
 }

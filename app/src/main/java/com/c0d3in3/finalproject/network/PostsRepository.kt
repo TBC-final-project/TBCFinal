@@ -31,7 +31,7 @@ class PostsRepository {
             val resultList = arrayListOf<PostModel>()
 
             while (counter < collectionSize) {
-                if (resultList.size >= 10) {
+                if (resultList.size >= limit) {
                     emit(State.success(resultList))
                     break
                 }

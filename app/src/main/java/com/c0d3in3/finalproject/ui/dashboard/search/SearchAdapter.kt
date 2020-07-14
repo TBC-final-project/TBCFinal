@@ -39,6 +39,10 @@ class SearchAdapter(private val callback: SearchAdapterCallback) : RecyclerView.
         fun onBind(){
             model = searchList[adapterPosition]
             binding.userModel = model
+
+            itemView.setOnClickListener {
+                callback.onSearchItemClick(adapterPosition)
+            }
         }
     }
 }

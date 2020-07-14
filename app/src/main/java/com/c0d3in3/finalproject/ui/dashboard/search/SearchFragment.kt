@@ -1,5 +1,6 @@
 package com.c0d3in3.finalproject.ui.dashboard.search
 
+import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.lifecycle.Observer
@@ -8,6 +9,7 @@ import com.c0d3in3.finalproject.base.BaseFragment
 
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.fragment_search.view.searchEditText
 
@@ -60,7 +62,9 @@ class SearchFragment : BaseFragment(), SearchAdapter.SearchAdapterCallback {
     }
 
     override fun onSearchItemClick(position: Int) {
-
+        val intent = Intent(activity, ProfileActivity::class.java)
+        intent.putExtra("model", searchList[position])
+        startActivity(intent)
     }
 
 }

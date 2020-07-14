@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -20,10 +21,21 @@ import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
 import com.c0d3in3.finalproject.image_chooser.MediaFile
 import com.c0d3in3.finalproject.image_chooser.MediaSource
 import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
+import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.network.UsersRepository
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.auth.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.choose_resource_file.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.*
 
 class EditProfileActivity : BaseActivity() {
@@ -36,39 +48,43 @@ class EditProfileActivity : BaseActivity() {
     override fun init() {
         model = intent.getParcelableExtra("model")!!
 
+        initToolbar("Edit profile")
+
         val name = model.userFullName.split(" ")
         etEditProfileFirstName.setText(name[0])
         etEditProfileLastName.setText(name[1])
         etEditProfileUserName.setText(model.username)
+        Glide.with(this).load(App.getCurrentUser().userProfileImage).into(editProfileImage)
 
-        choosePhoto.setOnClickListener{
+        choosePhotoLayout.setOnClickListener{
             ImageChooserUtils.choosePhoto(this)
         }
 
         btnUpdateProfile.setOnClickListener {
-            //intent.putExtra("image", imageFile?.uri.toString())
+            val firstName = etEditProfileFirstName.text.toString()
+            val lastName = etEditProfileLastName.text.toString()
+            val username = etEditProfileUserName.text.toString()
 
-            App.getCurrentUser().userFullName = "${etEditProfileFirstName.text} ${etEditProfileLastName.text}"
-
-            App.getCurrentUser().userFullNameToLowerCase = App.getCurrentUser().userFullName.toLowerCase(
-                Locale.ROOT)
-
-            App.getCurrentUser().username = etEditProfileUserName.text.toString()
-
-            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF).document(
-                App.getCurrentUser().userId
-            ).set(App.getCurrentUser())
-
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+            if(lastName.isBlank() || firstName.isBlank() || username.isBlank()) return@setOnClickListener Utils.createDialog(this, "Error", getString(R.string.fields_are_empty))
+            if(username != App.getCurrentUser().username)
+                checkUsername(firstName, lastName, username)
+            else updateProfile(firstName, lastName, username)
         }
     }
 
+    private fun updateProfile(firstName: String, lastName: String, username: String){
+        App.getCurrentUser().userFullName = "$firstName $lastName"
 
-    //fun choosePhotoOnClick(view: View) {
-    //    ImageChooserUtils.choosePhoto(this)
-    //}
+        App.getCurrentUser().userFullNameToLowerCase = App.getCurrentUser().userFullName.toLowerCase(
+            Locale.ROOT)
+        App.getCurrentUser().username = username
 
+        FirebaseHandler.getDatabase().collection(USERS_REF).document(
+            App.getCurrentUser().userId
+        ).set(App.getCurrentUser())
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -100,6 +116,22 @@ class EditProfileActivity : BaseActivity() {
                     if (imageFiles.isNotEmpty()) {
                         imageFile = imageFiles[0]
                         Glide.with(applicationContext).load(imageFile!!.uri).into(editProfileImage)
+
+                        val pictureRef = FirebaseHandler.getStorage().reference.child("users/${model.userId}")
+                        val uploadTask = pictureRef.putFile(imageFile!!.uri)
+                        uploadTask.continueWithTask { task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let {
+                                    throw it
+                                }
+                            }
+                            pictureRef.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result
+                                FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userProfileImage", downloadUri.toString())
+                            }
+                        }
                     }
                 }
 
@@ -107,5 +139,36 @@ class EditProfileActivity : BaseActivity() {
 
                 }
             })
+    }
+
+    private fun checkUsername(firstName: String, lastName: String, username: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            UsersRepository().checkUser(username).collect { state ->
+                when (state) {
+                    is State.Success -> {
+                        val model = state.data
+                        if (model != null)
+                            withContext(Dispatchers.Main) {
+                                Utils.createDialog(
+                                    this@EditProfileActivity,
+                                    "Error",
+                                    getString(R.string.username_is_taken)
+                                )
+                            }
+                        else withContext(Dispatchers.Main) {
+                            updateProfile(firstName,lastName,username)
+                        }
+                    }
+
+                    is State.Failed -> withContext(Dispatchers.Main) {
+                        Utils.createDialog(
+                            this@EditProfileActivity,
+                            "Error",
+                            state.message
+                        )
+                    }
+                } // END when
+            } // END collect
+        }
     }
 }
