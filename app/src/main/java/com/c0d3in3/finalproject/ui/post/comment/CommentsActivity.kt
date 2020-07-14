@@ -21,6 +21,7 @@ import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlin.properties.Delegates
 
@@ -132,6 +133,12 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
     override fun likeComment(position: Int) {
         commentViewModel.likeComment(position)
         adapter?.notifyItemChanged(position)
+    }
+
+    override fun openProfile(position: Int) {
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("model", post.postComments?.get(position)?.commentAuthorModel)
+        startActivity(intent)
     }
 
     fun addComment(v: View) {

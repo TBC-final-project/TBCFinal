@@ -13,6 +13,7 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.databinding.ActivityImagePostDetailedBinding
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
+import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_image_post_detailed.*
 import kotlin.properties.Delegates
 

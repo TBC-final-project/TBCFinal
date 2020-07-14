@@ -31,7 +31,7 @@ class PostsRepository {
             val resultList = arrayListOf<PostModel>()
 
             while (counter < collectionSize) {
-                if (resultList.size >= 10){
+                if (resultList.size >= 10) {
                     emit(State.success(resultList))
                     break
                 }
@@ -53,9 +53,52 @@ class PostsRepository {
                     )
                         resultList.add(it)
                 }
-                if(result.isNotEmpty()) lastPostModel = result[result.size - 1]
+                if (result.isNotEmpty()) lastPostModel = result[result.size - 1]
                 counter += limit.toInt()
-                if(counter >= collectionSize){
+                if (counter >= collectionSize) {
+                    emit(State.Success(resultList))
+                    break
+                }
+            }
+
+        }.catch {
+            emit(State.failed(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
+    fun getUserPosts(limit: Long = 10, lastPost: PostModel? = null, userId: String) =
+        flow<State<ArrayList<PostModel>>> {
+
+            emit(State.loading())
+
+            val collectionSize = mPostsCollection.get().await().documents.size
+            var counter = 0
+            var lastPostModel: PostModel? = lastPost
+
+            val resultList = arrayListOf<PostModel>()
+
+            while (counter < collectionSize) {
+                if (resultList.size >= 10) {
+                    emit(State.success(resultList))
+                    break
+                }
+                val snapshot: QuerySnapshot = if (lastPostModel != null)
+                    mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING)
+                        .startAfter(lastPostModel.postTimestamp)
+                        .limit(limit).get()
+                        .await()
+                else
+                    mPostsCollection.orderBy("postTimestamp", Query.Direction.DESCENDING)
+                        .limit(limit).get()
+                        .await()
+                val result =
+                    snapshot.toObjects(PostModel::class.java) as ArrayList<PostModel>
+                result.forEach {
+                    if (it.postAuthor == userId)
+                        resultList.add(it)
+                }
+                if (result.isNotEmpty()) lastPostModel = result[result.size - 1]
+                counter += limit.toInt()
+                if (counter >= collectionSize) {
                     emit(State.Success(resultList))
                     break
                 }

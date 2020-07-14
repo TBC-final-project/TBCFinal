@@ -24,35 +24,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.choose_resource_file.*
+import java.util.*
 
 class EditProfileActivity : BaseActivity() {
 
     private lateinit var model: UserModel
     private var imageFile: MediaFile? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
-
-        choosePhoto.setOnClickListener{
-            ImageChooserUtils.choosePhoto(this)
-        }
-
-        btnUpdateProfile.setOnClickListener {
-            //intent.putExtra("image", imageFile?.uri.toString())
-
-            //App.getCurrentUser().userFullName = etEditProfileFullName.text.toString()
-
-            App.getCurrentUser().username = etEditProfileUserName.text.toString()
-
-            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF).document(
-                App.getCurrentUser().userId
-            ).set(App.getCurrentUser())
-
-            finish()
-        }
-
-
-    }
 
     override fun getLayout() = R.layout.activity_edit_profile
 
@@ -64,6 +41,27 @@ class EditProfileActivity : BaseActivity() {
         etEditProfileLastName.setText(name[1])
         etEditProfileUserName.setText(model.username)
 
+        choosePhoto.setOnClickListener{
+            ImageChooserUtils.choosePhoto(this)
+        }
+
+        btnUpdateProfile.setOnClickListener {
+            //intent.putExtra("image", imageFile?.uri.toString())
+
+            App.getCurrentUser().userFullName = "${etEditProfileFirstName.text} ${etEditProfileLastName.text}"
+
+            App.getCurrentUser().userFullNameToLowerCase = App.getCurrentUser().userFullName.toLowerCase(
+                Locale.ROOT)
+
+            App.getCurrentUser().username = etEditProfileUserName.text.toString()
+
+            FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF).document(
+                App.getCurrentUser().userId
+            ).set(App.getCurrentUser())
+
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
     }
 
 
