@@ -20,6 +20,7 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
 import com.c0d3in3.finalproject.network.FirebaseHandler
@@ -37,6 +38,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
     private var adapter: CommentAdapter? = null
     private var model: PostModel? = null
     private lateinit var post: PostModel
+    //private lateinit var authorModel: UserModel
     private var position by Delegates.notNull<Int>()
     private lateinit var commentViewModel: CommentViewModel
     private lateinit var listener: ListenerRegistration
@@ -95,26 +97,26 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
             R.color.colorBlue
         )
 
-        val docRef = FirebaseHandler.getDatabase()
-            .collection(FirebaseHandler.POSTS_REF).document(post.postId)
-        listener = docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.d("NotificationsListener", "Listen failed.", e)
-                finish()
-                return@addSnapshotListener
-            }
-
-            if (snapshot != null) {
-                val postModel = snapshot.toObject(PostModel::class.java)
-
-                if (postModel == null) {
-                    Toast.makeText(this, "Post was deleted", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                else commentViewModel.setPostModel(postModel)
-            }
-
-        }
+//        val docRef = FirebaseHandler.getDatabase()
+//            .collection(FirebaseHandler.POSTS_REF).document(post.postId)
+//        listener = docRef.addSnapshotListener { snapshot, e ->
+//            if (e != null) {
+//                Log.d("NotificationsListener", "Listen failed.", e)
+//                finish()
+//                return@addSnapshotListener
+//            }
+//
+//            if (snapshot != null) {
+//                val postModel = snapshot.toObject(PostModel::class.java)
+//
+//                if (postModel == null) {
+//                    Toast.makeText(this, "Post was deleted", Toast.LENGTH_SHORT).show()
+//                    finish()
+//                }
+//                else commentViewModel.setPostModel(postModel)
+//            }
+//
+//        }
     }
 
     override fun onDestroy() {
@@ -126,10 +128,9 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
         model = intent.getParcelableExtra("model")
         position = intent.getIntExtra("position", -1)
 
-
-
         if (model == null) finish()
         else {
+            //authorModel = model!!.postAuthorModel!!
             post = model as PostModel
             commentViewModel.setPostModel(model!!)
         }
@@ -141,6 +142,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
     override fun onBackPressed() {
         val mIntent = Intent()
         //post.postComments = commentViewModel.getComments().value
+        //post.postAuthorModel = authorModel
         mIntent.putExtra("model", post)
         mIntent.putExtra("position", position)
         setResult(Activity.RESULT_OK, mIntent)

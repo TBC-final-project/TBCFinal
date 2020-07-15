@@ -12,6 +12,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.tools.Utils
@@ -36,58 +37,75 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
     @SuppressLint("SetTextI18n")
     fun removeComment(position: Int) {
-        _post.value?.postComments!!.removeAt(position)
-        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-            .document(_post.value!!.postId)
-            .update("postComments", FieldValue.arrayRemove(_post.value?.postComments!![position]))
-        setPostModel(_post.value!!)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
+            _post.value = it.result?.toObject(PostModel::class.java)
+            _post.value?.postComments!!.removeAt(position)
+            FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+                .document(_post.value!!.postId)
+                .update("postComments", _post.value?.postComments)
+            setPostModel(_post.value!!)
+        }
+
     }
 
     fun addComment(comment: CommentModel) {
-        comment.commentAuthorModel = App.getCurrentUser()
-        _post.value!!.postComments?.add(comment)
-        setPostModel(_post.value!!)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
+            _post.value = it.result?.toObject(PostModel::class.java)
 
-        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-            .document(_post.value!!.postId)
-            .update("postComments", FieldValue.arrayUnion(comment))
+            comment.commentAuthorModel = App.getCurrentUser()
+            _post.value!!.postComments?.add(comment)
+            setPostModel(_post.value!!)
 
-        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
-            Utils.addNotification(
-                App.getCurrentUser().userId,
-                _post.value!!.postAuthor.toString(),
-                Constants.NOTIFICATION_COMMENT,
-                comment.comment,
-                _post.value!!.postId
-            )
+            FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+                .document(_post.value!!.postId)
+                .update("postComments", _post.value!!.postComments)
+
+            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+                Utils.addNotification(
+                    App.getCurrentUser().userId,
+                    _post.value!!.postAuthor.toString(),
+                    Constants.NOTIFICATION_COMMENT,
+                    comment.comment,
+                    _post.value!!.postId
+                )
+            }
         }
     }
 
     fun likeComment(position: Int){
 
-        if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
-            _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
-        else{
-            _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
+            val oldPost = _post.value
+            _post.value = it.result?.toObject(PostModel::class.java)
 
-            val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
-            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
-                if (receiver != null) {
-                    Utils.addNotification(
-                        App.getCurrentUser().userId,
-                        receiver,
-                        Constants.NOTIFICATION_LIKE_COMMENT,
-                        _post.value!!.postId,
-                        _post.value!!.postComments?.get(position)?.comment
-                    )
+            if (oldPost != null) {
+                if(position < _post.value?.postComments?.size!! && _post.value!!.postComments?.get(position) == oldPost.postComments?.get(position)!!){
+                    if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
+                        _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
+                    else{
+                        _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
+
+                        val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
+                        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+                            if (receiver != null) {
+                                Utils.addNotification(
+                                    App.getCurrentUser().userId,
+                                    receiver,
+                                    Constants.NOTIFICATION_LIKE_COMMENT,
+                                    _post.value!!.postId,
+                                    _post.value!!.postComments?.get(position)?.comment
+                                )
+                            }
+                        }
+                    }
+
+                    FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+                        .document(_post.value!!.postId)
+                        .update("postComments", _post.value?.postComments)
+                    setPostModel(_post.value!!)
                 }
             }
         }
-
-        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-            .document(_post.value!!.postId)
-            .update("postComments", _post.value?.postComments)
-        setPostModel(_post.value!!)
     }
 
     fun loadPost(){
