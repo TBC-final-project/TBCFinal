@@ -82,7 +82,8 @@ class ProfileViewModel(private val repository: PostsRepository, private val user
                 Utils.addNotification(
                     App.getCurrentUser().userId,
                     _posts.value!![position].postAuthor!!,
-                    Constants.NOTIFICATION_LIKE_POST
+                    Constants.NOTIFICATION_LIKE_POST,
+                    _posts.value!![position].postId
                 )
             }
         }

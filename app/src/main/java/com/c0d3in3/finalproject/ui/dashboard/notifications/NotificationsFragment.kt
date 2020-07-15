@@ -1,5 +1,6 @@
 package com.c0d3in3.finalproject.ui.dashboard.notifications
 
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.widget.TextView
@@ -14,13 +15,27 @@ import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.BaseCallback
 import com.c0d3in3.finalproject.bean.NotificationModel
+import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.c0d3in3.finalproject.network.PostsRepository
+import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.network.UsersRepository
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
+import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
+import com.c0d3in3.finalproject.ui.post.post_detailed.PostDetailedActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.notificationRecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NotificationsFragment : BaseFragment(), BaseCallback {
 
@@ -48,7 +63,7 @@ class NotificationsFragment : BaseFragment(), BaseCallback {
     private fun initializeNotificationsListener() {
         val docRef = FirebaseHandler.getDatabase()
             .collection(FirebaseHandler.USERS_REF).document(App.getCurrentUser().userId)
-            .collection("notifications")
+            .collection("notifications").orderBy("notificationTimestamp", Query.Direction.DESCENDING)
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.d("NotificationsListener", "Listen failed.", e)
@@ -67,21 +82,58 @@ class NotificationsFragment : BaseFragment(), BaseCallback {
 
     override fun onClickItem(position: Int) {
         when(notificationsList[position].notificationType.toInt()){
-            NOTIFICATION_START_FOLLOW ->{
-                val intent = Intent(activity, ProfileActivity::class.java)
-                intent
+            NOTIFICATION_START_FOLLOW ->
+                getUser(notificationsList[position].notificationSenderId, ProfileActivity())
+            NOTIFICATION_LIKE_POST -> getPost(notificationsList[position].notificationPostId, PostDetailedActivity(), position)
+            NOTIFICATION_COMMENT -> getPost(notificationsList[position].notificationPostId, CommentsActivity(), position)
+            NOTIFICATION_LIKE_COMMENT -> getPost(notificationsList[position].notificationPostId, CommentsActivity(), position)
+        }
+    }
+
+    private fun getUser(userId: String, act:Activity, model: PostModel? = null, commentId: String? = null){
+        CoroutineScope(Dispatchers.IO).launch {
+            UsersRepository().getUser(userId).collect { state->
+                when(state){
+                    is State.Success ->{
+                        withContext(Dispatchers.Main){
+                            if(model != null){
+                                val intent = Intent(activity, act::class.java)
+                                model.postAuthorModel = state.data
+                                intent.putExtra("model", model)
+                                intent.putExtra("commentId", commentId)
+                                startActivity(intent)
+                            }
+                            else{
+                                println("movida")
+                                val intent = Intent(activity, ProfileActivity::class.java)
+                                intent.putExtra("model", state.data)
+                                startActivity(intent)
+                            }
+                        }
+                    }
+
+                    is State.Failed->
+                        withContext(Dispatchers.Main) {
+                            Utils.createDialog((activity as DashboardActivity), "Error", "Error while loading user profile")
+                        }
+                }
             }
-            NOTIFICATION_LIKE_POST ->{
-                val intent = Intent(activity, ProfileActivity::class.java)
-                intent
-            }
-            NOTIFICATION_COMMENT ->{
-                val intent = Intent(activity, ProfileActivity::class.java)
-                intent
-            }
-            NOTIFICATION_LIKE_COMMENT ->{
-                val intent = Intent(activity, ProfileActivity::class.java)
-                intent
+        }
+    }
+
+    private fun getPost(postId: String, act: Activity, position: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            PostsRepository().getPost(postId).collect { state->
+                when(state){
+                    is State.Success ->{
+                        state.data?.postAuthor?.let { getUser(it, act, state.data, notificationsList[position].notificationCommentId) }
+                    }
+
+                    is State.Failed->
+                        withContext(Dispatchers.Main) {
+                            Utils.createDialog((activity as DashboardActivity), "Error", "Error while loading post")
+                        }
+                }
             }
         }
     }

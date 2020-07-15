@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.tools.DialogCallback
@@ -65,9 +66,7 @@ abstract class BaseActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        if(App.getCurrentUser().userProfileImage.isNotEmpty()) Glide.with(applicationContext).load(
-            App.getCurrentUser().userProfileImage).into(toolbarFrameLayout.profileImageButton)
-        else toolbarFrameLayout.profileImageButton.setCircleBackgroundColorResource(android.R.color.black)
+        toolbarFrameLayout.profileImageButton.setImageResource(R.mipmap.ic_more)
         if(title != null) toolbarFrameLayout.titleTV.text = "Your profile"
         toolbarFrameLayout.profileImageButton.setOnClickListener {
             Utils.createOptionalDialog(this, "Log out", "Do you really want to log out?", object: DialogCallback{

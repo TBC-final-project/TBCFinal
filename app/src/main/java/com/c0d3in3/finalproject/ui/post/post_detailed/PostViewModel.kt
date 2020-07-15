@@ -35,7 +35,8 @@ class PostViewModel: ViewModel() {
             Utils.addNotification(
                 App.getCurrentUser().userId,
                 post.value!!.postAuthor!!,
-                Constants.NOTIFICATION_LIKE_POST
+                Constants.NOTIFICATION_LIKE_POST,
+                post.value!!.postId
             )
         }
         post.value?.let { Utils.likePost(it) }

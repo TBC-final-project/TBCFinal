@@ -65,7 +65,8 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
                 Utils.addNotification(
                     App.getCurrentUser().userId,
                     posts.value!![position].postAuthor!!,
-                    Constants.NOTIFICATION_LIKE_POST
+                    Constants.NOTIFICATION_LIKE_POST,
+                    posts.value!![position].postId
                 )
             }
         }

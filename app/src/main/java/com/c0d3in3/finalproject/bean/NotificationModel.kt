@@ -13,4 +13,5 @@ data class NotificationModel(
     var notificationId: String = "",
     var notificationTimestamp: Long = 0,
     var notificationPostId: String = "",
+    var notificationCommentId : String = "",
     @get:Exclude var notificationSenderModel: UserModel? = null) : Parcelable, CustomInterface

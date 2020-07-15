@@ -24,7 +24,7 @@ class PostDetailedActivity : BaseActivity() {
 
 
     private var post: PostModel? = null
-    private var position by Delegates.notNull<Int>()
+    private var position : Int? = null
     private lateinit var postViewModel: PostViewModel
 
     override fun getLayout() : Int{
@@ -74,8 +74,8 @@ class PostDetailedActivity : BaseActivity() {
     }
 
     private fun getModel(){
-        post = intent.extras!!.getParcelable("model")!!
-        position = intent.extras!!.get("position")!! as Int
+        post = intent.extras?.getParcelable("model")!!
+        if(intent.hasExtra("position")) position = intent.extras?.getInt("position")
 
     }
 
