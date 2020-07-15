@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
@@ -15,16 +14,12 @@ import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityProfileBinding
-import com.c0d3in3.finalproject.network.State
-import com.c0d3in3.finalproject.network.UsersRepository
+import com.c0d3in3.finalproject.tools.DialogCallback
+import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
-import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
+import com.c0d3in3.finalproject.ui.post.post_detailed.PostDetailedActivity
 import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
 
 class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
 
@@ -42,7 +37,7 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
             ViewModelProvider(this, ProfileViewModelFactory()).get(ProfileViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, getLayout())
 
-        userModel = intent.getParcelableExtra<UserModel>("model")
+        userModel = intent.getParcelableExtra("model")
 
         binding.userModel = userModel
         if (userModel.userId == App.getCurrentUser().userId)
@@ -155,13 +150,26 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
     }
 
     override fun openDetailedPost(position: Int) {
-        startPostActionActivity(ImagePostDetailedActivity(), posts[position], position)
+        startPostActionActivity(PostDetailedActivity(), posts[position], position)
     }
 
     override fun openProfile(position: Int) {
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("model", posts[position].postAuthorModel)
         startActivity(intent)
+    }
+
+    override fun openOptionsDialog(position: Int) {
+        Utils.createPostOptionsDialog(this, object:
+            DialogCallback {
+            override fun onEditPost() {
+                super.onEditPost()
+            }
+
+            override fun onDeletePost() {
+                profileViewModel.deletePost(position)
+            }
+        })
     }
 
 }

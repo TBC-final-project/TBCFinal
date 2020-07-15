@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.post.comment.CommentsActivity" />
-        <activity android:name=".ui.post.post_detailed.ImagePostDetailedActivity" />
+        <activity android:name=".ui.post.post_detailed.PostDetailedActivity" />
         <activity android:name=".ui.profile.EditProfileActivity" />
         <activity android:name=".ui.profile.ProfileActivity" />
         <activity android:name=".ui.dashboard.DashboardActivity" />

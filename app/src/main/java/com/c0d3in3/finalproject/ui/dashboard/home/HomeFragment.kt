@@ -13,12 +13,14 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.tools.DialogCallback
+import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoryAdapter
 import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
-import com.c0d3in3.finalproject.ui.post.post_detailed.ImagePostDetailedActivity
+import com.c0d3in3.finalproject.ui.post.post_detailed.PostDetailedActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -127,13 +129,25 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     }
 
     override fun openDetailedPost(position: Int) {
-        startPostActionActivity(ImagePostDetailedActivity(), posts[position], position)
+        startPostActionActivity(PostDetailedActivity(), posts[position], position)
     }
 
     override fun openProfile(position: Int) {
         val intent = Intent(activity, ProfileActivity::class.java)
         intent.putExtra("model", posts[position].postAuthorModel)
         startActivity(intent)
+    }
+
+    override fun openOptionsDialog(position: Int) {
+        Utils.createPostOptionsDialog((activity as DashboardActivity), object: DialogCallback{
+            override fun onEditPost() {
+                super.onEditPost()
+            }
+
+            override fun onDeletePost() {
+                homeViewModel.deletePost(position)
+            }
+        })
     }
 
     private fun onLoadMore() {
@@ -151,6 +165,9 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
                 homeViewModel.posts.value?.set(position, model)
                 posts[position] = model
                 adapter!!.updateSingleItem(model, position)
+            }
+            if(model == null){
+                homeViewModel.deletePost(position!!)
             }
             //posts[position] = model!!
         }

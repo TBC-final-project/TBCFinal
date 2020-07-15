@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="postModel"
+            type="com.c0d3in3.finalproject.bean.PostModel" />
+    </data>
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.post.post_detailed.PostDetailedActivity">
+
+
+        <include layout="@layout/app_bar_layout" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="20dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10dp"
+                android:text="@{postModel.postTitle}"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
+                app:layout_constraintStart_toStartOf="@id/profileImageView" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10dp"
+                android:text="@{postModel.postDescription}"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/profileImageView" />
+            </LinearLayout>
+        </ScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:id="@+id/bottomView"
+                android:clickable="true"
+                android:background="@drawable/comments_drawable"
+                android:paddingStart="30dp"
+                android:paddingEnd="20dp"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/likeButton"
+                    setLikeButtonResource="@{postModel.postLikes}"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/commentButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@android:color/transparent"
+                    android:src="@mipmap/ic_comment"
+                    app:layout_constraintStart_toEndOf="@+id/likeButton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/spinnerButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_more"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/likeButton"
+                    android:visibility="gone"/>
+
+
+                <TextView
+                    android:id="@+id/likesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:text="@{String.valueOf(postModel.postLikes.size) + ` likes`}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/likeButton" />
+
+                <TextView
+                    android:id="@+id/commentsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:text="@{String.valueOf(postModel.postComments.size) + ` comments`}"
+                    app:layout_constraintStart_toEndOf="@id/likesTextView"
+                    app:layout_constraintTop_toBottomOf="@id/likeButton"
+                    />
+
+
+                <TextView
+                    android:id="@+id/timestampTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    getTimeDiff="@{postModel.postTimestamp}"
+                    android:textColor="@color/descriptionColor"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/commentsTextView" />
+
+
+                <View
+                    android:id="@+id/secondDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timestampTextView" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</layout>

@@ -50,6 +50,12 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
         }
     }
 
+    fun deletePost(position: Int){
+        viewModelScope.launch {
+            removePost(position)
+        }
+    }
+
     fun likePost(position: Int){
         if (posts.value!![position].postLikes?.contains(App.getCurrentUser().userId)!!)
             posts.value!![position].postLikes!!.remove(App.getCurrentUser().userId)
@@ -65,6 +71,28 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
         }
         Utils.likePost(posts.value!![position])
         posts.value = posts.value
+    }
+
+    private suspend fun removePost(position: Int){
+        repository.removePost(posts.value!![position]).collect { state ->
+            when (state) {
+
+                is State.Success -> {
+                    if(posts.value != null){
+                        posts.value!!.removeAt(position)
+                        posts.value = posts.value
+                    }
+                }
+
+                is State.Failed -> withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        App.getInstance().applicationContext,
+                        "Error while deleting post ${state.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     private suspend fun getPosts(lastPost: PostModel? = null) {

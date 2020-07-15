@@ -1,11 +1,19 @@
 package com.c0d3in3.finalproject.ui.post.post_detailed
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.bean.PostModel
+import com.c0d3in3.finalproject.network.PostsRepository
+import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.tools.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PostViewModel: ViewModel() {
 
@@ -32,6 +40,10 @@ class PostViewModel: ViewModel() {
         }
         post.value?.let { Utils.likePost(it) }
         setPostModel(post.value!!)
+    }
+
+    fun deletePost(){
+        post.value = null
     }
 
 }

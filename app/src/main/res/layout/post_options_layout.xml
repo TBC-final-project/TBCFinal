@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dialog_margins"
+    android:layout_marginEnd="@dimen/dialog_margins"
+    android:background="@drawable/dialog_background">
+
+    <ImageView
+        android:id="@+id/closeDialogButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/ic_close"
+        android:layout_margin="10dp"
+        android:layout_gravity="end|top"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editPostDialogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            android:text="@string/edit_post"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/deletePostDialogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            android:padding="10dp"
+            android:text="@string/delete_post"
+            android:textColor="@color/errorColor"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

@@ -74,4 +74,6 @@
     <string name="add_a_description">Add a Description</string>
     <string name="add_a_title">Add a Title</string>
     <string name="unfollow">Unfollow</string>
+    <string name="edit_post">Edit post</string>
+    <string name="delete_post">Delete post</string>
 </resources>

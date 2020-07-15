@@ -44,6 +44,34 @@ class ProfileViewModel(private val repository: PostsRepository, private val user
         }
     }
 
+    fun deletePost(position: Int){
+        viewModelScope.launch {
+            removePost(position)
+        }
+    }
+
+    private suspend fun removePost(position: Int){
+        repository.removePost(_posts.value!![position]).collect { state ->
+            when (state) {
+
+                is State.Success -> {
+                    if(_posts.value != null){
+                        _posts.value!!.removeAt(position)
+                        _posts.value = _posts.value
+                    }
+                }
+
+                is State.Failed -> withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        App.getInstance().applicationContext,
+                        "Error while deleting post",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
 
     fun likePost(position: Int){
         if (_posts.value!![position].postLikes?.contains(App.getCurrentUser().userId)!!)

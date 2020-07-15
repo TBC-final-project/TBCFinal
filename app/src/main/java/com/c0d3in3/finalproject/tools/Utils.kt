@@ -24,6 +24,7 @@ import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.State
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
+import kotlinx.android.synthetic.main.post_options_layout.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -169,6 +170,39 @@ object Utils {
 
         dialog.yesDialogButton.setOnClickListener {
             callback.onResponse(dialog)
+        }
+
+        dialog.show()
+    }
+
+    fun createPostOptionsDialog(
+        ctx: Context,
+        callback: DialogCallback
+    ) {
+        val dialog = Dialog(ctx)
+
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialog.setContentView(R.layout.post_options_layout)
+
+        val params = dialog.window!!.attributes
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT
+        dialog.window!!.attributes = params
+
+        dialog.editPostDialogButton.setOnClickListener {
+            dialog.dismiss()
+            callback.onEditPost()
+        }
+
+        dialog.deletePostDialogButton.setOnClickListener {
+            dialog.dismiss()
+            callback.onDeletePost()
+        }
+
+        dialog.closeDialogButton.setOnClickListener {
+            dialog.dismiss()
         }
 
         dialog.show()
