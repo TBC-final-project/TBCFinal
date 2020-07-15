@@ -61,7 +61,8 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
                 App.getCurrentUser().userId,
                 _post.value!!.postAuthor.toString(),
                 Constants.NOTIFICATION_COMMENT,
-                comment.comment
+                comment.comment,
+                _post.value!!.postId
             )
         }
     }
@@ -79,6 +80,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
                         App.getCurrentUser().userId,
                         receiver,
                         Constants.NOTIFICATION_LIKE_COMMENT,
+                        _post.value!!.postId,
                         _post.value!!.postComments?.get(position)?.comment
                     )
                 }

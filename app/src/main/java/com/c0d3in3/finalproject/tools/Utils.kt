@@ -79,12 +79,15 @@ object Utils {
         senderId: String,
         receiverId: String,
         notificationType: Int,
+        notificationPostId: String = "",
         text: String? = null
     ) {
         val notificationModel = NotificationModel()
         notificationModel.notificationReceiverId = receiverId
         notificationModel.notificationSenderId = senderId
         notificationModel.notificationTimestamp = System.currentTimeMillis()
+        notificationModel.notificationType = notificationType.toLong()
+        notificationModel.notificationPostId = notificationPostId
         when (notificationType) {
             NOTIFICATION_START_FOLLOW -> notificationModel.notificationText =
                 App.getContext().getString(R.string.started_following_you)

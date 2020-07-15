@@ -44,6 +44,10 @@ class NotificationAdapter(private val callback: BaseCallback) : RecyclerView.Ada
 
         fun onBind(){
             binding.notificationModel = notificationList[adapterPosition]
+
+            binding.notificationItemLayout.setOnClickListener {
+                callback.onClickItem(adapterPosition)
+            }
         }
     }
 
