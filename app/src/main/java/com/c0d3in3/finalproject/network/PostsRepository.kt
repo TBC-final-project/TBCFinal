@@ -138,4 +138,18 @@ class PostsRepository {
         emit(State.failed(it.message.toString()))
     }.flowOn(Dispatchers.IO)
 
+    fun removePost(post: PostModel) = flow<State<Boolean>> {
+
+        emit(State.loading())
+
+        val snapshot = mPostsCollection.document(post.postId).delete().await()
+
+        emit(State.success(true))
+
+    }.catch {
+        // If exception is thrown, emit failed state along with message.
+        emit(State.failed(it.message.toString()))
+    }.flowOn(Dispatchers.IO)
+
+
 }
