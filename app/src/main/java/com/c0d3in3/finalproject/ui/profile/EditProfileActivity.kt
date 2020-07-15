@@ -97,6 +97,8 @@ class EditProfileActivity : BaseActivity() {
             finish()
         }
     }
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
