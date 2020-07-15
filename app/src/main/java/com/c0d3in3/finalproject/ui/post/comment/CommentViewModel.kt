@@ -35,40 +35,21 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
     @SuppressLint("SetTextI18n")
     fun removeComment(position: Int) {
-        val postRef = FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+        _post.value?.postComments!!.removeAt(position)
+        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
             .document(_post.value!!.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            val document = transaction.get(postRef)
-            _post.postValue(document.toObject(PostModel::class.java))
-
-            _post.value?.postComments!!.removeAt(position)
-            FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-                .document(_post.value!!.postId)
-                .update("postComments", _post.value!!.postComments)
-            _post.postValue(_post.value)
-
-            transaction.update(postRef, "postComments", _post.value!!.postComments)
-            null
-        }.addOnSuccessListener {
-            Log.d("AddComment", "Transaction success!")
-
-        }.addOnFailureListener { e -> Log.d("AddComment", "Transaction failure.", e) }
-
+            .update("postComments", _post.value!!.postComments)
+        setPostModel(_post.value!!)
     }
 
     fun addComment(comment: CommentModel) {
         comment.commentAuthorModel = App.getCurrentUser()
         _post.value!!.postComments?.add(comment)
         setPostModel(_post.value!!)
-        val postRef = FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-            .document(_post.value!!.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            transaction.update(postRef, "postComments", _post.value!!.postComments)
-            null
-        }.addOnSuccessListener {
-            Log.d("AddComment", "Transaction success!")
 
-        }.addOnFailureListener { e -> Log.d("AddComment", "Transaction failure.", e) }
+        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+            .document(_post.value!!.postId)
+            .update("postComments", _post.value!!.postComments)
 
         if(_post.value!!.postAuthor != App.getCurrentUser().userId){
             Utils.addNotification(
@@ -102,13 +83,9 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             }
         }
 
-        val postRef =  FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF).document(
-            _post.value!!.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            transaction.update(postRef, "postComments", _post.value!!.postComments)
-            null
-        }.addOnSuccessListener { Log.d("postComments", "Transaction success!") }
-            .addOnFailureListener { e -> Log.d("postComments", "Transaction failure.", e) }
+        FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
+            .document(_post.value!!.postId)
+            .update("postComments", _post.value!!.postComments)
 
         setPostModel(_post.value!!)
     }
