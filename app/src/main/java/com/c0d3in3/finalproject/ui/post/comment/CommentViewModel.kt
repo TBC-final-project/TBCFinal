@@ -39,13 +39,13 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             .document(_post.value!!.postId)
         FirebaseHandler.getDatabase().runTransaction { transaction ->
             val document = transaction.get(postRef)
-            _post.value = document.toObject(PostModel::class.java)
+            _post.postValue(document.toObject(PostModel::class.java))
 
             _post.value?.postComments!!.removeAt(position)
             FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
                 .document(_post.value!!.postId)
                 .update("postComments", _post.value!!.postComments)
-            setPostModel(_post.value!!)
+            _post.postValue(_post.value)
 
             transaction.update(postRef, "postComments", _post.value!!.postComments)
             null
@@ -57,17 +57,12 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
     }
 
     fun addComment(comment: CommentModel) {
-
+        comment.commentAuthorModel = App.getCurrentUser()
+        _post.value!!.postComments?.add(comment)
+        setPostModel(_post.value!!)
         val postRef = FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
             .document(_post.value!!.postId)
         FirebaseHandler.getDatabase().runTransaction { transaction ->
-            val document = transaction.get(postRef)
-            _post.value = document.toObject(PostModel::class.java)
-
-            comment.commentAuthorModel = App.getCurrentUser()
-            _post.value!!.postComments?.add(comment)
-            setPostModel(_post.value!!)
-
             transaction.update(postRef, "postComments", _post.value!!.postComments)
             null
         }.addOnSuccessListener {
@@ -80,39 +75,36 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
                 App.getCurrentUser().userId,
                 _post.value!!.postAuthor.toString(),
                 Constants.NOTIFICATION_COMMENT,
-                _post.value!!.postId,
-                comment.comment
+                comment.comment,
+                _post.value!!.postId
             )
         }
     }
 
     fun likeComment(position: Int){
 
+        if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
+            _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
+        else{
+            _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
+
+            val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
+            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+                if (receiver != null) {
+                    Utils.addNotification(
+                        App.getCurrentUser().userId,
+                        receiver,
+                        Constants.NOTIFICATION_LIKE_COMMENT,
+                        _post.value!!.postId,
+                        _post.value!!.postComments?.get(position)?.comment
+                    )
+                }
+            }
+        }
+
         val postRef =  FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF).document(
             _post.value!!.postId)
         FirebaseHandler.getDatabase().runTransaction { transaction ->
-            val document  = transaction.get(postRef)
-            _post.value = document.toObject(PostModel::class.java)
-
-            if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
-                _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
-            else{
-                _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
-
-                val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
-                if(_post.value!!.postComments?.get(position)?.commentAuthor != App.getCurrentUser().userId){
-                    if (receiver != null) {
-                        Utils.addNotification(
-                            App.getCurrentUser().userId,
-                            receiver,
-                            Constants.NOTIFICATION_LIKE_COMMENT,
-                            _post.value!!.postId,
-                            _post.value!!.postComments?.get(position)?.comment
-                        )
-                    }
-                }
-            }
-
             transaction.update(postRef, "postComments", _post.value!!.postComments)
             null
         }.addOnSuccessListener { Log.d("postComments", "Transaction success!") }
