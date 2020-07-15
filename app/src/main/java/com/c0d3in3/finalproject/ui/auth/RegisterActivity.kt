@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log.d
 import android.widget.Toast
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants.USER_PROFILE_PICTURES_REF
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
@@ -35,6 +36,7 @@ class RegisterActivity : BaseActivity() {
     override fun getLayout() = R.layout.activity_register
 
     override fun init(){
+        userModel.userProfileImage = "https://firebasestorage.googleapis.com/v0/b/postit-tbc.appspot.com/o/profile.png?alt=media&token=cd2c28cf-43cc-44d6-ad41-123c1f212fc8"
         googleAuth = intent.getBooleanExtra("googleAuth", false)
         adapter =
             BasePagerAdapter(supportFragmentManager)
@@ -122,7 +124,7 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun uploadImage() {
-        Utils.uploadImage("users/${userModel.userId}", imageUri!!, object : ImageUploadCallback {
+        Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${userModel.userId}", imageUri!!, object : ImageUploadCallback {
             override fun onFinish(downloadUrl: String) {
                 App.setCurrentUser(userModel)
                 App.getCurrentUser().userProfileImage = downloadUrl

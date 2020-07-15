@@ -18,4 +18,8 @@ object Constants {
     const val NOTIFICATION_LIKE_POST = 1
     const val NOTIFICATION_COMMENT = 2
     const val NOTIFICATION_LIKE_COMMENT = 3
+
+    const val USER_PROFILE_PICTURES_REF = "user_profile_pictures"
+    const val USER_STORIES_REF = "user_stories"
+    const val POSTS_REF = "posts"
 }

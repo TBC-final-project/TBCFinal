@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants.USER_STORIES_REF
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.StoryModel
@@ -44,7 +45,7 @@ class AddStoryActivity : BaseActivity() {
     }
 
     private fun uploadImage(){
-        Utils.uploadImage("users/${App.getCurrentUser().userId}/stories", imageUri, object: ImageUploadCallback{
+        Utils.uploadImage("$USER_STORIES_REF/${App.getCurrentUser().userId}_${(0..10000).random()}", imageUri, object: ImageUploadCallback{
             override fun onFinish(downloadUrl: String) {
                 addStory(downloadUrl.toString())
             }

@@ -61,8 +61,8 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
                 App.getCurrentUser().userId,
                 _post.value!!.postAuthor.toString(),
                 Constants.NOTIFICATION_COMMENT,
-                comment.comment,
-                _post.value!!.postId
+                _post.value!!.postId,
+                comment.comment
             )
         }
     }
@@ -74,7 +74,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
 
             val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
-            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+            if(_post.value!!.postComments?.get(position)?.commentAuthor != App.getCurrentUser().userId){
                 if (receiver != null) {
                     Utils.addNotification(
                         App.getCurrentUser().userId,

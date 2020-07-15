@@ -12,6 +12,7 @@ import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
 import com.c0d3in3.finalproject.image_chooser.MediaFile
 import com.c0d3in3.finalproject.image_chooser.MediaSource
 import com.c0d3in3.finalproject.network.FirebaseHandler
+import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
 import com.c0d3in3.finalproject.tools.ImageUploadCallback
 import com.c0d3in3.finalproject.tools.Utils
 import kotlinx.android.synthetic.main.activity_edit_profile.*
@@ -40,7 +41,7 @@ class CreatePostImageFragment: BaseFragment(){
     }
 
     private fun uploadImage() {
-        Utils.uploadImage("posts/", imageFile!!.uri, object : ImageUploadCallback {
+        Utils.uploadImage("$POSTS_REF/${App.getCurrentUser().userId}_${(0..10000).random()}", imageFile!!.uri, object : ImageUploadCallback {
             override fun onFinish(downloadUrl: String) {
                 (activity as CreatePostActivity).addPost(
                     etAddPostTitle.text.toString(),

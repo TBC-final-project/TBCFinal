@@ -10,6 +10,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
+import com.c0d3in3.finalproject.ui.auth.RegisterActivity
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -39,12 +40,20 @@ class SplashActivity : BaseActivity() {
     private fun getUserData() {
         FirebaseHandler.getDatabase().collection(USERS_REF).document(auth.currentUser!!.uid).get()
             .addOnSuccessListener {
-                val userInfo = it.toObject(UserModel::class.java)
-                if (userInfo != null) {
-                    App.setCurrentUser(userInfo)
-                    dataLoaded = true
-                    stopSplash()
-                } else stopSplash()
+                if(it.exists()){
+                    val userInfo = it.toObject(UserModel::class.java)
+                    if (userInfo != null) {
+                        App.setCurrentUser(userInfo)
+                        dataLoaded = true
+                        stopSplash()
+                    } else stopSplash()
+                }
+                else{
+                    val intent = Intent(this, RegisterActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+
             }
     }
 

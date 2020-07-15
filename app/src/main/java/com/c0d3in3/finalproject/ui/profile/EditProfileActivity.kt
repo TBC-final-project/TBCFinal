@@ -13,6 +13,7 @@ import android.view.Window
 import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants.USER_PROFILE_PICTURES_REF
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.UserModel
@@ -83,7 +84,7 @@ class EditProfileActivity : BaseActivity() {
             App.getCurrentUser().userId
         ).set(App.getCurrentUser())
         if(imageFile != null){
-            Utils.uploadImage("users/${model.userId}", imageFile!!.uri, object: ImageUploadCallback{
+            Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${model.userId}", imageFile!!.uri, object: ImageUploadCallback{
                 override fun onFinish(downloadUrl: String) {
                     FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userProfileImage", downloadUrl)
                     setResult(Activity.RESULT_OK, intent)
