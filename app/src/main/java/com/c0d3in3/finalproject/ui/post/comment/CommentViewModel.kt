@@ -15,6 +15,7 @@ import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.PostsRepository
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.tools.Utils
+import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
         _post.value?.postComments!!.removeAt(position)
         FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
             .document(_post.value!!.postId)
-            .update("postComments", _post.value!!.postComments)
+            .update("postComments", FieldValue.arrayRemove(_post.value?.postComments!![position]))
         setPostModel(_post.value!!)
     }
 
@@ -49,7 +50,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
         FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
             .document(_post.value!!.postId)
-            .update("postComments", _post.value!!.postComments)
+            .update("postComments", FieldValue.arrayUnion(comment))
 
         if(_post.value!!.postAuthor != App.getCurrentUser().userId){
             Utils.addNotification(
@@ -85,8 +86,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
         FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
             .document(_post.value!!.postId)
-            .update("postComments", _post.value!!.postComments)
-
+            .update("postComments", _post.value?.postComments)
         setPostModel(_post.value!!)
     }
 

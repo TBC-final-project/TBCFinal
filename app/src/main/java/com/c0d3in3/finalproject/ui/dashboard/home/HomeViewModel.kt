@@ -111,7 +111,7 @@ class HomeViewModel(private val repository: PostsRepository, private val storyRe
                 is State.Failed -> withContext(Dispatchers.Main) {
                     Toast.makeText(
                         App.getInstance().applicationContext,
-                        "Error while loading posts",
+                        "Error while loading posts ${state.message}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
