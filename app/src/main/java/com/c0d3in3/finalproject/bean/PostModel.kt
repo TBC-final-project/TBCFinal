@@ -15,6 +15,6 @@ data class PostModel(
     val postLocation: String = "",
     var postTimestamp: Long = 0,
     var postTitle: String = "",
-    val postType: Long = 0,
+    var postType: Long = 0,
     @get:Exclude var postAuthorModel: UserModel? = null,
     @get:Exclude var isLast: Boolean = false) :Parcelable, CustomInterface

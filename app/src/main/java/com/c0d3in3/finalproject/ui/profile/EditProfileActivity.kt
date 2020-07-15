@@ -85,6 +85,8 @@ class EditProfileActivity : BaseActivity() {
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
