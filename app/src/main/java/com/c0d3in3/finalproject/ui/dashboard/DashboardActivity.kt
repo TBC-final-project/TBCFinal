@@ -1,5 +1,6 @@
 package com.c0d3in3.finalproject.ui.dashboard
 
+import android.content.Intent
 import androidx.viewpager.widget.ViewPager
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
@@ -12,6 +13,7 @@ import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoriesFragment
+import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BaseActivity() {
@@ -29,6 +31,7 @@ class DashboardActivity : BaseActivity() {
         initMainToolbar(currentTitle)
 
         addPostButton.setOnClickListener {
+            startActivity(Intent(this, CreatePostActivity::class.java))
             addPosts()
         }
 
