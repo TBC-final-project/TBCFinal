@@ -1,6 +1,7 @@
 package com.c0d3in3.finalproject.ui.auth
 
 import android.content.Intent
+import android.net.Uri
 import android.util.Log.d
 import android.widget.Toast
 import com.c0d3in3.finalproject.App
@@ -9,13 +10,14 @@ import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.UserModel
-import com.c0d3in3.finalproject.ui.auth.register.ChooseEmailFragment
-import com.c0d3in3.finalproject.ui.auth.register.ChooseNameFragment
-import com.c0d3in3.finalproject.ui.auth.register.ChoosePasswordFragment
-import com.c0d3in3.finalproject.ui.auth.register.ChooseUsernameFragment
+import com.c0d3in3.finalproject.tools.ImageUploadCallback
+import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.auth.register.*
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
+import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.fragment_create_post_image.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -26,7 +28,7 @@ class RegisterActivity : BaseActivity() {
     private lateinit var email: String
     private var googleAuth by Delegates.notNull<Boolean>()
     private val auth = FirebaseAuth.getInstance()
-
+    private var imageUri : Uri? = null
     lateinit var adapter: BasePagerAdapter
 
 
@@ -37,6 +39,7 @@ class RegisterActivity : BaseActivity() {
         adapter =
             BasePagerAdapter(supportFragmentManager)
         adapter.addFragment(ChooseNameFragment())
+        adapter.addFragment(ChooseProfileImageFragment())
         adapter.addFragment(ChooseUsernameFragment())
         if(googleAuth) {
             email = auth.currentUser?.email.toString()
@@ -53,6 +56,11 @@ class RegisterActivity : BaseActivity() {
 
     fun getEmail(email: String){
         this.email = email
+        registerViewPager.currentItem = registerViewPager.currentItem + 1
+    }
+
+    fun getImage(imageUri: String){
+        this.imageUri = Uri.parse(imageUri)
         registerViewPager.currentItem = registerViewPager.currentItem + 1
     }
 
@@ -74,11 +82,16 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun uploadUser(uid: String){
+        userModel.userFollowers = arrayListOf()
+        userModel.userFollowing = arrayListOf()
         FirebaseHandler.getDatabase().collection("users").document(uid).set(userModel).addOnSuccessListener {
-            App.setCurrentUser(userModel)
-            val intent = Intent(this, DashboardActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            if(imageUri != null) uploadImage()
+            else{
+                App.setCurrentUser(userModel)
+                val intent = Intent(this, DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
         }
     }
 
@@ -106,6 +119,22 @@ class RegisterActivity : BaseActivity() {
 
                 // ...
             }
+    }
+
+    private fun uploadImage() {
+        Utils.uploadImage("users/${userModel.userId}", imageUri!!, object : ImageUploadCallback {
+            override fun onFinish(downloadUrl: String) {
+                App.setCurrentUser(userModel)
+                App.getCurrentUser().userProfileImage = downloadUrl
+                FirebaseHandler.getDatabase().collection(FirebaseHandler.USERS_REF)
+                    .document(App.getCurrentUser().userId)
+                    .update("userProfileImage", downloadUrl)
+                val intent = Intent(this@RegisterActivity, DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
+
+        })
     }
 
 }

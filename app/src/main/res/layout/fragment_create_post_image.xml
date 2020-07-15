@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".ui.post.create_post.CreatePostActivity">
 
 
@@ -14,19 +15,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/btnBackEditProfile"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:contentDescription="@string/back_button"
-            android:src="@mipmap/ic_back_arrow" />
-
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/editProfileImage"
+            android:id="@+id/createPostImage"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@mipmap/img_profile" />
@@ -54,7 +46,8 @@
             android:id="@+id/etAddPostTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textCapSentences"
+            android:maxLength="64"
             android:paddingVertical="15dp"
             android:paddingStart="0dp"
             android:paddingEnd="0dp" />
@@ -71,11 +64,10 @@
             android:id="@+id/etAddPostDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:paddingVertical="15dp"
             android:paddingStart="0dp"
             android:paddingEnd="0dp" />
-
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCreatePost"

@@ -131,8 +131,15 @@ class StoryViewFragment(private val storyList: ArrayList<StoryModel>, private va
     }
 
     fun startTimer(){
+        val recyclerView = rootView!!.storyListRecyclerView
         val progressBarRecyclerView =  rootView!!.progressBarRecyclerView
+        if(progressBarRecyclerView.childCount > 0){
+            for(idx in 0 until progressBarRecyclerView.childCount){
+                progressBarRecyclerView[idx].storyTimeProgressBar.cancelProgress()
+            }
+        }
         setProgressBar(progressBarRecyclerView[0].storyTimeProgressBar)
+        recyclerView.scrollToPosition(0)
     }
 
     override fun storyLoaded() {

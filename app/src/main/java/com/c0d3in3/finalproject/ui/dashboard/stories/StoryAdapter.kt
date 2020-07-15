@@ -85,6 +85,7 @@ class StoryAdapter(
                 if (idx == storyList.size - 1) getUser(storyList[idx][0], true, diffResult)
                 else getUser(storyList[idx][0], false, null)
             }
+            if(storyList.size <= 2) diffResult.dispatchUpdatesTo(this)
         }
         else{
             storyList.clear()

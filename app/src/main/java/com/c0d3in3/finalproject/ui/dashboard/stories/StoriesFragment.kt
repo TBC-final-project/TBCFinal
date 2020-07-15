@@ -48,6 +48,7 @@ class StoriesFragment : BaseFragment(), StoryAdapter.CustomStoryCallback {
             intent.putExtra("position", position)
             startActivity(intent)
         }
+        else (activity as DashboardActivity).addStory()
     }
 
     override fun onLoadMoreStories() {

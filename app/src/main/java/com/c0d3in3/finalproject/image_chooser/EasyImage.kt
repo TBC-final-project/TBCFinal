@@ -129,19 +129,14 @@ class EasyImage private constructor(
 
     fun openChooser(activity: Activity) = startChooser(activity)
     fun openChooser(fragment: Fragment) = startChooser(fragment)
-    fun openChooser(fragment: android.app.Fragment) = startChooser(fragment)
     fun openDocuments(activity: Activity) = startDocuments(activity)
     fun openDocuments(fragment: Fragment) = startDocuments(fragment)
-    fun openDocuments(fragment: android.app.Fragment) = startDocuments(fragment)
     fun openGallery(activity: Activity) = startGallery(activity)
     fun openGallery(fragment: Fragment) = startGallery(fragment)
-    fun openGallery(fragment: android.app.Fragment) = startGallery(fragment)
     fun openCameraForImage(activity: Activity) = startCameraForImage(activity)
     fun openCameraForImage(fragment: Fragment) = startCameraForImage(fragment)
-    fun openCameraForImage(fragment: android.app.Fragment) = startCameraForImage(fragment)
     fun openCameraForVideo(activity: Activity) = startCameraForVideo(activity)
     fun openCameraForVideo(fragment: Fragment) = startCameraForVideo(fragment)
-    fun openCameraForVideo(fragment: android.app.Fragment) = startCameraForVideo(fragment)
 
     fun handleActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?, activity: Activity, callbacks: Callbacks) {
         // EasyImage request codes are set to be between 374961 and 374965.

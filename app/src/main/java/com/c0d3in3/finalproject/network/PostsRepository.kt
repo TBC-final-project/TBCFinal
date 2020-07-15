@@ -29,7 +29,7 @@ class PostsRepository {
             val searchList = App.getCurrentUser().userFollowing
 
             val resultList = arrayListOf<PostModel>()
-
+            if(collectionSize == 0) emit(State.success(resultList))
             while (counter < collectionSize) {
                 if (resultList.size >= limit) {
                     emit(State.success(resultList))

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.R
 import kotlinx.android.synthetic.main.choose_resource_file.*
@@ -60,14 +61,17 @@ class ImageChooserUtils {
                 .build()
         }
 
-        fun choosePhoto(activity: Activity){
-            if (hasReadExternalStorage() && hasWriteExternalStorage() && hasCameraPermission())
-                chooseResource(activity)
-            else
+        fun choosePhoto(activity: Activity, fragment: Fragment? = null){
+            if (hasReadExternalStorage() && hasWriteExternalStorage() && hasCameraPermission()){
+                if(fragment != null) chooseResource(activity, fragment)
+                else chooseResource(activity)
+            }
+            else {
                 requestPermissions(activity)
+            }
         }
 
-        fun chooseResource(activity: Activity) {
+        fun chooseResource(activity: Activity, fragment: Fragment? = null) {
             val dialog = Dialog(activity)
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
             dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
@@ -77,12 +81,14 @@ class ImageChooserUtils {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT
             dialog.window!!.attributes = params as WindowManager.LayoutParams
             dialog.chooseFromCameraIB.setOnClickListener {
-                easyImage.openCameraForImage(activity)
+                if(fragment!= null) easyImage.openCameraForImage(fragment)
+                else easyImage.openCameraForImage(activity)
                 dialog.dismiss()
             }
 
             dialog.chooseFromGalleryIB.setOnClickListener {
-                easyImage.openGallery(activity)
+                if(fragment!= null) easyImage.openGallery(fragment)
+                else easyImage.openGallery(activity)
                 dialog.dismiss()
             }
 

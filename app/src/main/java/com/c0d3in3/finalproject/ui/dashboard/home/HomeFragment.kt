@@ -3,6 +3,7 @@ package com.c0d3in3.finalproject.ui.dashboard.home
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseFragment
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.bean.StoryModel
+import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
@@ -20,6 +22,7 @@ import com.c0d3in3.finalproject.ui.dashboard.stories.StoryAdapter
 import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
+import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import com.c0d3in3.finalproject.ui.post.post_detailed.PostDetailedActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.gson.Gson
@@ -59,11 +62,18 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
         homeViewModel.posts.observe(this, Observer { list ->
             if (rootView!!.homeSwipeLayout.isRefreshing) rootView!!.homeSwipeLayout.isRefreshing =
                 false
-            if (list != null && list.isNotEmpty()) {
-                posts = list
-                adapter!!.setPostsList(posts)
-                isLoading = false
-                rootView!!.loaderProgressBar.visibility = View.GONE
+            if (list != null) {
+                if(list.isEmpty()){
+                    rootView!!.loaderProgressBar.visibility = View.GONE
+                    rootView!!.noPostsTextView.visibility = View.VISIBLE
+                }
+                else{
+                    if(rootView!!.noPostsTextView.visibility == View.VISIBLE) rootView!!.noPostsTextView.visibility  = View.GONE
+                    posts = list
+                    adapter!!.setPostsList(posts)
+                    isLoading = false
+                    rootView!!.loaderProgressBar.visibility = View.GONE
+                }
             }
         })
 
@@ -182,6 +192,8 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
             intent.putExtra("position", position)
             startActivity(intent)
         }
+        else (activity as DashboardActivity).addStory()
+
     }
 
     override fun onLoadMoreStories() {
@@ -192,4 +204,6 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     override fun scrollToPosition(position: Int) {
         rootView!!.storyRecyclerView.scrollToPosition(position)
     }
+
+
 }

@@ -24,6 +24,7 @@ import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
+import com.c0d3in3.finalproject.tools.ImageUploadCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -40,13 +41,12 @@ import java.util.*
 
 class EditProfileActivity : BaseActivity() {
 
-    private lateinit var model: UserModel
     private var imageFile: MediaFile? = null
+    private val model = App.getCurrentUser()
 
     override fun getLayout() = R.layout.activity_edit_profile
 
     override fun init() {
-        model = intent.getParcelableExtra("model")!!
 
         initToolbar("Edit profile")
 
@@ -54,7 +54,7 @@ class EditProfileActivity : BaseActivity() {
         etEditProfileFirstName.setText(name[0])
         etEditProfileLastName.setText(name[1])
         etEditProfileUserName.setText(model.username)
-        Glide.with(this).load(App.getCurrentUser().userProfileImage).into(editProfileImage)
+        Glide.with(this).load(model.userProfileImage).into(editProfileImage)
 
         choosePhotoLayout.setOnClickListener{
             ImageChooserUtils.choosePhoto(this)
@@ -82,8 +82,20 @@ class EditProfileActivity : BaseActivity() {
         FirebaseHandler.getDatabase().collection(USERS_REF).document(
             App.getCurrentUser().userId
         ).set(App.getCurrentUser())
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        if(imageFile != null){
+            Utils.uploadImage("users/${model.userId}", imageFile!!.uri, object: ImageUploadCallback{
+                override fun onFinish(downloadUrl: String) {
+                    FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userProfileImage", downloadUrl)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+
+            })
+        }
+        else{
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
     }
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -116,22 +128,6 @@ class EditProfileActivity : BaseActivity() {
                     if (imageFiles.isNotEmpty()) {
                         imageFile = imageFiles[0]
                         Glide.with(applicationContext).load(imageFile!!.uri).into(editProfileImage)
-
-                        val pictureRef = FirebaseHandler.getStorage().reference.child("users/${model.userId}")
-                        val uploadTask = pictureRef.putFile(imageFile!!.uri)
-                        uploadTask.continueWithTask { task ->
-                            if (!task.isSuccessful) {
-                                task.exception?.let {
-                                    throw it
-                                }
-                            }
-                            pictureRef.downloadUrl
-                        }.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val downloadUri = task.result
-                                FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userProfileImage", downloadUri.toString())
-                            }
-                        }
                     }
                 }
 

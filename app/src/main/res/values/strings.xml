@@ -67,8 +67,8 @@
     <string name="password_length">Password length should be in range of 6–32</string>
     <string name="search_">Search…</string>
     <string name="add_to_story">Add to Story</string>
-      <string name="full_name">Full Name</string>
-      <string name="started_following_you">Started following you.</string>
+    <string name="full_name">Full Name</string>
+    <string name="started_following_you">Started following you.</string>
     <string name="liked_your_post">Liked your post.</string>
     <string name="add_post">Publish Your Post</string>
     <string name="add_a_description">Add a Description</string>
@@ -76,4 +76,7 @@
     <string name="unfollow">Unfollow</string>
     <string name="edit_post">Edit post</string>
     <string name="delete_post">Delete post</string>
+    <string name="choose_profile_image">Choose profile image</string>
+    <string name="skip_for_now">Skip for now</string>
+    <string name="your_news_feed_is_empty">Your news feed is empty!</string>
 </resources>

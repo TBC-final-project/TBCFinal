@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
@@ -22,8 +23,10 @@ import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.State
+import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
+import kotlinx.android.synthetic.main.fragment_create_post_image.*
 import kotlinx.android.synthetic.main.post_options_layout.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -226,5 +229,23 @@ object Utils {
             dp,
             r.displayMetrics
         ).toInt()
+    }
+
+    fun uploadImage(reference: String, imageUri: Uri, callback: ImageUploadCallback){
+        val pictureRef = FirebaseHandler.getStorage().reference.child(reference)
+        val uploadTask = pictureRef.putFile(imageUri)
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            pictureRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUri = task.result
+                callback.onFinish(downloadUri.toString())
+            }
+        }
     }
 }

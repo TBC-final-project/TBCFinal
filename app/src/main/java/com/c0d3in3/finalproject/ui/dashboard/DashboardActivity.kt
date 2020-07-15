@@ -1,26 +1,36 @@
 package com.c0d3in3.finalproject.ui.dashboard
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.bean.StoryModel
 import com.c0d3in3.finalproject.bean.UserModel
+import com.c0d3in3.finalproject.image_chooser.EasyImage
+import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
+import com.c0d3in3.finalproject.image_chooser.MediaFile
+import com.c0d3in3.finalproject.image_chooser.MediaSource
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.ui.dashboard.home.HomeFragment
 import com.c0d3in3.finalproject.ui.dashboard.notifications.NotificationsFragment
 import com.c0d3in3.finalproject.ui.dashboard.search.SearchFragment
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoriesFragment
+import com.c0d3in3.finalproject.ui.dashboard.stories.add_story.AddStoryActivity
 import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.fragment_create_post_image.view.*
 
 class DashboardActivity : BaseActivity() {
 
     private lateinit var adapter: BasePagerAdapter
 
     private var currentTitle = "news feed"
+
+    private var imageFile: MediaFile? = null
 
     override fun getLayout() = R.layout.activity_dashboard
 
@@ -32,7 +42,7 @@ class DashboardActivity : BaseActivity() {
 
         addPostButton.setOnClickListener {
             startActivity(Intent(this, CreatePostActivity::class.java))
-            addPosts()
+            //addPosts()
         }
 
         addViewPagerListener()
@@ -67,31 +77,22 @@ class DashboardActivity : BaseActivity() {
         }
     }
 
+    fun addStory(){
+        ImageChooserUtils.choosePhoto(this)
+    }
 
-    private fun addPosts() {
-//        val post = PostModel()
-//        post.postAuthor = UserInfo.userInfo.userId
-//        post.postTimestamp = System.currentTimeMillis()
-//        post.postComments = arrayListOf()
-//        post.postLikes = arrayListOf()
-//        CoroutineScope(Dispatchers.IO).launch {
-//            PostsRepository().addPost(post).collect {
-//            }
-//        }
-        val userModel = UserModel()
-        userModel.userId = (0..10000).random().toString()
-        userModel.userFullName = "ted ${userModel.userId}"
-        userModel.userFullNameToLowerCase = "ted ${userModel.userId}"
-        userModel.userProfileImage = "https://firebasestorage.googleapis.com/v0/b/postit-tbc.appspot.com/o/user_profile_pictures%2F160f636c40c160cf9e37ec0d7a67a807.jpg?alt=media"
-        FirebaseHandler.getDatabase().collection("users").document(userModel.userId).set(userModel)
-        val storyModel = StoryModel()
-        storyModel.storyAuthorId = userModel.userId
-        storyModel.storyCreatedAt = System.currentTimeMillis()
-        storyModel.storyValidUntil = storyModel.storyCreatedAt+10000000
-        val mStoriesCollection = FirebaseHandler.getDatabase().collection("${FirebaseHandler.USERS_REF}/${userModel.userId}/${FirebaseHandler.STORIES_REF}")
-        mStoriesCollection.add(storyModel)
-        App.getCurrentUser().userFollowing?.add(userModel.userId)
-        FirebaseHandler.getDatabase().collection("users").document(App.getCurrentUser().userId).update("userFollowing", App.getCurrentUser().userFollowing)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == ImageChooserUtils.PERMISSIONS_REQUEST) {
+            if (grantResults.size > 2) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    ImageChooserUtils.chooseResource(this)
+            }
+        }
     }
 
     private fun addViewPagerListener() {
@@ -132,5 +133,32 @@ class DashboardActivity : BaseActivity() {
     fun sendStoryList(list: ArrayList<ArrayList<StoryModel>>){
         val frag = adapter.getItem(1) as StoriesFragment
         frag.setStoryList(list)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        ImageChooserUtils.easyImage.handleActivityResult(
+            requestCode,
+            resultCode,
+            data,
+            this,
+            object : EasyImage.Callbacks {
+                override fun onImagePickerError(error: Throwable, source: MediaSource) {
+
+                }
+
+                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+                    if (imageFiles.isNotEmpty()) {
+                        imageFile = imageFiles[0]
+                        val intent = Intent(this@DashboardActivity, AddStoryActivity::class.java)
+                        intent.putExtra("imageUri", imageFile!!.uri.toString())
+                        startActivity(intent)
+                    }
+                }
+
+                override fun onCanceled(source: MediaSource) {
+
+                }
+            })
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
