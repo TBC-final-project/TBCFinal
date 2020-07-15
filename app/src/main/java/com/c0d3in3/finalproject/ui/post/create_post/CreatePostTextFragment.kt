@@ -15,6 +15,7 @@ class CreatePostTextFragment : BaseFragment() {
             (activity as CreatePostActivity).addPost(etAddPostTitle.text.toString(), etAddPostDescription.text.toString())
         }
 
+        // ..
 
 
 
