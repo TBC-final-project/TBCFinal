@@ -79,7 +79,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             _post.value = it.result?.toObject(PostModel::class.java)
 
             if (oldPost != null) {
-                if(position < _post.value?.postComments?.size!! && _post.value!!.postComments?.get(position) == oldPost.postComments?.get(position)!!){
+                if(position < _post.value?.postComments?.size!! && _post.value!!.postComments?.get(position)?.commentTimestamp == oldPost.postComments?.get(position)?.commentTimestamp){
                     if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
                         _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
                     else{
