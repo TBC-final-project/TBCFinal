@@ -8,9 +8,9 @@
     tools:context=".ui.splash.SplashActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_logo_white" />
 
 </FrameLayout>

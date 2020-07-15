@@ -32,12 +32,15 @@ class PostViewModel: ViewModel() {
             post.value?.postLikes!!.remove(App.getCurrentUser().userId)
         } else{
             post.value!!.postLikes?.add(App.getCurrentUser().userId)
-            Utils.addNotification(
-                App.getCurrentUser().userId,
-                post.value!!.postAuthor!!,
-                Constants.NOTIFICATION_LIKE_POST,
-                post.value!!.postId
-            )
+            if(post.value!!.postAuthor != App.getCurrentUser().userId){
+                Utils.addNotification(
+                    App.getCurrentUser().userId,
+                    post.value!!.postAuthor!!,
+                    Constants.NOTIFICATION_LIKE_POST,
+                    post.value!!.postId
+                )
+            }
+
         }
         post.value?.let { Utils.likePost(it) }
         setPostModel(post.value!!)
