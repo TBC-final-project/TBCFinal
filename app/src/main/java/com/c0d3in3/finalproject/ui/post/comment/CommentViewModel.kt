@@ -1,7 +1,5 @@
 package com.c0d3in3.finalproject.ui.post.comment
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.network.UsersRepository
 import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.FirebaseHandler.POSTS_REF
@@ -36,10 +33,12 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
 
     fun removeComment(position: Int) {
-        _post.value?.postComments!!.removeAt(position)
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update("postComments", FieldValue.arrayRemove(
-            _post.value?.postComments!![position]
-        ))
+        loadPost()
+        val index = _post.value?.postComments!!.indexOf(_post.value?.postComments!![position])
+        _post.value?.postComments!!.removeAt(index)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update(
+            "postComments", _post.value?.postComments!!
+        )
         setPostModel(_post.value!!)
     }
 
@@ -48,9 +47,10 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
         _post.value!!.postComments?.add(comment)
         setPostModel(_post.value!!)
 
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update("postComments", FieldValue.arrayUnion(comment))
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId)
+            .update("postComments", FieldValue.arrayUnion(comment))
 
-        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+        if (_post.value!!.postAuthor != App.getCurrentUser().userId) {
             Utils.addNotification(
                 App.getCurrentUser().userId,
                 _post.value!!.postAuthor.toString(),
@@ -61,16 +61,16 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
         }
     }
 
-    fun likeComment(position: Int){
+    fun likeComment(position: Int) {
+        loadPost()
+        val postComment = _post.value!!.postComments?.get(position)
+        if (postComment?.commentLikes?.contains(App.getCurrentUser().userId)!!)
+            postComment.commentLikes?.remove(App.getCurrentUser().userId)
+        else {
+            postComment.commentLikes?.add(App.getCurrentUser().userId)
 
-        val postComments = _post.value!!.postComments?.get(position)
-        if (postComments?.commentLikes?.contains(App.getCurrentUser().userId)!!)
-            postComments.commentLikes?.remove(App.getCurrentUser().userId)
-        else{
-            postComments.commentLikes?.add(App.getCurrentUser().userId)
-
-            val receiver = postComments.commentAuthor
-            if(postComments.commentAuthor != App.getCurrentUser().userId){
+            val receiver = postComment.commentAuthor
+            if (postComment.commentAuthor != App.getCurrentUser().userId) {
                 if (receiver != null) {
                     Utils.addNotification(
                         App.getCurrentUser().userId,
@@ -82,25 +82,18 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
                 }
             }
         }
-
-        val postRef =  FirebaseHandler.getDatabase().collection(POSTS_REF).document(
-            _post.value!!.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            transaction.update(postRef, "postComments", _post.value!!.postComments)
-            null
-        }.addOnSuccessListener { Log.d("postComments", "Transaction success!") }
-            .addOnFailureListener { e -> Log.d("postComments", "Transaction failure.", e) }
-
-        setPostModel(_post.value!!)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update(
+            "postComments", _post.value!!.postComments
+        )
     }
 
-    fun loadPost(){
+    fun loadPost() {
         viewModelScope.launch {
             repository.getPost(_post.value!!.postId).collect { state ->
                 when (state) {
 
                     is State.Success -> {
-                        if(state.data != null) {
+                        if (state.data != null) {
                             state.data.postAuthorModel = getPost().value!!.postAuthorModel
                             setPostModel(state.data)
                         }
