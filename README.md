@@ -15,7 +15,7 @@ PostIt არის სოციალური ქსელი, რომელ
 **Material Bottom Navigation** - დეშბორდისთვის.  
 **CardView**  დიზაინი  
 **Material** დიზაინი  
-**Swipe Refresh Layout** [მონაცემების გასანაახლებლად]  
+**Swipe Refresh Layout** [მონაცემების განსანახლებლად]  
 **Glide** "https://github.com/bumptech/glide"  [სურათებისთვის]  
 **Firebase Auth** "firebase.google.com"   [ავტორიზაცია/რეგისტრაცია]  
 **Firebase Firestore** "firebase.google.com"  [მომხმარებლის ინფოს შესანახად]  
