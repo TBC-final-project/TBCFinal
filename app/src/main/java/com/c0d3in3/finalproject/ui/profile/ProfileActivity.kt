@@ -16,6 +16,7 @@ import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityProfileBinding
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.post.EditPostActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import com.c0d3in3.finalproject.ui.post.post_detailed.PostDetailedActivity
@@ -74,7 +75,6 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
             if (profileSwipeRefreshLayout.isRefreshing) {
                 posts.clear()
                 adapter!!.setPostsList(posts)
-
                 profileViewModel.updateUser()
                 profileViewModel.loadPosts(null)
 
@@ -125,6 +125,26 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0 && resultCode == RESULT_OK)
             profileViewModel.updateUser()
+        if (requestCode == Constants.OPEN_DETAILED_POST && resultCode == Activity.RESULT_OK) {
+            val position = data?.extras?.getInt("position")
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (position != null && model != null) {
+                profileViewModel.getPosts().value?.set(position, model)
+                posts[position] = model
+                adapter!!.updateSingleItem(model, position)
+            }
+            if(model == null) profileViewModel.deletePost(position!!)
+        }
+        if(requestCode == Constants.EDIT_POST_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            val position = data?.extras?.getInt("position")
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (position != null && model != null) {
+                profileViewModel.getPosts().value?.set(position, model)
+                posts[position] = model
+                adapter!!.updateSingleItem(model, position)
+            }
+            if(model == null) profileViewModel.deletePost(position!!)
+        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -163,7 +183,10 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
         Utils.createPostOptionsDialog(this, object:
             DialogCallback {
             override fun onEditPost() {
-                super.onEditPost()
+                val intent = Intent(this@ProfileActivity, EditPostActivity::class.java)
+                intent.putExtra("model", posts[position])
+                intent.putExtra("position", position)
+                startActivityForResult(intent, Constants.EDIT_POST_REQUEST_CODE)
             }
 
             override fun onDeletePost() {

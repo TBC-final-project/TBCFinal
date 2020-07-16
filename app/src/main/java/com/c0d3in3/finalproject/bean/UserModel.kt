@@ -1,6 +1,7 @@
 package com.c0d3in3.finalproject.bean
 
 import android.os.Parcelable
+import com.google.firebase.firestore.Exclude
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -13,6 +14,6 @@ data class UserModel(
     var userProfileCover : String = "",
     var userProfileImage : String = "",
     var userRegisterDate : Long = 0,
-    var userPosts: ArrayList<String>? = null,
+    @get:Exclude var userPosts: Int = 0,
     var userProfileDescription: String = "",
     var username : String = ""): Parcelable

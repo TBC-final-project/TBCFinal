@@ -65,20 +65,23 @@ class EditProfileActivity : BaseActivity() {
             val firstName = etEditProfileFirstName.text.toString()
             val lastName = etEditProfileLastName.text.toString()
             val username = etEditProfileUserName.text.toString()
+            val bio = etEditProfileBio.text.toString()
 
             if(lastName.isBlank() || firstName.isBlank() || username.isBlank()) return@setOnClickListener Utils.createDialog(this, "Error", getString(R.string.fields_are_empty))
             if(username != App.getCurrentUser().username)
-                checkUsername(firstName, lastName, username)
-            else updateProfile(firstName, lastName, username)
+                checkUsername(firstName, lastName, username,bio)
+            else updateProfile(firstName, lastName, username, bio)
         }
     }
 
-    private fun updateProfile(firstName: String, lastName: String, username: String){
+    private fun updateProfile(firstName: String, lastName: String, username: String, bio: String){
         App.getCurrentUser().userFullName = "$firstName $lastName"
 
         App.getCurrentUser().userFullNameToLowerCase = App.getCurrentUser().userFullName.toLowerCase(
             Locale.ROOT)
         App.getCurrentUser().username = username
+
+        App.getCurrentUser().userProfileDescription = bio
 
         FirebaseHandler.getDatabase().collection(USERS_REF).document(
             App.getCurrentUser().userId
@@ -140,7 +143,7 @@ class EditProfileActivity : BaseActivity() {
             })
     }
 
-    private fun checkUsername(firstName: String, lastName: String, username: String) {
+    private fun checkUsername(firstName: String, lastName: String, username: String, bio: String) {
         CoroutineScope(Dispatchers.IO).launch {
             UsersRepository().checkUser(username).collect { state ->
                 when (state) {
@@ -155,7 +158,7 @@ class EditProfileActivity : BaseActivity() {
                                 )
                             }
                         else withContext(Dispatchers.Main) {
-                            updateProfile(firstName,lastName,username)
+                            updateProfile(firstName,lastName,username,bio)
                         }
                     }
 

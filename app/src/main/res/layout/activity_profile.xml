@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="@{String.valueOf(userModel.userPosts.size()) + `\nposts`}"
+                        android:text="@{userModel.userPosts + `\nposts`}"
                         android:textColor="#000"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/followerNumber"

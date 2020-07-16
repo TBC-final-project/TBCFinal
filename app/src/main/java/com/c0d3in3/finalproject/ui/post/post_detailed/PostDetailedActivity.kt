@@ -12,12 +12,13 @@ import com.c0d3in3.finalproject.Constants.POST_TYPE_TEXT
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.PostModel
-import com.c0d3in3.finalproject.databinding.*
+import com.c0d3in3.finalproject.databinding.ImagePostDetailedLayoutBinding
+import com.c0d3in3.finalproject.databinding.TextPostDetailedLayoutBinding
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
+import com.c0d3in3.finalproject.ui.post.EditPostActivity
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import kotlinx.android.synthetic.main.image_post_detailed_layout.*
-import kotlin.properties.Delegates
 
 
 class PostDetailedActivity : BaseActivity() {
@@ -68,8 +69,6 @@ class PostDetailedActivity : BaseActivity() {
         initToolbar("${post!!.postAuthorModel?.userFullName}'s post")
 
         setListeners()
-
-
 
     }
 
@@ -125,13 +124,19 @@ class PostDetailedActivity : BaseActivity() {
             val model = data?.extras!!.getParcelable<PostModel>("model")
             if (model != null) postViewModel.setPostModel(model)
         }
+        if(requestCode == Constants.EDIT_POST_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (model != null)  postViewModel.setPostModel(model)
+        }
     }
 
     private fun openOptionsDialog() {
         Utils.createPostOptionsDialog(this, object:
             DialogCallback {
             override fun onEditPost() {
-                super.onEditPost()
+                val intent = Intent(this@PostDetailedActivity, EditPostActivity::class.java)
+                intent.putExtra("model", post)
+                startActivityForResult(intent, Constants.EDIT_POST_REQUEST_CODE)
             }
 
             override fun onDeletePost() {

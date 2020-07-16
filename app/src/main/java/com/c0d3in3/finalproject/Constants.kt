@@ -22,4 +22,6 @@ object Constants {
     const val USER_PROFILE_PICTURES_REF = "user_profile_pictures"
     const val USER_STORIES_REF = "user_stories"
     const val POSTS_REF = "posts"
+
+    const val EDIT_POST_REQUEST_CODE = 229
 }

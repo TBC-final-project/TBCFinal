@@ -35,77 +35,70 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     fun removeComment(position: Int) {
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
-            _post.value = it.result?.toObject(PostModel::class.java)
-            _post.value?.postComments!!.removeAt(position)
-            FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-                .document(_post.value!!.postId)
-                .update("postComments", _post.value?.postComments)
-            setPostModel(_post.value!!)
-        }
-
+        _post.value?.postComments!!.removeAt(position)
+        FirebaseHandler.getDatabase().collection(POSTS_REF)
+            .document(_post.value!!.postId)
+            .update("postComments", _post.value!!.postComments)
+        setPostModel(_post.value!!)
     }
 
     fun addComment(comment: CommentModel) {
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
-            _post.value = it.result?.toObject(PostModel::class.java)
+        comment.commentAuthorModel = App.getCurrentUser()
+        _post.value!!.postComments?.add(comment)
+        setPostModel(_post.value!!)
+        val postRef = FirebaseHandler.getDatabase().collection(POSTS_REF)
+            .document(_post.value!!.postId)
+        FirebaseHandler.getDatabase().runTransaction { transaction ->
+            transaction.update(postRef, "postComments", _post.value!!.postComments)
+            null
+        }.addOnSuccessListener {
+            Log.d("AddComment", "Transaction success!")
 
-            comment.commentAuthorModel = App.getCurrentUser()
-            _post.value!!.postComments?.add(comment)
-            setPostModel(_post.value!!)
+        }.addOnFailureListener { e -> Log.d("AddComment", "Transaction failure.", e) }
 
-            FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-                .document(_post.value!!.postId)
-                .update("postComments", _post.value!!.postComments)
-
-            if(_post.value!!.postAuthor != App.getCurrentUser().userId){
-                Utils.addNotification(
-                    App.getCurrentUser().userId,
-                    _post.value!!.postAuthor.toString(),
-                    Constants.NOTIFICATION_COMMENT,
-                    comment.comment,
-                    _post.value!!.postId
-                )
-            }
+        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
+            Utils.addNotification(
+                App.getCurrentUser().userId,
+                _post.value!!.postAuthor.toString(),
+                Constants.NOTIFICATION_COMMENT,
+                comment.comment,
+                _post.value!!.postId
+            )
         }
     }
 
     fun likeComment(position: Int){
 
-        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).get().addOnCompleteListener {
-            val oldPost = _post.value
-            _post.value = it.result?.toObject(PostModel::class.java)
+        val postComments = _post.value!!.postComments?.get(position)
+        if (postComments?.commentLikes?.contains(App.getCurrentUser().userId)!!)
+            postComments.commentLikes?.remove(App.getCurrentUser().userId)
+        else{
+            postComments.commentLikes?.add(App.getCurrentUser().userId)
 
-            if (oldPost != null) {
-                if(position < _post.value?.postComments?.size!! && _post.value!!.postComments?.get(position)?.commentTimestamp == oldPost.postComments?.get(position)?.commentTimestamp){
-                    if (_post.value!!.postComments?.get(position)?.commentLikes?.contains(App.getCurrentUser().userId)!!)
-                        _post.value!!.postComments?.get(position)?.commentLikes?.remove(App.getCurrentUser().userId)
-                    else{
-                        _post.value!!.postComments?.get(position)?.commentLikes?.add(App.getCurrentUser().userId)
-
-                        val receiver = _post.value!!.postComments?.get(position)?.commentAuthor
-                        if(_post.value!!.postAuthor != App.getCurrentUser().userId){
-                            if (receiver != null) {
-                                Utils.addNotification(
-                                    App.getCurrentUser().userId,
-                                    receiver,
-                                    Constants.NOTIFICATION_LIKE_COMMENT,
-                                    _post.value!!.postId,
-                                    _post.value!!.postComments?.get(position)?.comment
-                                )
-                            }
-                        }
-                    }
-
-                    FirebaseHandler.getDatabase().collection(FirebaseHandler.POSTS_REF)
-                        .document(_post.value!!.postId)
-                        .update("postComments", _post.value?.postComments)
-                    setPostModel(_post.value!!)
+            val receiver = postComments.commentAuthor
+            if(postComments.commentAuthor != App.getCurrentUser().userId){
+                if (receiver != null) {
+                    Utils.addNotification(
+                        App.getCurrentUser().userId,
+                        receiver,
+                        Constants.NOTIFICATION_LIKE_COMMENT,
+                        _post.value!!.postId,
+                        _post.value!!.postComments?.get(position)?.comment
+                    )
                 }
             }
         }
+
+        val postRef =  FirebaseHandler.getDatabase().collection(POSTS_REF).document(
+            _post.value!!.postId)
+        FirebaseHandler.getDatabase().runTransaction { transaction ->
+            transaction.update(postRef, "postComments", _post.value!!.postComments)
+            null
+        }.addOnSuccessListener { Log.d("postComments", "Transaction success!") }
+            .addOnFailureListener { e -> Log.d("postComments", "Transaction failure.", e) }
+
+        setPostModel(_post.value!!)
     }
 
     fun loadPost(){

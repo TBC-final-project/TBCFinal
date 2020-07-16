@@ -80,4 +80,6 @@
     <string name="skip_for_now">Skip for now</string>
     <string name="your_news_feed_is_empty">Your news feed is empty!</string>
     <string name="add_a_story">Add a story</string>
+    <string name="your_bio">Your bio</string>
+    <string name="update_post">Update post</string>
 </resources>

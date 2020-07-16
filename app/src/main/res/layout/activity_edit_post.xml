@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.c0d3in3.finalproject.bean.PostModel" />
+
+    </data>
+
+    <ScrollView
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.post.create_post.CreatePostActivity">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/app_bar_layout"/>
+
+
+            <TextView
+                android:layout_marginHorizontal="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/add_a_title"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:layout_marginHorizontal="24dp"
+                android:id="@+id/etAddPostTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:maxLength="64"
+                android:text="@{model.postTitle}"
+                android:paddingVertical="15dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+            <TextView
+                android:layout_marginHorizontal="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/add_a_description"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+
+            <EditText
+                android:layout_marginHorizontal="24dp"
+                android:id="@+id/etAddPostDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:paddingVertical="15dp"
+                android:text="@{model.postDescription}"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpdatePost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:background="@drawable/btn_gradient_background"
+                    android:paddingVertical="20dp"
+                    android:layout_gravity="bottom"
+                    android:text="@string/update_post"
+                    android:textColor="#fff" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</layout>

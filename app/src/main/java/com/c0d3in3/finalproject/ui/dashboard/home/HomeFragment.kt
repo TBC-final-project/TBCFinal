@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.c0d3in3.finalproject.Constants
+import com.c0d3in3.finalproject.Constants.EDIT_POST_REQUEST_CODE
 import com.c0d3in3.finalproject.CustomLinearLayoutManager
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseFragment
@@ -20,6 +21,7 @@ import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
 import com.c0d3in3.finalproject.ui.dashboard.stories.StoryAdapter
 import com.c0d3in3.finalproject.ui.dashboard.stories.story_view.StoryViewActivity
+import com.c0d3in3.finalproject.ui.post.EditPostActivity
 import com.c0d3in3.finalproject.ui.post.PostsAdapter
 import com.c0d3in3.finalproject.ui.post.comment.CommentsActivity
 import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
@@ -151,7 +153,10 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
     override fun openOptionsDialog(position: Int) {
         Utils.createPostOptionsDialog((activity as DashboardActivity), object: DialogCallback{
             override fun onEditPost() {
-                super.onEditPost()
+                val intent = Intent(activity, EditPostActivity::class.java)
+                intent.putExtra("model", posts[position])
+                intent.putExtra("position", position)
+                startActivityForResult(intent, EDIT_POST_REQUEST_CODE)
             }
 
             override fun onDeletePost() {
@@ -176,10 +181,17 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
                 posts[position] = model
                 adapter!!.updateSingleItem(model, position)
             }
-            if(model == null){
-                homeViewModel.deletePost(position!!)
+            if(model == null) homeViewModel.deletePost(position!!)
+        }
+        if(requestCode == Constants.EDIT_POST_REQUEST_CODE && resultCode == RESULT_OK){
+            val position = data?.extras?.getInt("position")
+            val model = data?.extras!!.getParcelable<PostModel>("model")
+            if (position != null && model != null) {
+                homeViewModel.posts.value?.set(position, model)
+                posts[position] = model
+                adapter!!.updateSingleItem(model, position)
             }
-            //posts[position] = model!!
+            if(model == null) homeViewModel.deletePost(position!!)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
