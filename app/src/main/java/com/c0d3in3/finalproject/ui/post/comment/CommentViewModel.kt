@@ -97,6 +97,7 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
             )
             setPostModel(_post.value!!)
         }
+        else setPostModel(_post.value!!)
     }
 
     fun updatePost(comment: CommentModel? = null, operation: Int? = null) {
