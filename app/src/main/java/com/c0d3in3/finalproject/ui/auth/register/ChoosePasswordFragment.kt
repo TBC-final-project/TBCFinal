@@ -14,7 +14,7 @@ class ChoosePasswordFragment : BaseFragment() {
         rootView!!.finishButton.setOnClickListener {
             val password = rootView!!.passwordET.text.toString()
             val repeatPassword = rootView!!.repeatPasswordET.text.toString()
-            if(password.length < 6 || password.length > 32)return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.password_length))
+            if(password.length < 8 || password.length > 32)return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.password_length))
             if(password.isBlank() || repeatPassword.isBlank()) return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.fields_are_empty))
             if(password != repeatPassword) return@setOnClickListener Utils.createDialog(requireActivity(), "Error", getString(R.string.passwords_not_match))
             (activity as RegisterActivity).getPassword(rootView!!.passwordET.text.toString())

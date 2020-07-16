@@ -64,7 +64,7 @@ class ProfileActivity : BaseActivity(), PostsAdapter.CustomPostCallback {
         profileViewModel.getPosts().observe(this, Observer { list ->
             if (profileSwipeRefreshLayout.isRefreshing) profileSwipeRefreshLayout.isRefreshing =
                 false
-            if (list != null && list.isNotEmpty()) {
+            if (list != null) {
                 posts = list
                 adapter!!.setPostsList(posts)
                 isLoading = false

@@ -36,6 +36,7 @@ class AddStoryActivity : BaseActivity() {
         Glide.with(this).load(imageUri).into(binding.storyImageView)
 
         binding.addStoryButton.setOnClickListener{
+            binding.addStoryButton.isClickable = false
             uploadImage()
         }
 

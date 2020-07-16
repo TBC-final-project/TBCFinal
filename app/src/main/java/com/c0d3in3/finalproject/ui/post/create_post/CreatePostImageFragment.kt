@@ -28,8 +28,11 @@ class CreatePostImageFragment: BaseFragment(){
         rootView!!.btnCreatePost.setOnClickListener {
             if(etAddPostTitle.text.isEmpty() || etAddPostDescription.text.isEmpty())
                 return@setOnClickListener Toast.makeText(activity , "You need to fill all fields", Toast.LENGTH_LONG).show()
-            if(imageFile == null) return@setOnClickListener Utils.createDialog(activity as CreatePostActivity, "Error", "You must select image")
-            uploadImage()
+            if(imageFile == null) Utils.createDialog(activity as CreatePostActivity, "Error", "You must select image")
+            else {
+                rootView!!.btnCreatePost.isClickable = false
+                uploadImage()
+            }
         }
 
         rootView!!.createPostImage.setOnClickListener{

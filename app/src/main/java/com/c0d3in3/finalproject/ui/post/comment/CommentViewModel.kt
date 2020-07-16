@@ -37,9 +37,9 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
 
     fun removeComment(position: Int) {
         _post.value?.postComments!!.removeAt(position)
-        FirebaseHandler.getDatabase().collection(POSTS_REF)
-            .document(_post.value!!.postId)
-            .update("postComments", _post.value!!.postComments)
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update("postComments", FieldValue.arrayRemove(
+            _post.value?.postComments!![position]
+        ))
         setPostModel(_post.value!!)
     }
 
@@ -47,23 +47,16 @@ class CommentViewModel(private val repository: PostsRepository) : ViewModel() {
         comment.commentAuthorModel = App.getCurrentUser()
         _post.value!!.postComments?.add(comment)
         setPostModel(_post.value!!)
-        val postRef = FirebaseHandler.getDatabase().collection(POSTS_REF)
-            .document(_post.value!!.postId)
-        FirebaseHandler.getDatabase().runTransaction { transaction ->
-            transaction.update(postRef, "postComments", _post.value!!.postComments)
-            null
-        }.addOnSuccessListener {
-            Log.d("AddComment", "Transaction success!")
 
-        }.addOnFailureListener { e -> Log.d("AddComment", "Transaction failure.", e) }
+        FirebaseHandler.getDatabase().collection(POSTS_REF).document(_post.value!!.postId).update("postComments", FieldValue.arrayUnion(comment))
 
         if(_post.value!!.postAuthor != App.getCurrentUser().userId){
             Utils.addNotification(
                 App.getCurrentUser().userId,
                 _post.value!!.postAuthor.toString(),
                 Constants.NOTIFICATION_COMMENT,
-                comment.comment,
-                _post.value!!.postId
+                _post.value!!.postId,
+                comment.comment
             )
         }
     }

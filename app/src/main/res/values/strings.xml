@@ -64,7 +64,7 @@
     <string name="username">Username</string>
     <string name="username_is_taken">Username is taken!</string>
     <string name="email_is_taken">Email is taken!</string>
-    <string name="password_length">Password length should be in range of 6–32</string>
+    <string name="password_length">Password length should be in range of 8–32</string>
     <string name="search_">Search…</string>
     <string name="add_to_story">Add to Story</string>
     <string name="full_name">Full Name</string>

@@ -71,11 +71,11 @@ class HomeFragment : BaseFragment(), PostsAdapter.CustomPostCallback,
                 }
                 else{
                     if(rootView!!.noPostsTextView.visibility == View.VISIBLE) rootView!!.noPostsTextView.visibility  = View.GONE
-                    posts = list
-                    adapter!!.setPostsList(posts)
-                    isLoading = false
                     rootView!!.loaderProgressBar.visibility = View.GONE
                 }
+                posts = list
+                adapter!!.setPostsList(posts)
+                isLoading = false
             }
         })
 
