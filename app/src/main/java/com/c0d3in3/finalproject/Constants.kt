@@ -24,4 +24,7 @@ object Constants {
     const val POSTS_REF = "posts"
 
     const val EDIT_POST_REQUEST_CODE = 229
+
+    const val LIKE_COMMENT = 2020
+    const val REMOVE_COMMENT = 2021
 }

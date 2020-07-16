@@ -5,31 +5,26 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
+import com.c0d3in3.finalproject.Constants.LIKE_COMMENT
+import com.c0d3in3.finalproject.Constants.REMOVE_COMMENT
 import com.c0d3in3.finalproject.CustomLinearLayoutManager
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.CommentModel
-import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.bean.PostModel
-import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
-import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.tools.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlin.properties.Delegates
 
@@ -69,7 +64,6 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
             adapter = CommentAdapter(this)
             commentsRecyclerView.layoutManager = CustomLinearLayoutManager(this)
             commentsRecyclerView.adapter = adapter
-            //post.postComments?.let { adapter!!.setList(it) }
         }
 
         commentViewModel.getPost().observe(this, Observer {
@@ -85,7 +79,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
         commentSwipeRefreshLayout.setOnRefreshListener {
             if (commentSwipeRefreshLayout.isRefreshing)
-                commentViewModel.loadPost()
+                commentViewModel.updatePost()
         }
 
     }
@@ -96,27 +90,6 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
             R.color.colorLightBlue,
             R.color.colorBlue
         )
-
-//        val docRef = FirebaseHandler.getDatabase()
-//            .collection(FirebaseHandler.POSTS_REF).document(post.postId)
-//        listener = docRef.addSnapshotListener { snapshot, e ->
-//            if (e != null) {
-//                Log.d("NotificationsListener", "Listen failed.", e)
-//                finish()
-//                return@addSnapshotListener
-//            }
-//
-//            if (snapshot != null) {
-//                val postModel = snapshot.toObject(PostModel::class.java)
-//
-//                if (postModel == null) {
-//                    Toast.makeText(this, "Post was deleted", Toast.LENGTH_SHORT).show()
-//                    finish()
-//                }
-//                else commentViewModel.setPostModel(postModel)
-//            }
-//
-//        }
     }
 
     override fun onDestroy() {
@@ -141,8 +114,6 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
 
     override fun onBackPressed() {
         val mIntent = Intent()
-        //post.postComments = commentViewModel.getComments().value
-        //post.postAuthorModel = authorModel
         mIntent.putExtra("model", post)
         mIntent.putExtra("position", position)
         setResult(Activity.RESULT_OK, mIntent)
@@ -162,7 +133,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
             desc,
             object : DialogCallback {
                 override fun onResponse(dialog: Dialog) {
-                    commentViewModel.removeComment(position)
+                    post.postComments?.get(position)?.let { commentViewModel.updatePost(it, REMOVE_COMMENT) }
                     dialog.dismiss()
                 }
 
@@ -173,8 +144,7 @@ class CommentsActivity : BaseActivity(), CommentAdapter.CommentAdapterCallback {
     }
 
     override fun likeComment(position: Int) {
-        commentViewModel.likeComment(position)
-        adapter?.notifyItemChanged(position)
+        post.postComments?.get(position)?.let { commentViewModel.updatePost(it, LIKE_COMMENT) }
     }
 
     override fun openProfile(position: Int) {
