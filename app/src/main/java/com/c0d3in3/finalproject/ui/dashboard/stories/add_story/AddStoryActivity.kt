@@ -1,8 +1,6 @@
 package com.c0d3in3.finalproject.ui.dashboard.stories.add_story
 
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
@@ -11,13 +9,10 @@ import com.c0d3in3.finalproject.Constants.USER_STORIES_REF
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
 import com.c0d3in3.finalproject.bean.StoryModel
-import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.databinding.ActivityAddStoryBinding
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.tools.ImageUploadCallback
+import com.c0d3in3.finalproject.bean.ImageUploadCallback
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
-import kotlinx.android.synthetic.main.fragment_create_post_image.*
 
 class AddStoryActivity : BaseActivity() {
 
@@ -46,7 +41,8 @@ class AddStoryActivity : BaseActivity() {
     }
 
     private fun uploadImage(){
-        Utils.uploadImage("$USER_STORIES_REF/${App.getCurrentUser().userId}_${(0..10000).random()}", imageUri, object: ImageUploadCallback{
+        Utils.uploadImage("$USER_STORIES_REF/${App.getCurrentUser().userId}_${(0..10000).random()}", imageUri, object:
+            ImageUploadCallback {
             override fun onFinish(downloadUrl: String) {
                 addStory(downloadUrl.toString())
             }

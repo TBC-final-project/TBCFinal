@@ -1,9 +1,7 @@
 package com.c0d3in3.finalproject.tools
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.text.TextUtils
@@ -13,20 +11,19 @@ import android.util.TypedValue
 import android.view.Window
 import android.view.WindowManager
 import com.c0d3in3.finalproject.App
-import com.c0d3in3.finalproject.Constants
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_COMMENT
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_COMMENT
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_LIKE_POST
 import com.c0d3in3.finalproject.Constants.NOTIFICATION_START_FOLLOW
 import com.c0d3in3.finalproject.R
+import com.c0d3in3.finalproject.bean.DialogCallback
+import com.c0d3in3.finalproject.bean.ImageUploadCallback
 import com.c0d3in3.finalproject.bean.NotificationModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.network.State
-import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import kotlinx.android.synthetic.main.dialog_error_layout.*
 import kotlinx.android.synthetic.main.dialog_two_option_layout.*
-import kotlinx.android.synthetic.main.fragment_create_post_image.*
 import kotlinx.android.synthetic.main.post_options_layout.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,22 +1,13 @@
 package com.c0d3in3.finalproject.ui.profile
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.Constants.USER_PROFILE_PICTURES_REF
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.base.BaseActivity
-import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.image_chooser.EasyImage
 import com.c0d3in3.finalproject.image_chooser.ImageChooserUtils
 import com.c0d3in3.finalproject.image_chooser.MediaFile
@@ -25,19 +16,14 @@ import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.network.FirebaseHandler.USERS_REF
 import com.c0d3in3.finalproject.network.State
 import com.c0d3in3.finalproject.network.UsersRepository
-import com.c0d3in3.finalproject.tools.ImageUploadCallback
+import com.c0d3in3.finalproject.bean.ImageUploadCallback
 import com.c0d3in3.finalproject.tools.Utils
-import com.c0d3in3.finalproject.ui.auth.RegisterActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.choose_resource_file.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.util.*
 
 class EditProfileActivity : BaseActivity() {
@@ -87,7 +73,8 @@ class EditProfileActivity : BaseActivity() {
             App.getCurrentUser().userId
         ).set(App.getCurrentUser())
         if(imageFile != null){
-            Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${model.userId}", imageFile!!.uri, object: ImageUploadCallback{
+            Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${model.userId}", imageFile!!.uri, object:
+                ImageUploadCallback {
                 override fun onFinish(downloadUrl: String) {
                     FirebaseHandler.getDatabase().collection(USERS_REF).document(App.getCurrentUser().userId).update("userProfileImage", downloadUrl)
                     setResult(Activity.RESULT_OK, intent)

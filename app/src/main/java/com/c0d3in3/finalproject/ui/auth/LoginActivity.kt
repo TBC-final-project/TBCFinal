@@ -50,7 +50,6 @@ class LoginActivity : BaseActivity() {
         auth.signInWithEmailAndPassword(emailET.text.toString(), passwordET.text.toString())
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    println(auth.currentUser!!.uid)
                     FirebaseHandler.getDatabase().collection(USERS_REF).document(auth.currentUser!!.uid).get().addOnSuccessListener {
                         App.setCurrentUser(it.toObject<UserModel>()!!)
 

@@ -21,7 +21,7 @@ import com.c0d3in3.finalproject.bean.CommentModel
 import com.c0d3in3.finalproject.bean.PostModel
 import com.c0d3in3.finalproject.databinding.ActivityCommentsBinding
 import com.c0d3in3.finalproject.extensions.setListenerColor
-import com.c0d3in3.finalproject.tools.DialogCallback
+import com.c0d3in3.finalproject.bean.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
 import com.google.firebase.firestore.ListenerRegistration

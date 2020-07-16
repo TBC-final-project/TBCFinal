@@ -11,14 +11,12 @@ import com.c0d3in3.finalproject.base.BasePagerAdapter
 import com.c0d3in3.finalproject.R
 import com.c0d3in3.finalproject.network.FirebaseHandler
 import com.c0d3in3.finalproject.bean.UserModel
-import com.c0d3in3.finalproject.tools.ImageUploadCallback
+import com.c0d3in3.finalproject.bean.ImageUploadCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.register.*
 import com.c0d3in3.finalproject.ui.dashboard.DashboardActivity
-import com.c0d3in3.finalproject.ui.post.create_post.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.fragment_create_post_image.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -124,7 +122,8 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun uploadImage() {
-        Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${userModel.userId}", imageUri!!, object : ImageUploadCallback {
+        Utils.uploadImage("$USER_PROFILE_PICTURES_REF/${userModel.userId}", imageUri!!, object :
+            ImageUploadCallback {
             override fun onFinish(downloadUrl: String) {
                 App.setCurrentUser(userModel)
                 App.getCurrentUser().userProfileImage = downloadUrl

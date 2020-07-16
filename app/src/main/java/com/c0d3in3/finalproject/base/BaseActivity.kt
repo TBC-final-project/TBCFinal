@@ -9,9 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.c0d3in3.finalproject.App
 import com.c0d3in3.finalproject.R
-import com.c0d3in3.finalproject.bean.UserModel
 import com.c0d3in3.finalproject.network.FirebaseHandler
-import com.c0d3in3.finalproject.tools.DialogCallback
+import com.c0d3in3.finalproject.bean.DialogCallback
 import com.c0d3in3.finalproject.tools.Utils
 import com.c0d3in3.finalproject.ui.auth.PreAuthActivity
 import com.c0d3in3.finalproject.ui.profile.ProfileActivity
@@ -69,7 +68,8 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbarFrameLayout.profileImageButton.setImageResource(R.mipmap.ic_more)
         if(title != null) toolbarFrameLayout.titleTV.text = "Your profile"
         toolbarFrameLayout.profileImageButton.setOnClickListener {
-            Utils.createOptionalDialog(this, "Log out", "Do you really want to log out?", object: DialogCallback{
+            Utils.createOptionalDialog(this, "Log out", "Do you really want to log out?", object:
+                DialogCallback {
                 override fun onResponse(dialog: Dialog) {
                     dialog.dismiss()
                     FirebaseHandler.getAuth().signOut()
