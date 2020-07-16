@@ -8,27 +8,27 @@ PostIt არის სოციალური ქსელი, რომელ
 რეგისტრაციის შემდგომ, მომხმარებელი ავსებს საკუთარ პროფილს, კერძოდ: სახელ-გვარს, სურათს, username-ს. ხოლო ჩვეულებრივი რეგისტრაცის დროს ივსება ასევე იმეილი და პაროლი.
 
 ## გამოყენებული ბიბლიოთეკები
-**Lifecycle** - აპლიკაცია ითვალისწინებს MVVM-ის კომპონენტებს გარკვეულ ასპექტში ძირითადად.
-**DataBinding**
-**Kotlin Flow და Coroutines** - network-თან სამუშაოდ და მონაცემების წამოსაღებად.
-**FirebaseAuth, FirebaseStore, FirebaseStorage** - ავტორიზაციისთვის, მონაცემთა ბაზისთვის და მომხმარებლის სურათების შესანახად.
-**Material Bottom Navigation** - დეშბორდისთვის.
-**CardView**  დიზაინი
-**Material** დიზაინი
-**Swipe Refresh Layout** [მონაცემების გასანაახლებლად]
-**Glide** "https://github.com/bumptech/glide"  [სურათებისთვის]
-**Firebase Auth** "firebase.google.com"   [ავტორიზაცია/რეგისტრაცია]
-**Firebase Firestore** "firebase.google.com"  [მომხმარებლის ინფოს შესანახად]
-**Firebase Storage** "firebase.google.com"  [მომხმარებლის სურათების შესანახად]
-**CircleImageView** - პროფილის სურათებისთის.
+**Lifecycle** - აპლიკაცია ითვალისწინებს MVVM-ის კომპონენტებს გარკვეულ ასპექტში ძირითადად.  
+**DataBinding**  
+**Kotlin Flow და Coroutines** - network-თან სამუშაოდ და მონაცემების წამოსაღებად.  
+**FirebaseAuth, FirebaseStore, FirebaseStorage** - ავტორიზაციისთვის, მონაცემთა ბაზისთვის და მომხმარებლის სურათების შესანახად.  
+**Material Bottom Navigation** - დეშბორდისთვის.  
+**CardView**  დიზაინი  
+**Material** დიზაინი  
+**Swipe Refresh Layout** [მონაცემების გასანაახლებლად]  
+**Glide** "https://github.com/bumptech/glide"  [სურათებისთვის]  
+**Firebase Auth** "firebase.google.com"   [ავტორიზაცია/რეგისტრაცია]  
+**Firebase Firestore** "firebase.google.com"  [მომხმარებლის ინფოს შესანახად]  
+**Firebase Storage** "firebase.google.com"  [მომხმარებლის სურათების შესანახად]  
+**CircleImageView** - პროფილის სურათებისთის.  
 
 ## პროექტის წყობა
-**Base package** - base კლასებისთვის გამოიყენება. [base activity, fragment, viewpager Adapter]
-**Bean** - მოდელ კლასებითვის
-**extensions** - კოტლინის view კომპონენტების extension-ები.
-**image-chooser** - სურათის ასარჩევად შექმნილი package.
-**network** - ფაირბეისის singleton ობიექტი, რომელიც ხელმისაწვდომია მთლიანი აპლიკაციის ჭრილში. ასევე შეიცავს რეპოზიტორებს, სადაც განთავსებულია ფუნქციები, ინფორმაციის წამოსაღებად ან შესაცვლელად.
-**tools** - გლობალური უტილიტები, ფუნქციები, რომლებიც გამოიყენება მთლიანი აპლიკაციის ჭრილში და გვარიდებს თავიდან ზედმეტ კოდს. განთავსებულია ასევე დიალოგის callback-s ინტერფეისები
-**ui** - აპლიკაციის ძირითადი package. განთავსებულია არსებული ყველა activity, fragment, adapter და ა.შ. **ui** შეიცავს auth, dashboard, post, profile, splash package-ებს და თითოეული
-კიდევ შიგნით არსებულ სხვა package-ებს.
-**Custom Classes** - შეიცავს Aplication კლასს, ასევე custom view კლასებს, როგორიცაა პროგრესბარი, layoutmanager-ები, DataBinding-ის კომპონენტები და კონსტანტური ცვლადის სინგლტონ ობიქეტი.
+**Base package** - base კლასებისთვის გამოიყენება. [base activity, fragment, viewpager Adapter]  
+**Bean** - მოდელ კლასებითვის  
+**extensions** - კოტლინის view კომპონენტების extension-ები.  
+**image-chooser** - სურათის ასარჩევად შექმნილი package.  
+**network** - ფაირბეისის singleton ობიექტი, რომელიც ხელმისაწვდომია მთლიანი აპლიკაციის ჭრილში. ასევე შეიცავს რეპოზიტორებს, სადაც განთავსებულია ფუნქციები, ინფორმაციის წამოსაღებად ან შესაცვლელად.  
+**tools** - გლობალური უტილიტები, ფუნქციები, რომლებიც გამოიყენება მთლიანი აპლიკაციის ჭრილში და გვარიდებს თავიდან ზედმეტ კოდს. განთავსებულია ასევე დიალოგის callback-s ინტერფეისები  
+**ui** - აპლიკაციის ძირითადი package. განთავსებულია არსებული ყველა activity, fragment, adapter და ა.შ. **ui** შეიცავს auth, dashboard, post, profile, splash package-ებს და თითოეული  
+კიდევ შიგნით არსებულ სხვა package-ებს.  
+**Custom Classes** - შეიცავს Aplication კლასს, ასევე custom view კლასებს, როგორიცაა პროგრესბარი, layoutmanager-ები, DataBinding-ის კომპონენტები და კონსტანტური ცვლადის სინგლტონ ობიქეტი.  
