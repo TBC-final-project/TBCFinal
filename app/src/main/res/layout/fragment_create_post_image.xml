@@ -18,21 +18,12 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/createPostImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/img_profile" />
+            android:scaleType="centerInside"
+            android:src="@mipmap/upload_image_post" />
 
-        <TextView
-            android:id="@+id/choosePhoto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp"
-            android:gravity="center"
-            android:text="@string/upload_photo"
-            android:textColor="#000"
-            android:textSize="20sp" />
 
         <TextView
             android:layout_width="wrap_content"
